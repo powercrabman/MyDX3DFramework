@@ -58,6 +58,9 @@ void Engine::Update()
 	//InputManager 업데이트
 	InputManager::GetInst().Update();
 	DebugHandler();
+
+	//렌더링 머신 업데이트
+	Renderer::GetInst().Update(timer.GetDeltaTime());
 }
 
 void Engine::Render()
@@ -66,8 +69,8 @@ void Engine::Render()
 	r.ClearBuffer(Colors::SlateGray);
 
 	//성능측정
-	RenderDebugData();
 	r.Render();
+	RenderDebugData();
 
 	//스왑체인
 	r.Present();
@@ -139,7 +142,7 @@ void Engine::RenderDebugData()
 	buffer.Input(L"Fps: %lld\nDelta Time: %.7f\n", t.GetFPS(), t.GetDeltaTime());
 
 	//피쳐 레벨
-	buffer.Append(L"Feature Level: " + Renderer::GetInst().GetFeatureLevelToString() + L"\0");
+	buffer.Append(L"Feature Level: " + Renderer::GetInst().GetFeatureLevelToString());
 
 	Renderer::GetInst().DrawString(buffer.c_str(), initialPosition, eFont::Consolas_16pt, Colors::LightGreen);
 }

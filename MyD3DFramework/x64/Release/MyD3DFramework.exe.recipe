@@ -2,10 +2,17 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\Ahnjiwoo\Desktop\Projects\MyDX3DFramework\x64\Release\MyD3DFramework.exe</FullPath>
+      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\x64\Release\MyD3DFramework.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\x64\Release\PixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\x64\Release\VertexShader.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>

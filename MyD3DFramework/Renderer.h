@@ -12,6 +12,7 @@ public:
 
 	//렌더링 코어 함수
 	void InputAssembler();
+	void Update(float inDeltaTime);
 	void Render();
 
 	//창 크기 조절
@@ -57,8 +58,11 @@ private:
 
 	ComPtr<ID3D11VertexShader> m_vertexShader = nullptr;
 	ComPtr<ID3D11PixelShader> m_pixelShader = nullptr;
+
 	ComPtr<ID3D11InputLayout> m_inputLayout = nullptr;
 	ComPtr<ID3D11Buffer> m_constantBuffer = nullptr;
+	ComPtr<ID3D11Buffer> m_vertexBuffer = nullptr;
+	ComPtr<ID3D11Buffer> m_indexBuffer = nullptr;
 
 	CD3D11_VIEWPORT m_viewport = {};
 	D3D_FEATURE_LEVEL m_featureLevel = {};
@@ -91,7 +95,7 @@ inline void Renderer::ClearBuffer(XMVECTORF32 inClearColor)
 	m_deviceContext->ClearDepthStencilView(
 		m_depthStencilView.Get(),
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-		1.0,
+		1.f,
 		0);
 }
 

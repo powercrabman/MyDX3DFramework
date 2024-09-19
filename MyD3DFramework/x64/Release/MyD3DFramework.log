@@ -1,17 +1,7 @@
-﻿  Engine.cpp
-  GameTimer.cpp
-  InputManager.cpp
-  Main.cpp
-  pch.cpp
-  Renderer.cpp
-  Structs.cpp
-  WindowsApp.cpp
-C:\Users\Ahnjiwoo\Desktop\Projects\MyDX3DFramework\MyD3DFramework\WindowsApp.cpp(34,33): warning C4302: '형식 캐스트': 'LPWSTR'에서 'WORD'(으)로 잘립니다.
-  WindowsProc.cpp
-  WindowsUtile.cpp
-  코드를 생성하고 있습니다.
-  262 of 265 functions (98.9%) were compiled, the rest were copied from previous compilation.
-    59 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+﻿  코드를 생성하고 있습니다.
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Renderer.h(141): warning C4715: 'Renderer::GetFeatureLevelToString': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  723 of 724 functions (99.9%) were compiled, the rest were copied from previous compilation.
+    476 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
-  MyD3DFramework.vcxproj -> C:\Users\Ahnjiwoo\Desktop\Projects\MyDX3DFramework\x64\Release\MyD3DFramework.exe
+  MyD3DFramework.vcxproj -> C:\Users\alsxm\Desktop\dev\MyDX3DFramework\x64\Release\MyD3DFramework.exe
