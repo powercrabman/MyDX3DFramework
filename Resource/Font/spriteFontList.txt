@@ -1,0 +1,16 @@
+﻿
+G마켓 산스 TTF Medium	GMarketSansTTFM8	8
+G마켓 산스 TTF Medium	GMarketSansTTFM16	16
+G마켓 산스 TTF Medium	GMarketSansTTFM32	32
+G마켓 산스 TTF Medium	GMarketSansTTFM64	64
+G마켓 산스 TTF Medium	GMarketSansTTFM128	128
+나눔고딕	NaNumGothic8	8
+나눔고딕	NaNumGothic16	16
+나눔고딕	NaNumGothic32	32
+나눔고딕	NaNumGothic64	64
+나눔고딕	NaNumGothic128	128
+Consolas	Consolas8	8
+Consolas	Consolas16	16
+Consolas	Consolas32	32
+Consolas	Consolas64	64
+Consolas	Consolas128	128

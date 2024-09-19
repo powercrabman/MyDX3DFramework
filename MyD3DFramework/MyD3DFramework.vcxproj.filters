@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Main.h">
+      <Filter>01.Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99.Headers\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>99.Headers\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>99.Headers\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>99.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>01.Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>99.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Macro.h">
+      <Filter>99.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsApp.h">
+      <Filter>02.Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs.h">
+      <Filter>99.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTimer.h">
+      <Filter>03.Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>03.Module</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsUtile.h">
+      <Filter>02.Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsProc.h">
+      <Filter>02.Windows\WindowProc</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>03.Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>99.Headers\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.h">
+      <Filter>99.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>03.Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>04.Resource\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferPool.h">
+      <Filter>99.Headers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Algorithm.h">
+      <Filter>99.Headers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderIncludeHelper.h">
+      <Filter>99.Headers\Utility\DirectX</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="MyD3DFramework.ico">
+      <Filter>99.Headers\Default</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>99.Headers\Default</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="01.Engine">
+      <UniqueIdentifier>{c4f3486f-e732-4ad3-8640-3e7683ef1888}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Headers">
+      <UniqueIdentifier>{8908cae2-f285-4880-8fff-9a8a45709086}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Headers\Default">
+      <UniqueIdentifier>{70612464-c309-4d75-a211-c867405d9bf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Windows">
+      <UniqueIdentifier>{fd47494b-142e-425a-b6df-8f48a6fd19d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Module">
+      <UniqueIdentifier>{e694dfbf-7c2f-41f5-a6e2-f99bacfd50f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Windows\WindowProc">
+      <UniqueIdentifier>{88749dda-40c1-432b-b215-a32832f2a45d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Headers\Rendering">
+      <UniqueIdentifier>{7c51b9fe-926f-4ccc-97a8-d7e453f95e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Resource">
+      <UniqueIdentifier>{c40b9c7d-1f7d-4644-92fb-5c8828997fd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Resource\Font">
+      <UniqueIdentifier>{424c54d0-28eb-4ed3-8552-db2c7301f8a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Headers\Utility">
+      <UniqueIdentifier>{ead7b941-b6e4-4b56-b500-97f7286bbee9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Shader">
+      <UniqueIdentifier>{8221b782-8374-4d33-a989-eefa5ba9118e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Headers\Utility\DirectX">
+      <UniqueIdentifier>{64994a64-867c-43a8-90f9-af23a013e5ed}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>01.Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>99.Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>01.Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsApp.cpp">
+      <Filter>02.Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTimer.cpp">
+      <Filter>03.Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>03.Module</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsUtile.cpp">
+      <Filter>02.Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsProc.cpp">
+      <Filter>02.Windows\WindowProc</Filter>
+    </ClCompile>
+    <ClCompile Include="Structs.cpp">
+      <Filter>99.Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>03.Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>99.Headers\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>03.Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>04.Resource\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferPool.cpp">
+      <Filter>99.Headers\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Algorithm.cpp">
+      <Filter>99.Headers\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderIncludeHelper.cpp">
+      <Filter>99.Headers\Utility\DirectX</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MyD3DFramework.rc">
+      <Filter>99.Headers\Default</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint">
+      <Filter>99.Headers</Filter>
+    </None>
+    <None Include="..\.gitignore">
+      <Filter>99.Headers</Filter>
+    </None>
+    <None Include="packages.config">
+      <Filter>99.Headers\Default</Filter>
+    </None>
+    <None Include="ShaderHeader.hlsli">
+      <Filter>05.Shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>05.Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>05.Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
