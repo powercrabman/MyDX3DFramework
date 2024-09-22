@@ -1,2 +1,43 @@
-﻿  Renderer.cpp
-  MyD3DFramework.vcxproj -> C:\Users\alsxm\Desktop\dev\MyDX3DFramework\x64\Debug\MyD3DFramework.exe
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(517,5): warning MSB8004: Output 디렉터리가 슬래시로 끝나지 않습니다. Output 디렉터리의 적절한 평가를 허용하는 데 필요하므로 이 빌드 인스턴스에서 슬래시를 추가합니다.
+  pch.cpp
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Mesh.h(26,37): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 'pch.cpp'을(를) 컴파일하는 중)
+  
+  Algorithm.cpp
+  BufferPool.cpp
+  ContantBuffers.cpp
+  DirectionalLight.cpp
+  Engine.cpp
+  Font.cpp
+  GameTimer.cpp
+  InputManager.cpp
+  Main.cpp
+  Material.cpp
+  Mesh.cpp
+  PointLight.cpp
+  RenderableObject.cpp
+  Renderer.cpp
+  ResourceManager.cpp
+  ShaderIncludeHelper.cpp
+  SimpleMathAdv.cpp
+  SpotLight.cpp
+  Structs.cpp
+  Transform.cpp
+  코드를 생성하고 있습니다...
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Renderer.h(180,1): warning C4715: 'Renderer::GetFeatureLevelToString': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  컴파일하고 있습니다...
+  Vertex.cpp
+  WindowsApp.cpp
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\WindowsApp.cpp(34,33): warning C4302: '형식 캐스트': 'LPWSTR'에서 'WORD'(으)로 잘립니다.
+  (소스 파일 '/WindowsApp.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\WindowsApp.cpp(114,24): warning C4244: '인수': 'const unsigned __int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/WindowsApp.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\WindowsApp.cpp(114,12): warning C4244: '인수': 'const unsigned __int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/WindowsApp.cpp'을(를) 컴파일하는 중)
+  
+  WindowsProc.cpp
+  WindowsUtile.cpp
+  코드를 생성하고 있습니다...
+  MyD3DFramework.vcxproj -> C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\MyD3DFramework.exe

@@ -4,6 +4,8 @@
 #include "Engine.h"
 #include <fstream>
 
+
+
 bool Renderer::InitD3D11Device()
 {
 	if (!::XMVerifyCPUSupport())
@@ -163,7 +165,6 @@ void Renderer::CreateDeviceDependentResource()
 	m_spriteBatch = std::make_unique<SpriteBatch>(m_deviceContext.Get());
 }
 
-
 void Renderer::InputAssembler()
 {
 	//Vertex Shader 컴파일
@@ -235,7 +236,7 @@ void Renderer::InputAssembler()
 
 	D3D11_BUFFER_DESC vbd = {};
 	vbd.Usage = D3D11_USAGE_DEFAULT;
-	vbd.ByteWidth = sizeof(VertexNormal) * 8;
+	vbd.ByteWidth = sizeof(VertexNormal) * ARRAYSIZE(vertices);
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 	D3D11_SUBRESOURCE_DATA vinitData = {};
@@ -261,7 +262,7 @@ void Renderer::InputAssembler()
 
 	D3D11_BUFFER_DESC ibd = {};
 	ibd.Usage = D3D11_USAGE_DEFAULT;
-	ibd.ByteWidth = sizeof(UINT) * 36;
+	ibd.ByteWidth = sizeof(UINT) * ARRAYSIZE(indices);
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
@@ -315,17 +316,17 @@ void Renderer::InputAssembler()
 		m_farPlane);
 
 	//광원 초기화
-	m_spotLight.Ambient  = Color(0.2f, 0.2f, 0.2f, 1.f);
-	m_spotLight.Diffuse  = Color(1.0f, 0.95f, 0.8f, 1.f);
-	m_spotLight.Specular = Color(1.0f, 1.0f, 1.0f, 1.f);
-	m_spotLight.SpotDirection = Vector3(0.f, 0.f, 1.f);
-	m_spotLight.Attenuation = Vector3(1.f,0.1f,0.f);
-	m_spotLight.Range = 50.f;
+	m_dirLight.Ambient = Color(0.2f, 0.2f, 0.2f, 1.f);
+	m_dirLight.Diffuse = Color(1.0f, 0.95f, 0.8f, 1.f);
+	m_dirLight.Specular = Color(1.0f, 1.0f, 1.0f, 1.f);
+	m_dirLight.Direction = Vector3(2.f, -1.f, 2.f);
+	m_dirLight.Direction.Normalize();
 
 	//머테리얼 설정
-	m_material.Ambient  = Color(0.4f, 0.4f, 0.4f, 1.f);
-	m_material.Diffuse  = Color(0.5f, 0.5f, 0.5f, 1.f);
+	m_material.Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
+	m_material.Diffuse = Color(0.5f, 0.5f, 0.5f, 1.f);
 	m_material.Specular = Color(0.8f, 0.8f, 0.8f, 16.f);
+
 }
 
 void Renderer::Update(float inDeltaTime)
@@ -369,7 +370,7 @@ void Renderer::Update(float inDeltaTime)
 
 		if (KEY_HOLD(eKeyCode::Left))
 		{
-			m_cmrLook = ::XMVector3Rotate(m_cmrLook, Quaternion::CreateFromYawPitchRoll(-s_cmrRotateSpeed * inDeltaTime,0.f,0.f));
+			m_cmrLook = ::XMVector3Rotate(m_cmrLook, Quaternion::CreateFromYawPitchRoll(-s_cmrRotateSpeed * inDeltaTime, 0.f, 0.f));
 		}
 
 		if (KEY_HOLD(eKeyCode::Right))
@@ -388,7 +389,7 @@ void Renderer::Update(float inDeltaTime)
 		}
 	}
 
-	static const float s_rotateSpeed = ::XMConvertToRadians(30.f);
+	static const float s_rotateSpeed = ::XMConvertToRadians(90.f);
 	float s_rotateDelta = inDeltaTime * s_rotateSpeed;
 
 	//Update cbPerObject
@@ -411,7 +412,7 @@ void Renderer::Update(float inDeltaTime)
 	//Update cbPerFrame
 	{
 		cbPerFrame cb = {};
-		m_spotLight.Position = m_cmrPosition;
+		m_dirLight.Direction = ::XMVector3Rotate(m_dirLight.Direction, Quaternion::CreateFromYawPitchRoll(s_rotateDelta, 0.f, 0.f));
 
 		cb.gEyePosW = ToVector4(m_cmrPosition, true);
 		cb.gDirLight = m_dirLight;
@@ -420,6 +421,7 @@ void Renderer::Update(float inDeltaTime)
 
 		m_deviceContext->UpdateSubresource(m_cBufferPerFrame.Get(), 0, nullptr, &cb, 0, 0);
 	}
+
 }
 
 void Renderer::Render()

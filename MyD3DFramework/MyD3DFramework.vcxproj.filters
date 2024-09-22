@@ -46,9 +46,6 @@
     <ClInclude Include="InputManager.h">
       <Filter>03.Module</Filter>
     </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>99.Headers\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Enums.h">
       <Filter>99.Headers</Filter>
     </ClInclude>
@@ -67,23 +64,35 @@
     <ClInclude Include="ShaderIncludeHelper.h">
       <Filter>99.Headers\Utility\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
-      <Filter>99.Headers\Rendering\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="PointLight.h">
-      <Filter>99.Headers\Rendering\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="SpotLight.h">
-      <Filter>99.Headers\Rendering\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="ContantBuffers.h">
-      <Filter>99.Headers\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>99.Headers\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="SimpleMathAdv.h">
       <Filter>99.Headers\Utility\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>06.RenderModules\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>06.RenderModules\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>06.RenderModules\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableObject.h">
+      <Filter>05.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>06.RenderModules</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>06.RenderModules</Filter>
+    </ClInclude>
+    <ClInclude Include="ContantBuffers.h">
+      <Filter>06.RenderModules</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>06.RenderModules</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>06.RenderModules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -113,9 +122,6 @@
     <Filter Include="02.Windows\WindowProc">
       <UniqueIdentifier>{88749dda-40c1-432b-b215-a32832f2a45d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Headers\Rendering">
-      <UniqueIdentifier>{7c51b9fe-926f-4ccc-97a8-d7e453f95e3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Resource">
       <UniqueIdentifier>{c40b9c7d-1f7d-4644-92fb-5c8828997fd5}</UniqueIdentifier>
     </Filter>
@@ -125,23 +131,29 @@
     <Filter Include="99.Headers\Utility">
       <UniqueIdentifier>{ead7b941-b6e4-4b56-b500-97f7286bbee9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Shader">
-      <UniqueIdentifier>{8221b782-8374-4d33-a989-eefa5ba9118e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Headers\Utility\DirectX">
       <UniqueIdentifier>{64994a64-867c-43a8-90f9-af23a013e5ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Headers\Rendering\Light">
-      <UniqueIdentifier>{c5affbb2-1d59-44dc-9d0c-eab16615963c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Shader\Transform">
-      <UniqueIdentifier>{6590a010-c3a0-4c41-917f-59de16ae2aa9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05.Shader\Light+Trans">
-      <UniqueIdentifier>{b0a1ee0e-148b-4071-bc56-413b7f1bf831}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Headers\Utility\Math">
       <UniqueIdentifier>{30d3bf42-960a-4cce-8dad-e28db940d889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Object">
+      <UniqueIdentifier>{feb580ef-5ac5-4dee-a760-4cdf7ba495ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.RenderModules">
+      <UniqueIdentifier>{8221b782-8374-4d33-a989-eefa5ba9118e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.RenderModules\Shader">
+      <UniqueIdentifier>{7c882b67-ef5c-4f3a-8ff7-8297a4597a0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.RenderModules\Shader\Transform">
+      <UniqueIdentifier>{6590a010-c3a0-4c41-917f-59de16ae2aa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.RenderModules\Shader\Light+Trans">
+      <UniqueIdentifier>{b0a1ee0e-148b-4071-bc56-413b7f1bf831}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.RenderModules\Light">
+      <UniqueIdentifier>{443e8641-a7f4-4c5d-bc8a-c4cd4eea9449}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -175,9 +187,6 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>03.Module</Filter>
     </ClCompile>
-    <ClCompile Include="Vertex.cpp">
-      <Filter>99.Headers\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>03.Module</Filter>
     </ClCompile>
@@ -193,23 +202,35 @@
     <ClCompile Include="ShaderIncludeHelper.cpp">
       <Filter>99.Headers\Utility\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
-      <Filter>99.Headers\Rendering\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>99.Headers\Rendering\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="SpotLight.cpp">
-      <Filter>99.Headers\Rendering\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="ContantBuffers.cpp">
-      <Filter>99.Headers\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>99.Headers\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="SimpleMathAdv.cpp">
       <Filter>99.Headers\Utility\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>06.RenderModules\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>06.RenderModules\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>06.RenderModules\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableObject.cpp">
+      <Filter>05.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>06.RenderModules</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>06.RenderModules</Filter>
+    </ClCompile>
+    <ClCompile Include="ContantBuffers.cpp">
+      <Filter>06.RenderModules</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>06.RenderModules</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>06.RenderModules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -228,21 +249,21 @@
       <Filter>99.Headers\Default</Filter>
     </None>
     <None Include="ShaderHeader.hlsli">
-      <Filter>05.Shader</Filter>
+      <Filter>06.RenderModules\Shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SimpleVertexShader.hlsl">
-      <Filter>05.Shader\Transform</Filter>
+      <Filter>06.RenderModules\Shader\Transform</Filter>
     </FxCompile>
     <FxCompile Include="SimplePixelShader.hlsl">
-      <Filter>05.Shader\Transform</Filter>
+      <Filter>06.RenderModules\Shader\Transform</Filter>
     </FxCompile>
     <FxCompile Include="LightVertexShader.hlsl">
-      <Filter>05.Shader\Light+Trans</Filter>
+      <Filter>06.RenderModules\Shader\Light+Trans</Filter>
     </FxCompile>
     <FxCompile Include="LightPixelShader.hlsl">
-      <Filter>05.Shader\Light+Trans</Filter>
+      <Filter>06.RenderModules\Shader\Light+Trans</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -60,8 +60,10 @@ using namespace DirectX::SimpleMath;
 #include "BufferPool.h"
 #include "Algorithm.h"
 #include "SimpleMathAdv.h"
+#include "Transform.h"
 
 //About Rendering
+#include "Mesh.h"
 #include "Vertex.h"
 #include "Material.h"
 #include "DirectionalLight.h"

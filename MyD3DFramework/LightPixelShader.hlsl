@@ -95,7 +95,7 @@ void ComputeSpotLight(
     out float4 outSpecular
     )
 {
-    //초기화
+    //초기화l
     outAmbient = float4(0.f, 0.f, 0.f, 0.f);
     outDiffuse = float4(0.f, 0.f, 0.f, 0.f);
     outSpecular = float4(0.f, 0.f, 0.f, 0.f);
