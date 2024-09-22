@@ -63,11 +63,11 @@ using namespace DirectX::SimpleMath;
 
 //About Rendering
 #include "Vertex.h"
+#include "Material.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "ContantBuffers.h"
-#include "Material.h"
 
 //Resource
 #include "Font.h"

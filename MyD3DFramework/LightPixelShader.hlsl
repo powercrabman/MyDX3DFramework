@@ -14,7 +14,7 @@ void ComputeDirectionalLight(
     outSpecular = float4(0.f, 0.f, 0.f, 0.f);
     
     //Light 벡터
-    float3 lightVecW = -gDirLight.DirectionRange.xyz;
+    float3 lightVecW = -gDirLight.Direction;
 
     //ambient
     outAmbient = gMaterial.Ambient * gDirLight.Ambient;
@@ -49,9 +49,9 @@ void ComputePointLight(
     outSpecular = float4(0.f, 0.f, 0.f, 0.f);
     
     //범위를 넘어갈 경우 리턴
-    float3 lightVecW = gPointLight.PositionRange.xyz - inPosition;
+    float3 lightVecW = gPointLight.Position - inPosition;
     float dist = length(lightVecW);
-    if (dist > gPointLight.PositionRange.w)
+    if (dist > gPointLight.Range)
     {
         return;
     }
@@ -77,7 +77,7 @@ void ComputePointLight(
     }
     
     //감쇠 계수
-    float att = dot(gSpotLight.Attenuation.xyz, float3(1.f, dist, dist * dist));
+    float att = dot(gPointLight.Attenuation, float3(1.f, dist, dist * dist));
     att = max(att, SMALL_NUMBER);
     
     float attInv = 1.f / att;
@@ -101,9 +101,9 @@ void ComputeSpotLight(
     outSpecular = float4(0.f, 0.f, 0.f, 0.f);
     
     //범위를 넘어갈 경우 리턴
-    float3 lightVecW = gSpotLight.PositionRange.xyz - inPosition;
+    float3 lightVecW = gSpotLight.Position - inPosition;
     float dist = length(lightVecW);
-    if (dist > gSpotLight.PositionRange.w)
+    if (dist > gSpotLight.Range)
     {
         return;
     }
@@ -129,18 +129,17 @@ void ComputeSpotLight(
     }
     
     //스포트라이트 계수
-    float spotFactor = pow(max(0, dot(-lightVecW, gSpotLight.DirectionSpot.xyz)), gSpotLight.DirectionSpot.w);
-    
+    float spotFactor = pow(max(0, dot(-lightVecW, gSpotLight.SpotDirection)), gSpotLight.Exponent);
     
     //스포트라이트 계수 * 감쇠 계수
-    float att = dot(gSpotLight.Attenuation.xyz, float3(1.f, dist, dist * dist));
+    float att = dot(gSpotLight.Attenuation, float3(1.f, dist, dist * dist));
     att = max(att, SMALL_NUMBER);
     
     float attInv = spotFactor / att;
    
-    outAmbient  *= spotFactor;
+    outAmbient *= spotFactor;
     outSpecular *= attInv;
-    outDiffuse  *= attInv;
+    outDiffuse *= attInv;
 }
 
 float4 PS(LIGHT_VS_OUTPUT input) : SV_TARGET

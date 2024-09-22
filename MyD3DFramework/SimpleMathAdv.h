@@ -6,7 +6,7 @@ namespace DirectX
 	{
 		inline constexpr Vector4 ToVector4(const Vector3& inVector, bool isPoint = true) 
 		{
-			return Vector4(inVector.x, inVector.y, inVector.z, isPoint ? 1 : 0);
+			return Vector4(inVector.x, inVector.y, inVector.z, isPoint ? 1.f : 0.f);
 		}
 	}
 }

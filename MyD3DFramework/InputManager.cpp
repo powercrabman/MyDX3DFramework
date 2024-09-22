@@ -39,6 +39,7 @@ void InputManager::Update()
 	}
 
 	// 마우스 위치 업데이트
+	m_prevMousePos = m_mousePos;
 	::GetCursorPos(&m_mousePos);
 	::ScreenToClient(m_hwnd, &m_mousePos);
 }

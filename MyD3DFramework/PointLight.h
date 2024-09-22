@@ -11,12 +11,11 @@ struct PointLight
 	//반사광
 	Color Specular;
 	
-	//(X,Y,Z) = Position, (W) = Range
-	Vector4 PositionRange;
+	//Position
+	Vector3 Position;
+	float Range;
 
-	//차례대로 a0, a1, a2를 의미, W = 패킹
-	Vector4 Attenuation;
+	//차례대로 a0, a1, a2를 의미
+	Vector3 Attenuation;
+	float Pad;
 };
-
-
-

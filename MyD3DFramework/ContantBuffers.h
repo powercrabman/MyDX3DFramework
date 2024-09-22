@@ -4,6 +4,7 @@ struct cbPerObject
 	Matrix World;
     Matrix WorldInvTranspose;
     Matrix ViewProj;
+    Material Material;
 };
 
 struct cbPerFrame

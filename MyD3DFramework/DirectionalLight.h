@@ -11,8 +11,9 @@ struct DirectionalLight
 	//¹Ý»ç±¤
 	Color Specular;
 
-	//(X,Y,Z) = Direction, (W) = ÆÐÅ·
-	Vector4 DirectionRange;
+	//(X,Y,Z) = Direction
+	Vector3 Direction;
+	float Pad;
 };
 
 

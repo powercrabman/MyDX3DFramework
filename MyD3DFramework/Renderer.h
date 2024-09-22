@@ -85,13 +85,14 @@ private:
 	Vector3 m_scale = Vector3::One;
 
 	//카메라(임시)
-	Vector3 m_cmrLookAt = Vector3{ 0.f,0.f, 1.f };
-	Vector3 m_cmrPosition = Vector3{ 0.f,0.f,0.f };
+	Vector3 m_cmrLook = Vector3{ 0.f,0.f,1.f };
+	Vector3 m_cmrPosition = Vector3{ 0.f,3.f,0.f };
 	Vector3 m_worldUpAxis = Vector3{ 0.f,1.f,0.f };
 	float m_nearPlane = 0.5f;
 	float m_farPlane = 100.f;
 
-	Matrix m_viewProjMat = Matrix::Identity;
+	Matrix m_viewMat = Matrix::Identity;
+	Matrix m_projMat = Matrix::Identity;
 
 	float m_fov = ::XMConvertToRadians(45.f);
 

@@ -14,8 +14,8 @@ struct DirectionalLight
     float4 Ambient;
     float4 Diffuse;
     float4 Specular;
-
-    float4 DirectionRange;
+    float3 Direction;
+    float  Pad;
 };
 
 struct PointLight
@@ -23,9 +23,10 @@ struct PointLight
     float4 Ambient;
     float4 Diffuse;
     float4 Specular;
-
-    float4 PositionRange;
-    float4 Attenuation;
+    float3 Position;
+    float Range;
+    float3 Attenuation;
+    float Pad;
 };
 
 struct SpotLight
@@ -33,10 +34,12 @@ struct SpotLight
     float4 Ambient;
     float4 Diffuse;
     float4 Specular;
-
-    float4 PositionRange;
-    float4 DirectionSpot;
-    float4 Attenuation;
+    float3 Position;
+    float Range;
+    float3 SpotDirection;
+    float Exponent;
+    float3 Attenuation;
+    float Pad;
 };
 
 #define SMALL_NUMBER (1.0e-6)

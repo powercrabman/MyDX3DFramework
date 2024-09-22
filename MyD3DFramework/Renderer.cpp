@@ -169,7 +169,7 @@ void Renderer::InputAssembler()
 	//Vertex Shader 컴파일
 	ComPtr<ID3DBlob> vsBlob = nullptr;
 	LoadAndCopileShaderFromFile(
-		L"SimpleVertexShader.hlsl",
+		L"LightVertexShader.hlsl",
 		"VS",
 		"vs_5_0",
 		vsBlob.GetAddressOf()
@@ -187,7 +187,7 @@ void Renderer::InputAssembler()
 	D3D11_INPUT_ELEMENT_DESC inputLayout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	hr = m_device->CreateInputLayout(
@@ -202,7 +202,7 @@ void Renderer::InputAssembler()
 	//픽셀쉐이더 컴파일
 	ComPtr<ID3DBlob> psBlob = nullptr;
 	LoadAndCopileShaderFromFile(
-		L"SimplePixelShader.hlsl",
+		L"LightPixelShader.hlsl",
 		"PS",
 		"ps_5_0",
 		psBlob.GetAddressOf()
@@ -216,20 +216,26 @@ void Renderer::InputAssembler()
 	);
 
 	//버텍스 버퍼 생성
-	VertexColor vertices[] = {
-		{Vector3{-1.f,-1.f,-1.f}, Color(Colors::Red)},
-		{Vector3{-1.f,+1.f,-1.f}, Color(Colors::Blue)},
-		{Vector3{+1.f,+1.f,-1.f}, Color(Colors::Green)},
-		{Vector3{+1.f,-1.f,-1.f}, Color(Colors::Yellow)},
-		{Vector3{-1.f,-1.f,+1.f}, Color(Colors::Cyan)},
-		{Vector3{-1.f,+1.f,+1.f}, Color(Colors::Magenta)},
-		{Vector3{+1.f,+1.f,+1.f}, Color(Colors::Silver)},
-		{Vector3{+1.f,-1.f,+1.f}, Color(Colors::Gold)}
+	VertexNormal vertices[] = {
+		{Vector3{-1.f,-1.f,-1.f}, Vector3{-1.f,-1.f,-1.f}},
+		{Vector3{-1.f,+1.f,-1.f}, Vector3{-1.f,+1.f,-1.f}},
+		{Vector3{+1.f,+1.f,-1.f}, Vector3{+1.f,+1.f,-1.f}},
+		{Vector3{+1.f,-1.f,-1.f}, Vector3{+1.f,-1.f,-1.f}},
+		{Vector3{-1.f,-1.f,+1.f}, Vector3{-1.f,-1.f,+1.f}},
+		{Vector3{-1.f,+1.f,+1.f}, Vector3{-1.f,+1.f,+1.f}},
+		{Vector3{+1.f,+1.f,+1.f}, Vector3{+1.f,+1.f,+1.f}},
+		{Vector3{+1.f,-1.f,+1.f}, Vector3{+1.f,-1.f,+1.f}}
 	};
+
+	//노멀 벡터 정규화
+	for (auto& v : vertices)
+	{
+		v.Normal.Normalize();
+	}
 
 	D3D11_BUFFER_DESC vbd = {};
 	vbd.Usage = D3D11_USAGE_DEFAULT;
-	vbd.ByteWidth = sizeof(VertexColor) * 8;
+	vbd.ByteWidth = sizeof(VertexNormal) * 8;
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 	D3D11_SUBRESOURCE_DATA vinitData = {};
@@ -239,7 +245,7 @@ void Renderer::InputAssembler()
 	hr = m_device->CreateBuffer(&vbd, &vinitData, m_vertexBuffer.GetAddressOf());
 	CHECK_FAILED(hr);
 
-	UINT strid = sizeof(VertexColor);
+	UINT strid = sizeof(VertexNormal);
 	UINT offset = 0;
 	m_deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &strid, &offset);
 
@@ -282,6 +288,7 @@ void Renderer::InputAssembler()
 		desc.ByteWidth = sizeof(cbPerObject);
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		hr = m_device->CreateBuffer(&desc, nullptr, m_cBufferPerObject.GetAddressOf());
+		CHECK_FAILED(hr);
 	}
 
 	//Contant Buffer Per Frame
@@ -292,46 +299,111 @@ void Renderer::InputAssembler()
 		desc.ByteWidth = sizeof(cbPerFrame);
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		hr = m_device->CreateBuffer(&desc, nullptr, m_cBufferPerFrame.GetAddressOf());
+		CHECK_FAILED(hr);
 	}
 
 	//뷰 투영 행렬 초기화
-	Matrix view = ::XMMatrixLookAtLH(m_cmrPosition, m_cmrLookAt, m_worldUpAxis);
-	Matrix proj = ::XMMatrixPerspectiveFovLH(
+	const static Vector3 s_cmrLookAt{ 0.f, 0.f, 5.f };
+	m_viewMat = ::XMMatrixLookAtLH(m_cmrPosition, s_cmrLookAt, m_worldUpAxis);
+	m_cmrLook = s_cmrLookAt - m_cmrPosition;
+	m_cmrLook.Normalize();
+
+	m_projMat = ::XMMatrixPerspectiveFovLH(
 		m_fov,
 		WindowsApp::GetInst().GetAspectRatio(),
 		m_nearPlane,
 		m_farPlane);
 
-	m_viewProjMat = view * proj;
-
 	//광원 초기화
-	m_dirLight.Ambient = Colors::White;
-	m_dirLight.Diffuse = Colors::White;
-	m_dirLight.Specular = Colors::White;
+	m_spotLight.Ambient  = Color(0.2f, 0.2f, 0.2f, 1.f);
+	m_spotLight.Diffuse  = Color(1.0f, 0.95f, 0.8f, 1.f);
+	m_spotLight.Specular = Color(1.0f, 1.0f, 1.0f, 1.f);
+	m_spotLight.SpotDirection = Vector3(0.f, 0.f, 1.f);
+	m_spotLight.Attenuation = Vector3(1.f,0.1f,0.f);
+	m_spotLight.Range = 50.f;
 
-	m_material.Ambient = Colors::Red * 0.5f;
-	m_material.Diffuse = Colors::Red * 0.5f;
-	m_material.Specular = Colors::Red * 0.5f;
+	//머테리얼 설정
+	m_material.Ambient  = Color(0.4f, 0.4f, 0.4f, 1.f);
+	m_material.Diffuse  = Color(0.5f, 0.5f, 0.5f, 1.f);
+	m_material.Specular = Color(0.8f, 0.8f, 0.8f, 16.f);
 }
 
 void Renderer::Update(float inDeltaTime)
 {
+	//Move Camera
+	{
+		static float s_cmrMoveSpeed = 3.f;
+		static float s_cmrRotateSpeed = ::XMConvertToRadians(30.f);
+
+		if (KEY_HOLD(eKeyCode::A))
+		{
+			Vector3 dir = -m_worldUpAxis.Cross(m_cmrLook);
+			m_cmrPosition += dir * s_cmrMoveSpeed * inDeltaTime;
+		}
+
+		if (KEY_HOLD(eKeyCode::D))
+		{
+			Vector3 dir = m_worldUpAxis.Cross(m_cmrLook);
+			m_cmrPosition += dir * s_cmrMoveSpeed * inDeltaTime;
+		}
+
+		if (KEY_HOLD(eKeyCode::S))
+		{
+			m_cmrPosition += -m_cmrLook * s_cmrMoveSpeed * inDeltaTime;
+		}
+
+		if (KEY_HOLD(eKeyCode::W))
+		{
+			m_cmrPosition += m_cmrLook * s_cmrMoveSpeed * inDeltaTime;
+		}
+
+		if (KEY_HOLD(eKeyCode::Space))
+		{
+			m_cmrPosition.y += s_cmrMoveSpeed * inDeltaTime;
+		}
+
+		if (KEY_HOLD(eKeyCode::L_Shift))
+		{
+			m_cmrPosition.y += -s_cmrMoveSpeed * inDeltaTime;
+		}
+
+		if (KEY_HOLD(eKeyCode::Left))
+		{
+			m_cmrLook = ::XMVector3Rotate(m_cmrLook, Quaternion::CreateFromYawPitchRoll(-s_cmrRotateSpeed * inDeltaTime,0.f,0.f));
+		}
+
+		if (KEY_HOLD(eKeyCode::Right))
+		{
+			m_cmrLook = ::XMVector3Rotate(m_cmrLook, Quaternion::CreateFromYawPitchRoll(s_cmrRotateSpeed * inDeltaTime, 0.f, 0.f));
+		}
+
+		if (KEY_HOLD(eKeyCode::Up))
+		{
+			m_cmrLook = ::XMVector3Rotate(m_cmrLook, Quaternion::CreateFromYawPitchRoll(0.f, -s_cmrRotateSpeed * inDeltaTime, 0.f));
+		}
+
+		if (KEY_HOLD(eKeyCode::Down))
+		{
+			m_cmrLook = ::XMVector3Rotate(m_cmrLook, Quaternion::CreateFromYawPitchRoll(0.f, s_cmrRotateSpeed * inDeltaTime, 0.f));
+		}
+	}
+
+	static const float s_rotateSpeed = ::XMConvertToRadians(30.f);
+	float s_rotateDelta = inDeltaTime * s_rotateSpeed;
+
 	//Update cbPerObject
 	{
 		cbPerObject cb = {};
 
-		static const float s_rotateSpeed = ::XMConvertToRadians(30.f);
-		float s_rotateDelta = inDeltaTime * s_rotateSpeed;
+		// m_rotation *= Quaternion::CreateFromYawPitchRoll(s_rotateDelta, 0, 0);
 
-		m_rotation *= Quaternion::CreateFromYawPitchRoll(s_rotateDelta, s_rotateDelta, s_rotateDelta);
-
-		Matrix world = ::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) *
-			::XMMatrixRotationQuaternion(m_rotation) *
-			::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
+		Matrix world = ::XMMatrixAffineTransformation(m_scale, Vector3::Zero, m_rotation, m_position);
+		m_viewMat = ::XMMatrixLookToLH(m_cmrPosition, m_cmrLook, m_worldUpAxis);
 
 		cb.World = ::XMMatrixTranspose(world);
 		cb.WorldInvTranspose = ::XMMatrixInverse(nullptr, world);
-		cb.ViewProj = ::XMMatrixTranspose(m_viewProjMat);
+		cb.ViewProj = ::XMMatrixTranspose(m_viewMat * m_projMat);
+		cb.Material = m_material;
 
 		m_deviceContext->UpdateSubresource(m_cBufferPerObject.Get(), 0, nullptr, &cb, 0, 0);
 	}
@@ -339,6 +411,7 @@ void Renderer::Update(float inDeltaTime)
 	//Update cbPerFrame
 	{
 		cbPerFrame cb = {};
+		m_spotLight.Position = m_cmrPosition;
 
 		cb.gEyePosW = ToVector4(m_cmrPosition, true);
 		cb.gDirLight = m_dirLight;
@@ -352,7 +425,7 @@ void Renderer::Update(float inDeltaTime)
 void Renderer::Render()
 {
 	//렌더링 상태 재설정
-	UINT strid = sizeof(VertexColor);
+	UINT strid = sizeof(VertexNormal);
 	UINT offset = 0;
 
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -365,7 +438,8 @@ void Renderer::Render()
 	m_deviceContext->VSSetConstantBuffers(0, 1, m_cBufferPerObject.GetAddressOf());
 
 	m_deviceContext->PSSetShader(m_pixelShader.Get(), nullptr, 0);
-	m_deviceContext->PSSetConstantBuffers(0, 1, m_cBufferPerFrame.GetAddressOf());
+	m_deviceContext->PSSetConstantBuffers(0, 1, m_cBufferPerObject.GetAddressOf());
+	m_deviceContext->PSSetConstantBuffers(1, 1, m_cBufferPerFrame.GetAddressOf());
 
 	// 큐브를 그리기 위한 인덱스 개수 지정
 	m_deviceContext->DrawIndexed(36, 0, 0);

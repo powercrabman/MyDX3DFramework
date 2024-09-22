@@ -12,11 +12,14 @@ struct SpotLight
 	Color Specular;
 
 	//(X,Y,Z) = Position, (W) = Range
-	Vector4 PositionRange;
+	Vector3 Position;
+	float Range;
 
 	//(X,Y,Z) = Direction, (W) = 스포트라이트 램버트 코사인 법칙 지수
-	Vector4 DirectionSpot;
+	Vector3 SpotDirection;
+	float Exponent;
 
-	//차례대로 a0, a1, a2를 의미, W = 패딩
-	Vector4 Attenuation;
+	//차례대로 a0, a1, a2를 의미
+	Vector3 Attenuation;
+	float Pad;
 };
