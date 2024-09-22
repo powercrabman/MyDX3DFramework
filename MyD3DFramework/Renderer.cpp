@@ -163,24 +163,13 @@ void Renderer::CreateDeviceDependentResource()
 	m_spriteBatch = std::make_unique<SpriteBatch>(m_deviceContext.Get());
 }
 
-struct CBuffer
-{
-	XMMATRIX mWorld;
-	XMMATRIX mView;
-	XMMATRIX mProjection;
-};
-
-Matrix g_world = {};
-Matrix g_view = {};
-Matrix g_proj = {};
-CBuffer g_cBuffer = {};
 
 void Renderer::InputAssembler()
 {
 	//Vertex Shader 컴파일
 	ComPtr<ID3DBlob> vsBlob = nullptr;
 	LoadAndCopileShaderFromFile(
-		L"VertexShader.hlsl",
+		L"SimpleVertexShader.hlsl",
 		"VS",
 		"vs_5_0",
 		vsBlob.GetAddressOf()
@@ -213,7 +202,7 @@ void Renderer::InputAssembler()
 	//픽셀쉐이더 컴파일
 	ComPtr<ID3DBlob> psBlob = nullptr;
 	LoadAndCopileShaderFromFile(
-		L"PixelShader.hlsl",
+		L"SimplePixelShader.hlsl",
 		"PS",
 		"ps_5_0",
 		psBlob.GetAddressOf()
@@ -227,7 +216,7 @@ void Renderer::InputAssembler()
 	);
 
 	//버텍스 버퍼 생성
-	Vertex vertices[] = {
+	VertexColor vertices[] = {
 		{Vector3{-1.f,-1.f,-1.f}, Color(Colors::Red)},
 		{Vector3{-1.f,+1.f,-1.f}, Color(Colors::Blue)},
 		{Vector3{+1.f,+1.f,-1.f}, Color(Colors::Green)},
@@ -240,7 +229,7 @@ void Renderer::InputAssembler()
 
 	D3D11_BUFFER_DESC vbd = {};
 	vbd.Usage = D3D11_USAGE_DEFAULT;
-	vbd.ByteWidth = sizeof(Vertex) * 8;
+	vbd.ByteWidth = sizeof(VertexColor) * 8;
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 	D3D11_SUBRESOURCE_DATA vinitData = {};
@@ -250,18 +239,18 @@ void Renderer::InputAssembler()
 	hr = m_device->CreateBuffer(&vbd, &vinitData, m_vertexBuffer.GetAddressOf());
 	CHECK_FAILED(hr);
 
-	UINT strid = sizeof(Vertex);
+	UINT strid = sizeof(VertexColor);
 	UINT offset = 0;
 	m_deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &strid, &offset);
 
 	//인덱스 버퍼 생성
 	UINT indices[] = {
-		0, 1, 2, 0, 2, 3, // Front face
-		4, 6, 5, 4, 7, 6, // Back face
-		1, 5, 6, 1, 6, 2, // Top face
-		0, 3, 7, 0, 7, 4, // Bottom face
-		0, 4, 5, 0, 5, 1, // Left face
-		3, 2, 6, 3, 6, 7  // Right face
+		0, 1, 2, 0, 2, 3,
+		4, 6, 5, 4, 7, 6,
+		1, 5, 6, 1, 6, 2,
+		0, 3, 7, 0, 7, 4,
+		0, 4, 5, 0, 5, 1,
+		3, 2, 6, 3, 6, 7
 	};
 
 	D3D11_BUFFER_DESC ibd = {};
@@ -285,48 +274,85 @@ void Renderer::InputAssembler()
 	//기하 토폴로지													
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	//콘스턴트 버퍼
-	D3D11_BUFFER_DESC bDesc = {};
-	bDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bDesc.ByteWidth = sizeof(CBuffer);
-	bDesc.CPUAccessFlags = 0;
-	bDesc.MiscFlags = 0;
-	bDesc.StructureByteStride = 0;
-	bDesc.Usage = D3D11_USAGE_DEFAULT;
-	hr = m_device->CreateBuffer(&bDesc, nullptr, m_constantBuffer.GetAddressOf());
+	//Constant Buffer Per Object
+	{
+		D3D11_BUFFER_DESC desc = {};
+		ZeroMemory(&desc, sizeof(desc));
+		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		desc.ByteWidth = sizeof(cbPerObject);
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		hr = m_device->CreateBuffer(&desc, nullptr, m_cBufferPerObject.GetAddressOf());
+	}
 
-	//초기화
-	g_world = XMMatrixIdentity();
+	//Contant Buffer Per Frame
+	{
+		D3D11_BUFFER_DESC desc = {};
+		ZeroMemory(&desc, sizeof(desc));
+		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		desc.ByteWidth = sizeof(cbPerFrame);
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		hr = m_device->CreateBuffer(&desc, nullptr, m_cBufferPerFrame.GetAddressOf());
+	}
 
-	XMVECTOR eye = XMVectorSet(0.0f, 0.0f, -5.0f, 1.0f);
-	XMVECTOR at = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);  
-	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);  
+	//뷰 투영 행렬 초기화
+	Matrix view = ::XMMatrixLookAtLH(m_cmrPosition, m_cmrLookAt, m_worldUpAxis);
+	Matrix proj = ::XMMatrixPerspectiveFovLH(
+		m_fov,
+		WindowsApp::GetInst().GetAspectRatio(),
+		m_nearPlane,
+		m_farPlane);
 
-	g_view = XMMatrixLookAtLH(eye, at, up);
+	m_viewProjMat = view * proj;
 
-	float aspectRatio = WindowsApp::GetInst().GetAspectRatio();
-	g_proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, aspectRatio, 0.1f, 100.0f);
+	//광원 초기화
+	m_dirLight.Ambient = Colors::White;
+	m_dirLight.Diffuse = Colors::White;
+	m_dirLight.Specular = Colors::White;
+
+	m_material.Ambient = Colors::Red * 0.5f;
+	m_material.Diffuse = Colors::Red * 0.5f;
+	m_material.Specular = Colors::Red * 0.5f;
 }
 
 void Renderer::Update(float inDeltaTime)
 {
-	CBuffer cb = {};
+	//Update cbPerObject
+	{
+		cbPerObject cb = {};
 
-	static const float rotateSpeed = ::XMConvertToRadians(30.f);
+		static const float s_rotateSpeed = ::XMConvertToRadians(30.f);
+		float s_rotateDelta = inDeltaTime * s_rotateSpeed;
 
-	g_world *= XMMatrixRotationRollPitchYaw(inDeltaTime * rotateSpeed, inDeltaTime * rotateSpeed, inDeltaTime * rotateSpeed);
-	cb.mWorld = XMMatrixTranspose(g_world);
-	cb.mView = XMMatrixTranspose(g_view);
-	cb.mProjection = XMMatrixTranspose(g_proj);
+		m_rotation *= Quaternion::CreateFromYawPitchRoll(s_rotateDelta, s_rotateDelta, s_rotateDelta);
 
-	// 상수 버퍼 업데이트
-	m_deviceContext->UpdateSubresource(m_constantBuffer.Get(), 0, nullptr, &cb, 0, 0);
+		Matrix world = ::XMMatrixScaling(m_scale.x, m_scale.y, m_scale.z) *
+			::XMMatrixRotationQuaternion(m_rotation) *
+			::XMMatrixTranslation(m_position.x, m_position.y, m_position.z);
+
+		cb.World = ::XMMatrixTranspose(world);
+		cb.WorldInvTranspose = ::XMMatrixInverse(nullptr, world);
+		cb.ViewProj = ::XMMatrixTranspose(m_viewProjMat);
+
+		m_deviceContext->UpdateSubresource(m_cBufferPerObject.Get(), 0, nullptr, &cb, 0, 0);
+	}
+
+	//Update cbPerFrame
+	{
+		cbPerFrame cb = {};
+
+		cb.gEyePosW = ToVector4(m_cmrPosition, true);
+		cb.gDirLight = m_dirLight;
+		cb.gPointLight = m_pointLight;
+		cb.gSpotLight = m_spotLight;
+
+		m_deviceContext->UpdateSubresource(m_cBufferPerFrame.Get(), 0, nullptr, &cb, 0, 0);
+	}
 }
 
 void Renderer::Render()
 {
 	//렌더링 상태 재설정
-	UINT strid = sizeof(Vertex);
+	UINT strid = sizeof(VertexColor);
 	UINT offset = 0;
 
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -336,8 +362,10 @@ void Renderer::Render()
 
 	// Renders a triangle
 	m_deviceContext->VSSetShader(m_vertexShader.Get(), nullptr, 0);
-	m_deviceContext->VSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());
+	m_deviceContext->VSSetConstantBuffers(0, 1, m_cBufferPerObject.GetAddressOf());
+
 	m_deviceContext->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+	m_deviceContext->PSSetConstantBuffers(0, 1, m_cBufferPerFrame.GetAddressOf());
 
 	// 큐브를 그리기 위한 인덱스 개수 지정
 	m_deviceContext->DrawIndexed(36, 0, 0);

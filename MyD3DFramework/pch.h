@@ -58,8 +58,16 @@ using namespace DirectX::SimpleMath;
 #include "Enums.h"
 #include "ResourceManager.h"
 #include "BufferPool.h"
-#include "Vertex.h"
 #include "Algorithm.h"
+#include "SimpleMathAdv.h"
+
+//About Rendering
+#include "Vertex.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
+#include "ContantBuffers.h"
+#include "Material.h"
 
 //Resource
 #include "Font.h"

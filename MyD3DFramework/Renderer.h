@@ -33,8 +33,8 @@ public:
 	//쉐이더 코드 가져오기
 	void LoadAndCopileShaderFromFile(
 		const std::wstring& inFilename,
-		const std::string& inEntryPoint, 
-		const std::string& inTarget, 
+		const std::string& inEntryPoint,
+		const std::string& inTarget,
 		ID3DBlob** outInppBlob);
 
 	//Getter
@@ -60,7 +60,8 @@ private:
 	ComPtr<ID3D11PixelShader> m_pixelShader = nullptr;
 
 	ComPtr<ID3D11InputLayout> m_inputLayout = nullptr;
-	ComPtr<ID3D11Buffer> m_constantBuffer = nullptr;
+	ComPtr<ID3D11Buffer> m_cBufferPerObject = nullptr;
+	ComPtr<ID3D11Buffer> m_cBufferPerFrame = nullptr;
 	ComPtr<ID3D11Buffer> m_vertexBuffer = nullptr;
 	ComPtr<ID3D11Buffer> m_indexBuffer = nullptr;
 
@@ -73,6 +74,34 @@ private:
 	//MSAA
 	bool m_bUseMSAA = false;
 	UINT m_MSAAquality = 0;
+
+	//Constant Buffer Struct
+	cbPerObject m_cbPerObject = {};
+	cbPerFrame m_cbPerFrame = {};
+
+	//모델(임시)
+	Vector3 m_position = Vector3{ 0.f,0.f,5.f };
+	Quaternion m_rotation = Quaternion::Identity;
+	Vector3 m_scale = Vector3::One;
+
+	//카메라(임시)
+	Vector3 m_cmrLookAt = Vector3{ 0.f,0.f, 1.f };
+	Vector3 m_cmrPosition = Vector3{ 0.f,0.f,0.f };
+	Vector3 m_worldUpAxis = Vector3{ 0.f,1.f,0.f };
+	float m_nearPlane = 0.5f;
+	float m_farPlane = 100.f;
+
+	Matrix m_viewProjMat = Matrix::Identity;
+
+	float m_fov = ::XMConvertToRadians(45.f);
+
+	//광원(임시)
+	DirectionalLight m_dirLight = {};
+	PointLight m_pointLight = {};
+	SpotLight m_spotLight = {};
+
+	//머테리얼
+	Material m_material = {};
 };
 
 inline bool Renderer::IsInitalized() const

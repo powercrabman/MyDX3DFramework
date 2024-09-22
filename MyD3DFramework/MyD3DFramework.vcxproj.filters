@@ -67,6 +67,24 @@
     <ClInclude Include="ShaderIncludeHelper.h">
       <Filter>99.Headers\Utility\DirectX</Filter>
     </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>99.Headers\Rendering\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>99.Headers\Rendering\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>99.Headers\Rendering\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="ContantBuffers.h">
+      <Filter>99.Headers\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>99.Headers\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMathAdv.h">
+      <Filter>99.Headers\Utility\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="MyD3DFramework.ico">
@@ -112,6 +130,18 @@
     </Filter>
     <Filter Include="99.Headers\Utility\DirectX">
       <UniqueIdentifier>{64994a64-867c-43a8-90f9-af23a013e5ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Headers\Rendering\Light">
+      <UniqueIdentifier>{c5affbb2-1d59-44dc-9d0c-eab16615963c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Shader\Transform">
+      <UniqueIdentifier>{6590a010-c3a0-4c41-917f-59de16ae2aa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Shader\Light+Trans">
+      <UniqueIdentifier>{b0a1ee0e-148b-4071-bc56-413b7f1bf831}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Headers\Utility\Math">
+      <UniqueIdentifier>{30d3bf42-960a-4cce-8dad-e28db940d889}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +193,24 @@
     <ClCompile Include="ShaderIncludeHelper.cpp">
       <Filter>99.Headers\Utility\DirectX</Filter>
     </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>99.Headers\Rendering\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>99.Headers\Rendering\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>99.Headers\Rendering\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="ContantBuffers.cpp">
+      <Filter>99.Headers\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>99.Headers\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleMathAdv.cpp">
+      <Filter>99.Headers\Utility\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyD3DFramework.rc">
@@ -184,11 +232,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
-      <Filter>05.Shader</Filter>
+    <FxCompile Include="SimpleVertexShader.hlsl">
+      <Filter>05.Shader\Transform</Filter>
     </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
-      <Filter>05.Shader</Filter>
+    <FxCompile Include="SimplePixelShader.hlsl">
+      <Filter>05.Shader\Transform</Filter>
+    </FxCompile>
+    <FxCompile Include="LightVertexShader.hlsl">
+      <Filter>05.Shader\Light+Trans</Filter>
+    </FxCompile>
+    <FxCompile Include="LightPixelShader.hlsl">
+      <Filter>05.Shader\Light+Trans</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
