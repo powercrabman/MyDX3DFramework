@@ -8,7 +8,6 @@ public:
 
 private:
 	Mesh m_mesh = {};
-
 	Transform m_transform = {};
 };
 

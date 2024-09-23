@@ -94,6 +94,12 @@
     <ClInclude Include="Mesh.h">
       <Filter>06.RenderModules</Filter>
     </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>06.RenderModules</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderState.h">
+      <Filter>06.RenderModules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="MyD3DFramework.ico">
@@ -230,6 +236,12 @@
       <Filter>06.RenderModules</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
+      <Filter>06.RenderModules</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>06.RenderModules</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderState.cpp">
       <Filter>06.RenderModules</Filter>
     </ClCompile>
   </ItemGroup>

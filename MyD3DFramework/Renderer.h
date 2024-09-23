@@ -43,10 +43,6 @@ public:
 	inline D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
 	inline std::wstring GetFeatureLevelToString() const;
 
-	void ReloadRenderState()
-	{
-	}
-
 private:
 	Renderer() = default;
 	~Renderer() = default;
@@ -68,7 +64,6 @@ private:
 	ComPtr<ID3D11Buffer> m_cBufferPerFrame = nullptr;
 	ComPtr<ID3D11Buffer> m_vertexBuffer = nullptr;
 	ComPtr<ID3D11Buffer> m_indexBuffer = nullptr;
-
 
 	CD3D11_VIEWPORT m_viewport = {};
 	D3D_FEATURE_LEVEL m_featureLevel = {};
@@ -98,7 +93,6 @@ private:
 
 	Matrix m_viewMat = Matrix::Identity;
 	Matrix m_projMat = Matrix::Identity;
-
 	float m_fov = ::XMConvertToRadians(45.f);
 
 	//±¤¿ø(ÀÓ½Ã)
