@@ -20,6 +20,8 @@ public:
 	inline Quaternion GetRotate() const { return m_rotate; }
 	inline Vector3 GetScale() const { return m_scaling; }
 
+	inline Matrix GetWorldMatrix() const;
+
 private:
 	Vector3 m_translate = Vector3::Zero;
 	Quaternion m_rotate = Quaternion::Identity;
@@ -70,4 +72,14 @@ inline void Transform::AddRotate(float inYaw, float inPitch, float inRoll)
 inline void Transform::AddScale(const Vector3& inScale)
 {
 	m_scaling += inScale;
+}
+
+inline Matrix Transform::GetWorldMatrix() const
+{
+	return ::XMMatrixAffineTransformation(
+		m_scaling,
+		Vector3::Zero,
+		m_rotate,
+		m_translate
+	);
 }

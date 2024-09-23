@@ -6,9 +6,10 @@ public:
 	RenderState() = default;
 	virtual ~RenderState() = default;
 
-	void Apply(ID3D11DeviceContext* inDeviceContext)
+	inline void Apply(ID3D11DeviceContext* inDeviceContext)
 	{
 		inDeviceContext->RSSetState(m_rasterizerState.Get());
+		inDeviceContext->IASetPrimitiveTopology(m_primitiveTopology);
 	}
 
 	void SetRasterizerState(
@@ -42,6 +43,12 @@ public:
 		CHECK_FAILED(hr);
 	}
 
+	void SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY inSetting)
+	{
+		m_primitiveTopology = inSetting;
+	}
+
 private:
 	ComPtr<ID3D11RasterizerState> m_rasterizerState = nullptr;
+	D3D11_PRIMITIVE_TOPOLOGY m_primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 };

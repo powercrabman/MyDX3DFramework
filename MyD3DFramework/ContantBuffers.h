@@ -9,8 +9,8 @@ struct cbPerObject
 
 struct cbPerFrame
 {
-    DirectionalLight gDirLight;
-    PointLight gPointLight;
-    SpotLight gSpotLight;
-    Vector4 gEyePosW;
+    DirectionalLight DirLight;
+    PointLight PointLight;
+    SpotLight SpotLight;
+    Vector4 EyePosW;
 };

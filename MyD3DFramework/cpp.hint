@@ -2,3 +2,5 @@
 // 해석하는 데 도움이 됩니다.
 // 자세한 내용은 다음을 참조하세요. https://go.microsoft.com/fwlink/?linkid=865984
 #define DEFINE_SINGLE(classname) inline static classname& GetInst() { static classname inst; return inst; }
+#define assert(expression) ((void)0)
+#define assert(expression) (void)( (!!(expression)) || (_wassert(_CRT_WIDE(#expression), _CRT_WIDE(__FILE__), (unsigned)(__LINE__)), 0) )

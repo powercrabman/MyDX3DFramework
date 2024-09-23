@@ -2,7 +2,7 @@
 #include "Effect.h"
 #include "Renderer.h"
 
-void Effect::SetProperties(ID3D11Device* inDevice, const std::wstring& inVertexShaderFilePath, const std::string& inVertexShaderEntryPointName, const std::string& inVertexShaderModelVersion, const std::wstring& inPixelShaderFilePath, const std::string& inPixelShaderEntryPointName, const std::string& inPixelShaderModelVersion, const std::vector<D3D11_INPUT_ELEMENT_DESC> inInputElementDesc)
+void Effect::SetProperties(ID3D11Device* inDevice, const std::wstring& inVertexShaderFilePath, const std::string& inVertexShaderEntryPointName, const std::string& inVertexShaderModelVersion, const std::wstring& inPixelShaderFilePath, const std::string& inPixelShaderEntryPointName, const std::string& inPixelShaderModelVersion, const std::vector<D3D11_INPUT_ELEMENT_DESC>& inInputElementDesc)
 {
 	m_inputLayout.Reset();
 	m_vertexShader.Reset();
@@ -17,21 +17,23 @@ void Effect::SetProperties(ID3D11Device* inDevice, const std::wstring& inVertexS
 		blob.GetAddressOf()
 	);
 
-	inDevice->CreateVertexShader(
+	HRESULT hr = inDevice->CreateVertexShader(
 		blob->GetBufferPointer(),
 		blob->GetBufferSize(),
 		nullptr,
 		m_vertexShader.GetAddressOf()
 	);
+	CHECK_FAILED(hr);
 
 	//ÀÎÇ² ·¹ÀÌ¾Æ¿ô ¼³Á¤
-	inDevice->CreateInputLayout(
+	hr = inDevice->CreateInputLayout(
 		inInputElementDesc.data(),
 		inInputElementDesc.size(),
 		blob->GetBufferPointer(),
 		blob->GetBufferSize(),
 		m_inputLayout.GetAddressOf()
 	);
+	CHECK_FAILED(hr);
 
 	//ÇÈ¼¿ ½¦ÀÌ´õ
 	Renderer::GetInst().LoadAndCopileShaderFromFile(
@@ -41,10 +43,11 @@ void Effect::SetProperties(ID3D11Device* inDevice, const std::wstring& inVertexS
 		blob.GetAddressOf()
 	);
 
-	inDevice->CreatePixelShader(
+	hr = inDevice->CreatePixelShader(
 		blob->GetBufferPointer(),
 		blob->GetBufferSize(),
 		nullptr,
 		m_pixelShader.GetAddressOf()
 	);
+	CHECK_FAILED(hr);
 }

@@ -2,9 +2,17 @@
 #include "Renderer.h"
 #include "WindowsApp.h"
 #include "Engine.h"
+#include "RenderableObject.h"
 #include <fstream>
 
 
+const std::wstring Renderer::BasicEffectKey = L"BasicEffect";
+const std::wstring Renderer::CubeMeshKey = L"CubeMesh";
+const std::wstring Renderer::SphereMeshKey = L"SphereMesh";
+const std::wstring Renderer::BasicRenderStateKey = L"BasicRenderState";
+const std::wstring Renderer::BasicMaterialKey = L"BasicMateral";
+const std::wstring Renderer::CbPerFrameKey = L"cbPerFrame";
+const std::wstring Renderer::CbPerObjectKey = L"cbPerObject";
 
 bool Renderer::InitD3D11Device()
 {
@@ -160,64 +168,35 @@ bool Renderer::InitD3D11Device()
 	return true;
 }
 
-void Renderer::CreateDeviceDependentResource()
+void Renderer::CreateDirectXTKResource()
 {
 	m_spriteBatch = std::make_unique<SpriteBatch>(m_deviceContext.Get());
 }
 
-void Renderer::InputAssembler()
+void Renderer::CreateRenderResoucre()
 {
-	//Vertex Shader 컴파일
-	ComPtr<ID3DBlob> vsBlob = nullptr;
-	LoadAndCopileShaderFromFile(
+	//이펙트 생성
+	Effect* effect = RegisterEffect(BasicEffectKey);
+
+	effect->SetProperties(
+		m_device.Get(),
 		L"LightVertexShader.hlsl",
 		"VS",
 		"vs_5_0",
-		vsBlob.GetAddressOf()
-	);
-
-	HRESULT hr = m_device->CreateVertexShader(
-		vsBlob->GetBufferPointer(),
-		vsBlob->GetBufferSize(),
-		nullptr,
-		m_vertexShader.GetAddressOf()
-	);
-
-	CHECK_FAILED(hr);
-
-	D3D11_INPUT_ELEMENT_DESC inputLayout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
-
-	hr = m_device->CreateInputLayout(
-		inputLayout,
-		ARRAYSIZE(inputLayout),
-		vsBlob->GetBufferPointer(),
-		vsBlob->GetBufferSize(),
-		m_inputLayout.GetAddressOf());
-
-	m_deviceContext->IASetInputLayout(m_inputLayout.Get());
-
-	//픽셀쉐이더 컴파일
-	ComPtr<ID3DBlob> psBlob = nullptr;
-	LoadAndCopileShaderFromFile(
 		L"LightPixelShader.hlsl",
 		"PS",
 		"ps_5_0",
-		psBlob.GetAddressOf()
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		}
 	);
 
-	m_device->CreatePixelShader(
-		psBlob->GetBufferPointer(),
-		psBlob->GetBufferSize(),
-		nullptr,
-		m_pixelShader.GetAddressOf()
-	);
+	//메쉬 생성
+	Mesh* mesh = RegisterMesh(CubeMeshKey);
 
 	//버텍스 버퍼 생성
-	VertexNormal vertices[] = {
+	std::vector<VertexNormal> vertices = {
 		{Vector3{-1.f,-1.f,-1.f}, Vector3{-1.f,-1.f,-1.f}},
 		{Vector3{-1.f,+1.f,-1.f}, Vector3{-1.f,+1.f,-1.f}},
 		{Vector3{+1.f,+1.f,-1.f}, Vector3{+1.f,+1.f,-1.f}},
@@ -234,24 +213,10 @@ void Renderer::InputAssembler()
 		v.Normal.Normalize();
 	}
 
-	D3D11_BUFFER_DESC vbd = {};
-	vbd.Usage = D3D11_USAGE_DEFAULT;
-	vbd.ByteWidth = sizeof(VertexNormal) * ARRAYSIZE(vertices);
-	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-	D3D11_SUBRESOURCE_DATA vinitData = {};
-	vinitData.pSysMem = vertices;
-
-	//버텍스 버퍼 설정
-	hr = m_device->CreateBuffer(&vbd, &vinitData, m_vertexBuffer.GetAddressOf());
-	CHECK_FAILED(hr);
-
-	UINT strid = sizeof(VertexNormal);
-	UINT offset = 0;
-	m_deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &strid, &offset);
+	mesh->SetVertexBuffer(m_device.Get(), vertices);
 
 	//인덱스 버퍼 생성
-	UINT indices[] = {
+	std::vector<UINT> indices = {
 		0, 1, 2, 0, 2, 3,
 		4, 6, 5, 4, 7, 6,
 		1, 5, 6, 1, 6, 2,
@@ -260,48 +225,33 @@ void Renderer::InputAssembler()
 		3, 2, 6, 3, 6, 7
 	};
 
-	D3D11_BUFFER_DESC ibd = {};
-	ibd.Usage = D3D11_USAGE_DEFAULT;
-	ibd.ByteWidth = sizeof(UINT) * ARRAYSIZE(indices);
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = 0;
-	ibd.MiscFlags = 0;
-	ibd.StructureByteStride = 0;
+	mesh->SetIndexBuffer(m_device.Get(), indices);
 
-	//인덱스 버퍼 설정
-	D3D11_SUBRESOURCE_DATA iinitData = {};
-	iinitData.pSysMem = indices;
+	//RnederState 설정
+	RenderState* renderState = RegisterRenderState(BasicRenderStateKey);
+	renderState->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	renderState->SetRasterizerState(m_device.Get());
 
-	ComPtr<ID3D11Buffer> iBuffer = nullptr;
-	hr = m_device->CreateBuffer(&ibd, &iinitData, m_indexBuffer.GetAddressOf());
-	CHECK_FAILED(hr);
+	//컨스턴트 버퍼 설정
 
-	m_deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	//cbPerObject
+	effect->RegisterConstantBuffer(
+		m_device.Get(),
+		sizeof(cbPerObject),
+		CbPerObjectKey,
+		0,
+		CONSTANT_BUFFER_APPLY_VERTEX_SHADER | CONSTANT_BUFFER_APPLY_PIXEL_SHADER
+	);
 
-	//기하 토폴로지													
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//cbPerFrame
+	effect->RegisterConstantBuffer(
+		m_device.Get(),
+		sizeof(cbPerFrame),
+		CbPerFrameKey,
+		1,
+		CONSTANT_BUFFER_APPLY_PIXEL_SHADER
+	);
 
-	//Constant Buffer Per Object
-	{
-		D3D11_BUFFER_DESC desc = {};
-		ZeroMemory(&desc, sizeof(desc));
-		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		desc.ByteWidth = sizeof(cbPerObject);
-		desc.Usage = D3D11_USAGE_DEFAULT;
-		hr = m_device->CreateBuffer(&desc, nullptr, m_cBufferPerObject.GetAddressOf());
-		CHECK_FAILED(hr);
-	}
-
-	//Contant Buffer Per Frame
-	{
-		D3D11_BUFFER_DESC desc = {};
-		ZeroMemory(&desc, sizeof(desc));
-		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		desc.ByteWidth = sizeof(cbPerFrame);
-		desc.Usage = D3D11_USAGE_DEFAULT;
-		hr = m_device->CreateBuffer(&desc, nullptr, m_cBufferPerFrame.GetAddressOf());
-		CHECK_FAILED(hr);
-	}
 
 	//뷰 투영 행렬 초기화
 	const static Vector3 s_cmrLookAt{ 0.f, 0.f, 5.f };
@@ -323,14 +273,113 @@ void Renderer::InputAssembler()
 	m_dirLight.Direction.Normalize();
 
 	//머테리얼 설정
-	m_material.Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
-	m_material.Diffuse = Color(0.5f, 0.5f, 0.5f, 1.f);
-	m_material.Specular = Color(0.8f, 0.8f, 0.8f, 16.f);
+	Material* material = RegisterMaterial(BasicMaterialKey);
+	material->Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
+	material->Diffuse = Color(0.5f, 0.5f, 0.5f, 1.f);
+	material->Specular = Color(0.8f, 0.8f, 0.8f, 16.f);
 
+	SetCurrentEffect(BasicEffectKey);
+	SetCurrentRenderState(BasicRenderStateKey);
+
+	//오브젝트 생성
+	RenderableObject* obj = RegisterRenderableObject();
 }
 
 void Renderer::Update(float inDeltaTime)
 {
+	UpdateCameraAction(inDeltaTime);
+
+	//Effect* effect = GetEffect(BasicEffectKey);
+	//
+	////Update cbPerObject
+	//{
+	//	cbPerObject cb = {};
+	//
+	//	Matrix world = ::XMMatrixAffineTransformation(m_scale, Vector3::Zero, m_rotation, m_position);
+	//	m_viewMat = ::XMMatrixLookToLH(m_cmrPosition, m_cmrLook, m_worldUpAxis);
+	//
+	//	cb.World = ::XMMatrixTranspose(world);
+	//	cb.WorldInvTranspose = ::XMMatrixInverse(nullptr, world);
+	//	cb.ViewProj = ::XMMatrixTranspose(m_viewMat * m_projMat);
+	//	cb.Material = m_material;
+	//
+	//
+	//	m_deviceContext->UpdateSubresource(m_cBufferPerObject.Get(), 0, nullptr, &cb, 0, 0);
+	//}
+	//
+	////Update cbPerFrame
+	//{
+	//	cbPerFrame cb = {};
+	//	m_dirLight.Direction = ::XMVector3Rotate(m_dirLight.Direction, Quaternion::CreateFromYawPitchRoll(s_rotateDelta, 0.f, 0.f));
+	//
+	//	cb.gEyePosW = ToVector4(m_cmrPosition, true);
+	//	cb.gDirLight = m_dirLight;
+	//	cb.gPointLight = m_pointLight;
+	//	cb.gSpotLight = m_spotLight;
+	//
+	//	m_deviceContext->UpdateSubresource(m_cBufferPerFrame.Get(), 0, nullptr, &cb, 0, 0);
+	//}
+}
+
+void Renderer::Render()
+{
+	//렌더상태 초기화 할까 말까??
+	m_curEffect->Apply(m_deviceContext.Get());
+	m_curRenderState->Apply(m_deviceContext.Get());
+	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), CbPerObjectKey);
+	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), CbPerFrameKey);
+
+	//cbPerFrame 업데이트
+	{
+		cbPerFrame cb = {};
+		cb.DirLight = m_dirLight;
+		cb.PointLight = m_pointLight;
+		cb.SpotLight = m_spotLight;
+		cb.EyePosW = ToVector4(m_cmrPosition, true);
+
+		m_curEffect->UpdateConstantBuffer(
+			m_deviceContext.Get(),
+			CbPerFrameKey,
+			&cb
+		);
+	}
+
+	for (const auto& obj : m_rObjRepo)
+	{
+		//cbPerObjct 업데이트
+		cbPerObject cb = {};
+
+		const Transform& t = obj->GetTransform();
+		const Mesh* m = obj->GetMesh();
+
+		m->BindBuffers(m_deviceContext.Get());
+
+		cb.World = ::XMMatrixTranspose(t.GetWorldMatrix());
+		cb.WorldInvTranspose = ::XMMatrixInverse(nullptr, t.GetWorldMatrix());
+		cb.ViewProj = ::XMMatrixTranspose(m_viewMat * m_projMat);
+
+		cb.Material = *obj->GetMaterial();
+
+		m_curEffect->UpdateConstantBuffer(
+			m_deviceContext.Get(),
+			CbPerObjectKey,
+			&cb
+		);
+		m_curEffect->BindConstantBuffer(
+			m_deviceContext.Get(),
+			CbPerObjectKey
+		);
+
+		RenderIndices(m->GetIndexBufferSize());
+	}
+
+}
+
+void Renderer::UpdateCameraAction(float inDeltaTime)
+{
+	static const float s_rotateSpeed = ::XMConvertToRadians(90.f);
+	float s_rotateDelta = inDeltaTime * s_rotateSpeed;
+
 	//Move Camera
 	{
 		static float s_cmrMoveSpeed = 3.f;
@@ -389,63 +438,8 @@ void Renderer::Update(float inDeltaTime)
 		}
 	}
 
-	static const float s_rotateSpeed = ::XMConvertToRadians(90.f);
-	float s_rotateDelta = inDeltaTime * s_rotateSpeed;
-
-	//Update cbPerObject
-	{
-		cbPerObject cb = {};
-
-		// m_rotation *= Quaternion::CreateFromYawPitchRoll(s_rotateDelta, 0, 0);
-
-		Matrix world = ::XMMatrixAffineTransformation(m_scale, Vector3::Zero, m_rotation, m_position);
-		m_viewMat = ::XMMatrixLookToLH(m_cmrPosition, m_cmrLook, m_worldUpAxis);
-
-		cb.World = ::XMMatrixTranspose(world);
-		cb.WorldInvTranspose = ::XMMatrixInverse(nullptr, world);
-		cb.ViewProj = ::XMMatrixTranspose(m_viewMat * m_projMat);
-		cb.Material = m_material;
-
-		m_deviceContext->UpdateSubresource(m_cBufferPerObject.Get(), 0, nullptr, &cb, 0, 0);
-	}
-
-	//Update cbPerFrame
-	{
-		cbPerFrame cb = {};
-		m_dirLight.Direction = ::XMVector3Rotate(m_dirLight.Direction, Quaternion::CreateFromYawPitchRoll(s_rotateDelta, 0.f, 0.f));
-
-		cb.gEyePosW = ToVector4(m_cmrPosition, true);
-		cb.gDirLight = m_dirLight;
-		cb.gPointLight = m_pointLight;
-		cb.gSpotLight = m_spotLight;
-
-		m_deviceContext->UpdateSubresource(m_cBufferPerFrame.Get(), 0, nullptr, &cb, 0, 0);
-	}
-
 }
 
-void Renderer::Render()
-{
-	//렌더링 상태 재설정
-	UINT strid = sizeof(VertexNormal);
-	UINT offset = 0;
-
-	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	m_deviceContext->IASetInputLayout(m_inputLayout.Get());
-	m_deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	m_deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &strid, &offset);
-
-	// Renders a triangle
-	m_deviceContext->VSSetShader(m_vertexShader.Get(), nullptr, 0);
-	m_deviceContext->VSSetConstantBuffers(0, 1, m_cBufferPerObject.GetAddressOf());
-
-	m_deviceContext->PSSetShader(m_pixelShader.Get(), nullptr, 0);
-	m_deviceContext->PSSetConstantBuffers(0, 1, m_cBufferPerObject.GetAddressOf());
-	m_deviceContext->PSSetConstantBuffers(1, 1, m_cBufferPerFrame.GetAddressOf());
-
-	// 큐브를 그리기 위한 인덱스 개수 지정
-	m_deviceContext->DrawIndexed(36, 0, 0);
-}
 
 void Renderer::ResizeWindow(const WindowSize& winSize)
 {
@@ -535,6 +529,18 @@ void Renderer::DrawString(const wchar_t* inStr, const Vector2& inScreenPos, eFon
 
 	m_spriteBatch->End();
 }
+
+
+inline RenderState* Renderer::RegisterRenderState(const std::wstring& inKey)
+{
+	assert(!m_renderStateRepo.contains(inKey));
+	std::unique_ptr<RenderState> inst = std::make_unique<RenderState>();
+	RenderState* returnObj = inst.get();
+	m_renderStateRepo[inKey] = std::move(inst);
+
+	return returnObj;
+}
+
 
 void Renderer::LoadAndCopileShaderFromFile(
 	const std::wstring& inFilename,

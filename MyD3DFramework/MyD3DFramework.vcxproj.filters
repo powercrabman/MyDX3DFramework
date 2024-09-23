@@ -100,6 +100,9 @@
     <ClInclude Include="RenderState.h">
       <Filter>06.RenderModules</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>05.Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="MyD3DFramework.ico">
@@ -243,6 +246,9 @@
     </ClCompile>
     <ClCompile Include="RenderState.cpp">
       <Filter>06.RenderModules</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>05.Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

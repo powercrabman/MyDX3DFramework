@@ -70,6 +70,9 @@ using namespace DirectX::SimpleMath;
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "ContantBuffers.h"
+#include "Effect.h"
+#include "RenderState.h"
+#include "RenderableObject.h" //나중에 GameObject.h 로 변경
 
 //Resource
 #include "Font.h"

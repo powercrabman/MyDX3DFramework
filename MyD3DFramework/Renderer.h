@@ -1,5 +1,7 @@
 #pragma once
 
+class RenderableObject;
+
 class Renderer
 {
 public:
@@ -8,12 +10,20 @@ public:
 	//초기화 관련
 	bool InitD3D11Device();
 	inline bool IsInitalized() const;
-	void CreateDeviceDependentResource();
+
+	//리소스 생성
+	void CreateDirectXTKResource();
+	void CreateRenderResoucre();
 
 	//렌더링 코어 함수
-	void InputAssembler();
 	void Update(float inDeltaTime);
 	void Render();
+
+	//추가 업데이트 함수
+	void UpdateCameraAction(float inDeltaTime);
+
+	//추가 렌더링 함수
+	inline void RenderIndices(uint32 indicesCount);
 
 	//창 크기 조절
 	void ResizeWindow(const WindowSize& winSize);
@@ -30,6 +40,24 @@ public:
 	void DrawString(const std::wstring& inStr, const Vector2& inScreenPos, eFont inFont, const XMVECTORF32& inColor, eFontAlign align = eFontAlign::Left, float scale = 1.f);
 	void DrawString(const wchar_t* inStr, const Vector2& inScreenPos, eFont inFont, const XMVECTORF32& inColor, eFontAlign align = eFontAlign::Left, float scale = 1.f);
 
+	//Setter Getter
+	inline ID3D11Device5* GetDeivce() const { ASSERT(m_device, L"디바이스가 Nullptr입니다."); return m_device.Get(); }
+
+	inline D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
+	inline std::wstring GetFeatureLevelToString() const;
+
+	inline Effect* GetEffect(const std::wstring& inKey);
+	inline Effect* GetCurrentEffect() const { assert(m_curEffect); return m_curEffect; }
+
+	inline RenderState* GetRenderState(const std::wstring& inKey);
+	inline RenderState* GetCurrentRenderState() const { assert(m_curRenderState); return m_curRenderState; }
+
+	inline Mesh* GetMesh(const std::wstring& inKey);
+	inline Material* GetMaterial(const std::wstring& inKey);
+
+	inline void SetCurrentEffect(const std::wstring& inKey);
+	inline void SetCurrentRenderState(const std::wstring& inKey);
+
 	//쉐이더 코드 가져오기
 	void LoadAndCopileShaderFromFile(
 		const std::wstring& inFilename,
@@ -37,17 +65,29 @@ public:
 		const std::string& inTarget,
 		ID3DBlob** outInppBlob);
 
-	//Getter
-	inline ID3D11Device5* GetDeivce() const { ASSERT(m_device, L"디바이스가 Nullptr입니다."); return m_device.Get(); }
+	//리소스 관련
+	inline Effect* RegisterEffect(const std::wstring& inKey);
+	inline Mesh* RegisterMesh(const std::wstring& inKey);
+	inline RenderState* RegisterRenderState(const std::wstring& inKey);
+	inline RenderableObject* RegisterRenderableObject();
+	inline Material* RegisterMaterial(const std::wstring& inKey);
 
-	inline D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
-	inline std::wstring GetFeatureLevelToString() const;
+public:
+	//참조용 Static 변수들
+	const static std::wstring BasicEffectKey;
+	const static std::wstring CubeMeshKey;
+	const static std::wstring SphereMeshKey;
+	const static std::wstring BasicRenderStateKey;
+	const static std::wstring BasicMaterialKey;
+	const static std::wstring CbPerFrameKey;
+	const static std::wstring CbPerObjectKey;
 
 private:
 	Renderer() = default;
 	~Renderer() = default;
 
 private:
+	//DirectX Resource
 	ComPtr<ID3D11Device5> m_device = nullptr;
 	ComPtr<ID3D11DeviceContext4> m_deviceContext = nullptr;
 	ComPtr<IDXGISwapChain4> m_swapChain = nullptr;
@@ -56,17 +96,18 @@ private:
 	ComPtr<ID3D11DepthStencilView> m_depthStencilView = nullptr;
 	ComPtr<ID3D11RenderTargetView> m_renderTargetView = nullptr;
 
-	ComPtr<ID3D11VertexShader> m_vertexShader = nullptr;
-	ComPtr<ID3D11PixelShader> m_pixelShader = nullptr;
-
-	ComPtr<ID3D11InputLayout> m_inputLayout = nullptr;
-	ComPtr<ID3D11Buffer> m_cBufferPerObject = nullptr;
-	ComPtr<ID3D11Buffer> m_cBufferPerFrame = nullptr;
-	ComPtr<ID3D11Buffer> m_vertexBuffer = nullptr;
-	ComPtr<ID3D11Buffer> m_indexBuffer = nullptr;
-
 	CD3D11_VIEWPORT m_viewport = {};
 	D3D_FEATURE_LEVEL m_featureLevel = {};
+
+	//내부 리소스
+	std::unordered_map<std::wstring, std::unique_ptr<Effect>> m_effectRepo;
+	std::unordered_map<std::wstring, std::unique_ptr<Mesh>> m_meshRepo;
+	std::unordered_map<std::wstring, std::unique_ptr<RenderState>> m_renderStateRepo;
+	std::unordered_map<std::wstring, std::unique_ptr<Material>> m_materialRepo;
+
+	//현재 사용중인 Effect 캐싱
+	Effect* m_curEffect = nullptr;
+	RenderState* m_curRenderState = nullptr;
 
 	//DirectXTK
 	std::unique_ptr<SpriteBatch> m_spriteBatch = nullptr;
@@ -80,9 +121,7 @@ private:
 	cbPerFrame m_cbPerFrame = {};
 
 	//모델(임시)
-	Vector3 m_position = Vector3{ 0.f,0.f,5.f };
-	Quaternion m_rotation = Quaternion::Identity;
-	Vector3 m_scale = Vector3::One;
+	std::vector<std::unique_ptr<RenderableObject>> m_rObjRepo;
 
 	//카메라(임시)
 	Vector3 m_cmrLook = Vector3{ 0.f,0.f,1.f };
@@ -99,9 +138,6 @@ private:
 	DirectionalLight m_dirLight = {};
 	PointLight m_pointLight = {};
 	SpotLight m_spotLight = {};
-
-	//머테리얼
-	Material m_material = {};
 };
 
 inline bool Renderer::IsInitalized() const
@@ -173,3 +209,81 @@ inline std::wstring Renderer::GetFeatureLevelToString() const
 	}
 }
 
+inline Effect* Renderer::GetEffect(const std::wstring& inKey)
+{
+	assert(m_effectRepo.contains(inKey));
+	return m_effectRepo[inKey].get();
+}
+
+inline RenderState* Renderer::GetRenderState(const std::wstring& inKey)
+{
+	assert(m_renderStateRepo.contains(inKey));
+	return m_renderStateRepo[inKey].get();
+}
+
+inline Effect* Renderer::RegisterEffect(const std::wstring& inKey)
+{
+	assert(!m_effectRepo.contains(inKey));
+	std::unique_ptr<Effect> inst = std::make_unique<Effect>();
+	Effect* returnObj = inst.get();
+	m_effectRepo[inKey] = std::move(inst);
+
+	return returnObj;
+}
+
+inline Mesh* Renderer::RegisterMesh(const std::wstring& inKey)
+{
+	assert(!m_meshRepo.contains(inKey));
+	std::unique_ptr<Mesh> inst = std::make_unique<Mesh>();
+	Mesh* returnObj = inst.get();
+	m_meshRepo[inKey] = std::move(inst);
+
+	return returnObj;
+}
+
+inline RenderableObject* Renderer::RegisterRenderableObject()
+{
+	std::unique_ptr<RenderableObject> inst = std::make_unique<RenderableObject>();
+	inst->Init();
+	RenderableObject* returnObj = inst.get();
+	m_rObjRepo.push_back(std::move(inst));
+
+	return returnObj;
+}
+
+inline Material* Renderer::RegisterMaterial(const std::wstring& inKey)
+{
+	assert(!m_materialRepo.contains(inKey));
+	std::unique_ptr<Material> inst = std::make_unique<Material>();
+	Material* returnObj = inst.get();
+	m_materialRepo[inKey] = std::move(inst);
+
+	return returnObj;
+}
+
+inline Mesh* Renderer::GetMesh(const std::wstring& inKey)
+{
+	assert(m_meshRepo.contains(inKey));
+	return m_meshRepo[inKey].get();
+}
+
+inline Material* Renderer::GetMaterial(const std::wstring& inKey)
+{
+	assert(m_materialRepo.contains(inKey));
+	return m_materialRepo[inKey].get();
+}
+
+inline void Renderer::SetCurrentEffect(const std::wstring& inKey)
+{
+	m_curEffect = GetEffect(inKey);
+}
+
+inline void Renderer::SetCurrentRenderState(const std::wstring& inKey)
+{
+	m_curRenderState = GetRenderState(inKey);
+}
+
+inline void Renderer::RenderIndices(uint32 indicesCount)
+{
+	m_deviceContext->DrawIndexed(indicesCount, 0, 0);
+}
