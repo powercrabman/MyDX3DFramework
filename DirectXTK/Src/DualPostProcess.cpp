@@ -312,7 +312,7 @@ void DualPostProcess::SetEffect(Effect fx)
 }
 
 
-// Properties
+// Property
 void DualPostProcess::SetSourceTexture(_In_opt_ ID3D11ShaderResourceView* value)
 {
     pImpl->texture = value;

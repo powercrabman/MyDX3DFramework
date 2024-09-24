@@ -441,7 +441,7 @@ void ToneMapPostProcess::SetMRTOutput(bool value)
 #endif
 
 
-// Properties
+// Property
 void ToneMapPostProcess::SetHDRSourceTexture(_In_opt_ ID3D11ShaderResourceView* value)
 {
     pImpl->hdrTexture = value;

@@ -68,7 +68,6 @@ using namespace DirectX::SimpleMath;
 #include "Mesh.h"
 #include "Vertex.h"
 #include "Material.h"
-#include "LightStruct.h"
 #include "ContantBuffers.h"
 #include "Effect.h"
 #include "RenderState.h"

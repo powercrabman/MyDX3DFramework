@@ -35,3 +35,10 @@ struct WindowPosition
 	unsigned __int64 X = 0;
 	unsigned __int64 Y = 0;
 };
+
+struct LightColor
+{
+	Color Ambient;
+	Color Diffuse;
+	Color Specular;
+};

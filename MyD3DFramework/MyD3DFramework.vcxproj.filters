@@ -100,11 +100,11 @@
     <ClInclude Include="EngineConfig.h">
       <Filter>01.Engine</Filter>
     </ClInclude>
-    <ClInclude Include="LightObject.h">
-      <Filter>05.Object\Private\Light</Filter>
-    </ClInclude>
     <ClInclude Include="LightStruct.h">
       <Filter>06.RenderModules</Filter>
+    </ClInclude>
+    <ClInclude Include="LightObject.h">
+      <Filter>05.Object\Private\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -253,11 +253,11 @@
     <ClCompile Include="Pawn.cpp">
       <Filter>05.Object\Game</Filter>
     </ClCompile>
-    <ClCompile Include="LightObject.cpp">
-      <Filter>05.Object\Private\Light</Filter>
-    </ClCompile>
     <ClCompile Include="LightStruct.cpp">
       <Filter>06.RenderModules</Filter>
+    </ClCompile>
+    <ClCompile Include="LightObject.cpp">
+      <Filter>05.Object\Private\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
