@@ -150,7 +150,6 @@
     <ClInclude Include="Algorithm.h" />
     <ClInclude Include="BufferPool.h" />
     <ClInclude Include="ContantBuffers.h" />
-    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Enums.h" />
@@ -159,12 +158,13 @@
     <ClInclude Include="IGameObject.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="LightObject.h" />
+    <ClInclude Include="LightStruct.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PointLight.h" />
     <ClInclude Include="RenderableObject.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderState.h" />
@@ -172,7 +172,6 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ShaderIncludeHelper.h" />
     <ClInclude Include="SimpleMathAdv.h" />
-    <ClInclude Include="SpotLight.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Types.h" />
@@ -182,18 +181,20 @@
     <ClInclude Include="Structs.h" />
     <ClInclude Include="WindowsProc.h" />
     <ClInclude Include="WindowsUtile.h" />
+    <ClInclude Include="EngineConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="BufferPool.cpp" />
     <ClCompile Include="ContantBuffers.cpp" />
-    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="IGameObject.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="LightObject.cpp" />
+    <ClCompile Include="LightStruct.cpp" />
     <ClCompile Include="Main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -206,14 +207,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RenderableObject.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderState.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ShaderIncludeHelper.cpp" />
     <ClCompile Include="SimpleMathAdv.cpp" />
-    <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Structs.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vertex.cpp" />

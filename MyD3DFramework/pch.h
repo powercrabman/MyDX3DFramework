@@ -45,12 +45,14 @@ using namespace DirectX::SimpleMath;
 #include <thread>
 #include <filesystem>
 #include <locale>
+#include <algorithm>
 
 //STL
 #include <array>
 
 //MyInclude
 #include "Types.h"
+#include "EngineConfig.h"
 #include "Structs.h"
 #include "Macro.h"
 #include "WindowsUtile.h"
@@ -66,9 +68,7 @@ using namespace DirectX::SimpleMath;
 #include "Mesh.h"
 #include "Vertex.h"
 #include "Material.h"
-#include "DirectionalLight.h"
-#include "PointLight.h"
-#include "SpotLight.h"
+#include "LightStruct.h"
 #include "ContantBuffers.h"
 #include "Effect.h"
 #include "RenderState.h"

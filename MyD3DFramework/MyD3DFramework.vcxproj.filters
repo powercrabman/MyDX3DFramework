@@ -67,15 +67,6 @@
     <ClInclude Include="SimpleMathAdv.h">
       <Filter>99.Headers\Utility\Math</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
-      <Filter>06.RenderModules\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="PointLight.h">
-      <Filter>06.RenderModules\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="SpotLight.h">
-      <Filter>06.RenderModules\Light</Filter>
-    </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>06.RenderModules</Filter>
     </ClInclude>
@@ -105,6 +96,15 @@
     </ClInclude>
     <ClInclude Include="Pawn.h">
       <Filter>05.Object\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineConfig.h">
+      <Filter>01.Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="LightObject.h">
+      <Filter>05.Object\Private\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="LightStruct.h">
+      <Filter>06.RenderModules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -164,14 +164,14 @@
     <Filter Include="06.RenderModules\Shader\Light+Trans">
       <UniqueIdentifier>{b0a1ee0e-148b-4071-bc56-413b7f1bf831}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.RenderModules\Light">
-      <UniqueIdentifier>{443e8641-a7f4-4c5d-bc8a-c4cd4eea9449}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Object\Game">
       <UniqueIdentifier>{d8dc1dab-e9bc-4a61-8b95-cc67975a42bb}</UniqueIdentifier>
     </Filter>
     <Filter Include="05.Object\Private">
       <UniqueIdentifier>{fd4c0937-7d46-41a6-ac8d-cbc9007bbb50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Object\Private\Light">
+      <UniqueIdentifier>{e68cf528-f3e8-4481-9202-32034a11a4f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -223,15 +223,6 @@
     <ClCompile Include="SimpleMathAdv.cpp">
       <Filter>99.Headers\Utility\Math</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
-      <Filter>06.RenderModules\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>06.RenderModules\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="SpotLight.cpp">
-      <Filter>06.RenderModules\Light</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>06.RenderModules</Filter>
     </ClCompile>
@@ -261,6 +252,12 @@
     </ClCompile>
     <ClCompile Include="Pawn.cpp">
       <Filter>05.Object\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="LightObject.cpp">
+      <Filter>05.Object\Private\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="LightStruct.cpp">
+      <Filter>06.RenderModules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

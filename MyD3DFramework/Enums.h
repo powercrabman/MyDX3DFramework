@@ -27,3 +27,12 @@ enum class eFont
 
 	Count
 };
+
+enum class eLightType
+{
+	Unknown,
+
+	DirectionalLight,
+	PointLight,
+	SpotLight
+};
