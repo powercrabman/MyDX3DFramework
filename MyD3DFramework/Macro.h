@@ -39,3 +39,5 @@ inline static classname& GetInst() \
 #define KEY_RELEASE(keycode) InputManager::GetInst().GetKeyRelease(keycode)
 #define KEY_PRESS(keycode) InputManager::GetInst().GetKeyPress(keycode)
 #define KEY_AWAY(keycode) InputManager::GetInst().GetKeyAway(keycode)
+
+#define NODISCARD [[nodiscard]]

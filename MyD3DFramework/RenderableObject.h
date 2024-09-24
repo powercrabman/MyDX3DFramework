@@ -1,24 +1,23 @@
 #pragma once
-#include "GameObject.h"
+#include "IGameObject.h"
 
-class RenderableObject : public GameObject
+class RenderableObject : public IGameObject
 {
 public:
-	RenderableObject() = default;
+	RenderableObject();
 	virtual ~RenderableObject() = default;
 
-	virtual void Init() override;
-	virtual void Update(float inDeltaTime) override;
-	virtual void Render() override;
+	void SetMesh(const std::wstring& inMeshKey);
+	void SetMaterial(const std::wstring& inMaterialKey);
 
-	Mesh* GetMesh() const { assert(m_mesh); return m_mesh; }
-	Material* GetMaterial() const { assert(m_material); return m_material; }
-	const Transform& GetTransform() const { return m_transform; }
+	NODISCARD Mesh* GetMesh() const { assert(m_mesh); return m_mesh; }
+	NODISCARD Material* GetMaterial() const { assert(m_material); return m_material; }
+	NODISCARD const Transform& GetTransform() const { return m_transform; }
+	NODISCARD Transform& GetTransform() { return m_transform; }
 
 private:
 	Mesh* m_mesh = nullptr;
 	Material* m_material = nullptr;
-
 	Transform m_transform = {};
 };
 

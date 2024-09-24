@@ -69,7 +69,7 @@ void Engine::Render()
 
 	//성능측정
 	r.Render();
-	//RenderDebugData();
+	RenderDebugData();
 
 	//스왑체인
 	r.Present();

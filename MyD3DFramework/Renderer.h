@@ -41,19 +41,19 @@ public:
 	void DrawString(const wchar_t* inStr, const Vector2& inScreenPos, eFont inFont, const XMVECTORF32& inColor, eFontAlign align = eFontAlign::Left, float scale = 1.f);
 
 	//Setter Getter
-	inline ID3D11Device5* GetDeivce() const { ASSERT(m_device, L"디바이스가 Nullptr입니다."); return m_device.Get(); }
+	NODISCARD inline ID3D11Device5* GetDeivce() const { ASSERT(m_device, L"디바이스가 Nullptr입니다."); return m_device.Get(); }
 
-	inline D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
-	inline std::wstring GetFeatureLevelToString() const;
+	NODISCARD inline D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
+	NODISCARD inline std::wstring GetFeatureLevelToString() const;
 
-	inline Effect* GetEffect(const std::wstring& inKey);
-	inline Effect* GetCurrentEffect() const { assert(m_curEffect); return m_curEffect; }
+	NODISCARD inline Effect* GetEffect(const std::wstring& inKey);
+	NODISCARD inline Effect* GetCurrentEffect() const { assert(m_curEffect); return m_curEffect; }
 
-	inline RenderState* GetRenderState(const std::wstring& inKey);
-	inline RenderState* GetCurrentRenderState() const { assert(m_curRenderState); return m_curRenderState; }
+	NODISCARD inline RenderState* GetRenderState(const std::wstring& inKey);
+	NODISCARD inline RenderState* GetCurrentRenderState() const { assert(m_curRenderState); return m_curRenderState; }
 
-	inline Mesh* GetMesh(const std::wstring& inKey);
-	inline Material* GetMaterial(const std::wstring& inKey);
+	NODISCARD inline Mesh* GetMesh(const std::wstring& inKey);
+	NODISCARD inline Material* GetMaterial(const std::wstring& inKey);
 
 	inline void SetCurrentEffect(const std::wstring& inKey);
 	inline void SetCurrentRenderState(const std::wstring& inKey);
@@ -69,7 +69,19 @@ public:
 	inline Effect* RegisterEffect(const std::wstring& inKey);
 	inline Mesh* RegisterMesh(const std::wstring& inKey);
 	inline RenderState* RegisterRenderState(const std::wstring& inKey);
-	inline RenderableObject* RegisterRenderableObject();
+
+	template<typename Ty>
+	inline RenderableObject* RegisterRenderableObject()
+	{
+		static_assert(std::is_base_of<RenderableObject, Ty>::value);
+
+		std::unique_ptr<RenderableObject> inst = std::make_unique<Ty>();
+		inst->Init();
+		RenderableObject* returnObj = inst.get();
+		m_rObjRepo.push_back(std::move(inst));
+
+		return returnObj;
+	}
 	inline Material* RegisterMaterial(const std::wstring& inKey);
 
 public:
@@ -237,16 +249,6 @@ inline Mesh* Renderer::RegisterMesh(const std::wstring& inKey)
 	std::unique_ptr<Mesh> inst = std::make_unique<Mesh>();
 	Mesh* returnObj = inst.get();
 	m_meshRepo[inKey] = std::move(inst);
-
-	return returnObj;
-}
-
-inline RenderableObject* Renderer::RegisterRenderableObject()
-{
-	std::unique_ptr<RenderableObject> inst = std::make_unique<RenderableObject>();
-	inst->Init();
-	RenderableObject* returnObj = inst.get();
-	m_rObjRepo.push_back(std::move(inst));
 
 	return returnObj;
 }

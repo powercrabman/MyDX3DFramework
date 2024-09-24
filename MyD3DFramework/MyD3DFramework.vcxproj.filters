@@ -76,9 +76,6 @@
     <ClInclude Include="SpotLight.h">
       <Filter>06.RenderModules\Light</Filter>
     </ClInclude>
-    <ClInclude Include="RenderableObject.h">
-      <Filter>05.Object</Filter>
-    </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>06.RenderModules</Filter>
     </ClInclude>
@@ -100,8 +97,14 @@
     <ClInclude Include="RenderState.h">
       <Filter>06.RenderModules</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>05.Object</Filter>
+    <ClInclude Include="RenderableObject.h">
+      <Filter>05.Object\Private</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameObject.h">
+      <Filter>05.Object\Private</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>05.Object\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +167,12 @@
     <Filter Include="06.RenderModules\Light">
       <UniqueIdentifier>{443e8641-a7f4-4c5d-bc8a-c4cd4eea9449}</UniqueIdentifier>
     </Filter>
+    <Filter Include="05.Object\Game">
+      <UniqueIdentifier>{d8dc1dab-e9bc-4a61-8b95-cc67975a42bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Object\Private">
+      <UniqueIdentifier>{fd4c0937-7d46-41a6-ac8d-cbc9007bbb50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -223,9 +232,6 @@
     <ClCompile Include="SpotLight.cpp">
       <Filter>06.RenderModules\Light</Filter>
     </ClCompile>
-    <ClCompile Include="RenderableObject.cpp">
-      <Filter>05.Object</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>06.RenderModules</Filter>
     </ClCompile>
@@ -247,8 +253,14 @@
     <ClCompile Include="RenderState.cpp">
       <Filter>06.RenderModules</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>05.Object</Filter>
+    <ClCompile Include="IGameObject.cpp">
+      <Filter>05.Object\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableObject.cpp">
+      <Filter>05.Object\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Pawn.cpp">
+      <Filter>05.Object\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

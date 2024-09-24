@@ -2,19 +2,16 @@
 #include "RenderableObject.h"
 #include "Renderer.h"
 
-void RenderableObject::Init()
+RenderableObject::RenderableObject()
 {
-	m_mesh = Renderer::GetInst().GetMesh(Renderer::CubeMeshKey);
-	m_material = Renderer::GetInst().GetMaterial(Renderer::BasicMaterialKey);
-	m_transform.SetPosition(Vector3{ 0.f,0.f,5.f });
 }
 
-void RenderableObject::Update(float inDeltaTime)
+void RenderableObject::SetMesh(const std::wstring& inMeshKey) 
 {
-	
+	m_mesh = Renderer::GetInst().GetMesh(inMeshKey);
 }
 
-void RenderableObject::Render()
+void RenderableObject::SetMaterial(const std::wstring& inMaterialKey) 
 {
-	//???
+	m_material = Renderer::GetInst().GetMaterial(inMaterialKey);
 }

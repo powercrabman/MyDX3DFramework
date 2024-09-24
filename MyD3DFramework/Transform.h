@@ -21,6 +21,7 @@ public:
 	inline Vector3 GetScale() const { return m_scaling; }
 
 	inline Matrix GetWorldMatrix() const;
+	inline Matrix GetWorldMatrixInverse() const;
 
 private:
 	Vector3 m_translate = Vector3::Zero;
@@ -82,4 +83,9 @@ inline Matrix Transform::GetWorldMatrix() const
 		m_rotate,
 		m_translate
 	);
+}
+
+inline Matrix Transform::GetWorldMatrixInverse() const
+{
+	return ::XMMatrixTranspose(GetWorldMatrix());
 }

@@ -3,6 +3,7 @@
 #include "WindowsApp.h"
 #include "Engine.h"
 #include "RenderableObject.h"
+#include "Pawn.h"
 #include <fstream>
 
 
@@ -282,43 +283,12 @@ void Renderer::CreateRenderResoucre()
 	SetCurrentRenderState(BasicRenderStateKey);
 
 	//오브젝트 생성
-	RenderableObject* obj = RegisterRenderableObject();
+	RegisterRenderableObject<Pawn>();
 }
 
 void Renderer::Update(float inDeltaTime)
 {
 	UpdateCameraAction(inDeltaTime);
-
-	//Effect* effect = GetEffect(BasicEffectKey);
-	//
-	////Update cbPerObject
-	//{
-	//	cbPerObject cb = {};
-	//
-	//	Matrix world = ::XMMatrixAffineTransformation(m_scale, Vector3::Zero, m_rotation, m_position);
-	//	m_viewMat = ::XMMatrixLookToLH(m_cmrPosition, m_cmrLook, m_worldUpAxis);
-	//
-	//	cb.World = ::XMMatrixTranspose(world);
-	//	cb.WorldInvTranspose = ::XMMatrixInverse(nullptr, world);
-	//	cb.ViewProj = ::XMMatrixTranspose(m_viewMat * m_projMat);
-	//	cb.Material = m_material;
-	//
-	//
-	//	m_deviceContext->UpdateSubresource(m_cBufferPerObject.Get(), 0, nullptr, &cb, 0, 0);
-	//}
-	//
-	////Update cbPerFrame
-	//{
-	//	cbPerFrame cb = {};
-	//	m_dirLight.Direction = ::XMVector3Rotate(m_dirLight.Direction, Quaternion::CreateFromYawPitchRoll(s_rotateDelta, 0.f, 0.f));
-	//
-	//	cb.gEyePosW = ToVector4(m_cmrPosition, true);
-	//	cb.gDirLight = m_dirLight;
-	//	cb.gPointLight = m_pointLight;
-	//	cb.gSpotLight = m_spotLight;
-	//
-	//	m_deviceContext->UpdateSubresource(m_cBufferPerFrame.Get(), 0, nullptr, &cb, 0, 0);
-	//}
 }
 
 void Renderer::Render()
@@ -340,7 +310,7 @@ void Renderer::Render()
 		m_curEffect->UpdateConstantBuffer(
 			m_deviceContext.Get(),
 			CbPerFrameKey,
-			&cb
+			cb
 		);
 	}
 
@@ -363,7 +333,7 @@ void Renderer::Render()
 		m_curEffect->UpdateConstantBuffer(
 			m_deviceContext.Get(),
 			CbPerObjectKey,
-			&cb
+			cb
 		);
 		m_curEffect->BindConstantBuffer(
 			m_deviceContext.Get(),
