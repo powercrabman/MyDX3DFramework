@@ -1,4 +1,24 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(517,5): warning MSB8004: Output 디렉터리가 슬래시로 끝나지 않습니다. Output 디렉터리의 적절한 평가를 허용하는 데 필요하므로 이 빌드 인스턴스에서 슬래시를 추가합니다.
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\EngineConfig.h(1,9-12): warning X3568: 'once' : unknown pragma ignored
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\LightPixelShader.hlsl(167,17-34): warning X3203: signed/unsigned mismatch, unsigned assumed
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\LightPixelShader.hlsl(177,17-36): warning X3203: signed/unsigned mismatch, unsigned assumed
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\LightPixelShader.hlsl(187,17-35): warning X3203: signed/unsigned mismatch, unsigned assumed
+  
+  compilation object save succeeded; see C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\LightPixelShader.cso
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\EngineConfig.h(1,9-12): warning X3568: 'once' : unknown pragma ignored
+  
+  compilation object save succeeded; see C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\SimplePixelShader.cso
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\EngineConfig.h(1,9-12): warning X3568: 'once' : unknown pragma ignored
+  
+  compilation object save succeeded; see C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\SimpleVertexShader.cso
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\EngineConfig.h(1,9-12): warning X3568: 'once' : unknown pragma ignored
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\LightVertexShader.hlsl(7,19-41): warning X3206: 'mul': implicit truncation of vector type
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\LightVertexShader.hlsl(7,5-41): warning X3206: implicit truncation of vector type
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\LightVertexShader.hlsl(10,32-69): warning X3206: 'mul': implicit truncation of vector type
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\LightVertexShader.hlsl(10,5-70): warning X3206: implicit truncation of vector type
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\LightVertexShader.hlsl(12,19-45): warning X3206: 'mul': implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\LightVertexShader.cso
   pch.cpp
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Mesh.h(51,36): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   (소스 파일 'pch.cpp'을(를) 컴파일하는 중)
@@ -7,28 +27,45 @@ C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Mesh.h(59,36): warning
   (소스 파일 'pch.cpp'을(를) 컴파일하는 중)
   
   Algorithm.cpp
+  CAttribute.cpp
+  CBehavior.cpp
   BufferPool.cpp
+  CDirectionalLight.cpp
+  CircularArray.cpp
+  Component.cpp
+  ConstexprHash.cpp
   ContantBuffers.cpp
+  CPointLight.cpp
+  CSpotLight.cpp
   Effect.cpp
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Effect.cpp(31,26): warning C4267: '인수': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   (소스 파일 '/Effect.cpp'을(를) 컴파일하는 중)
   
   Engine.cpp
   Font.cpp
-  IGameObject.cpp
+  GameObject.cpp
   GameTimer.cpp
   InputManager.cpp
-  LightObject.cpp
-C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\LightObject.h(39,7): warning C4834: [[nodiscard]] 특성이 포함된 함수의 반환 값을 버리는 중입니다.
-  (소스 파일 '/LightObject.cpp'을(를) 컴파일하는 중)
-  
-  LightStruct.cpp
+  CLight.cpp
   Main.cpp
   Material.cpp
+  코드를 생성하고 있습니다...
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Renderer.h(225,1): warning C4715: 'Renderer::GetFeatureLevelToString': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  컴파일하고 있습니다...
   Mesh.cpp
+  CMeshRenderer.cpp
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\CMeshRenderer.h(5,7): warning C4099: 'Material': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
+  (소스 파일 '/CMeshRenderer.cpp'을(를) 컴파일하는 중)
+      C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Material.h(3,8):
+      'Material' 선언을 참조하십시오.
+  
   Pawn.cpp
-  RenderableObject.cpp
   Renderer.cpp
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\CMeshRenderer.h(5,7): warning C4099: 'Material': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
+  (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
+      C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Material.h(3,8):
+      'Material' 선언을 참조하십시오.
+  
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Mesh.h(33,37): warning C4267: '=': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
       C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Mesh.h(33,37):
@@ -39,12 +76,11 @@ C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Mesh.h(33,37): warning
   RenderState.cpp
   ResourceManager.cpp
   ShaderIncludeHelper.cpp
-  코드를 생성하고 있습니다...
-C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Renderer.h(222,1): warning C4715: 'Renderer::GetFeatureLevelToString': 모든 제어 경로에서 값을 반환하지는 않습니다.
-  컴파일하고 있습니다...
   SimpleMathAdv.cpp
+  SortedVector.cpp
   Structs.cpp
-  Transform.cpp
+  CTransform.cpp
+  TypeTrait.cpp
   Vertex.cpp
   WindowsApp.cpp
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\WindowsApp.cpp(34,33): warning C4302: '형식 캐스트': 'LPWSTR'에서 'WORD'(으)로 잘립니다.
@@ -59,5 +95,4 @@ C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\WindowsApp.cpp(114,12)
   WindowsProc.cpp
   WindowsUtile.cpp
   코드를 생성하고 있습니다...
-  LINK : C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\MyD3DFramework.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
   MyD3DFramework.vcxproj -> C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\MyD3DFramework.exe

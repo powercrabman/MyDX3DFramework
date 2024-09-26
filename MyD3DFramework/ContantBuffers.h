@@ -50,14 +50,20 @@ struct cbPerObject
 {
 	Matrix World;
     Matrix WorldInvTranspose;
-    Matrix ViewProj;
     Material Material;
 };
 
 struct cbPerFrame
 {
-	cbStructDirLight DirLight;
-	cbStructPointLight PointLight;
-	cbStructSpotLight SpotLight;
-    Vector4 EyePosW;
+	cbStructDirLight	DirLight[DIRECTIONAL_LIGHT_MAXIMUM_COUNT];
+	cbStructPointLight	PointLight[POINT_LIGHT_MAXIMUM_COUNT];
+	cbStructSpotLight	SpotLight[SPOT_LIGHT_MAXIMUM_COUNT];
+
+	Matrix	ViewProj;
+	Vector4 EyePosW;
+
+	unsigned int DirLightCount;    
+	unsigned int PointLightCount;  
+	unsigned int SpotLightCount;   
+	float Pad;
 };

@@ -2,10 +2,10 @@
 #include "Renderer.h"
 #include "WindowsApp.h"
 #include "Engine.h"
-#include "RenderableObject.h"
+#include "CTransform.h"
 #include "Pawn.h"
+#include "CMeshRenderer.h"
 #include <fstream>
-
 
 const std::wstring Renderer::BasicEffectKey = L"BasicEffect";
 const std::wstring Renderer::CubeMeshKey = L"CubeMesh";
@@ -267,11 +267,11 @@ void Renderer::CreateRenderResoucre()
 		m_farPlane);
 
 	//광원 초기화
-	m_dirLight.Ambient = Color(0.2f, 0.2f, 0.2f, 1.f);
-	m_dirLight.Diffuse = Color(1.0f, 0.95f, 0.8f, 1.f);
-	m_dirLight.Specular = Color(1.0f, 1.0f, 1.0f, 1.f);
-	m_dirLight.Direction = Vector3(2.f, -1.f, 2.f);
-	m_dirLight.Direction.Normalize();
+	//m_dirLight.Ambient = Color(0.2f, 0.2f, 0.2f, 1.f);
+	//m_dirLight.Diffuse = Color(1.0f, 0.95f, 0.8f, 1.f);
+	//m_dirLight.Specular = Color(1.0f, 1.0f, 1.0f, 1.f);
+	//m_dirLight.Direction = Vector3(2.f, -1.f, 2.f);
+	//m_dirLight.Direction.Normalize();
 
 	//머테리얼 설정
 	Material* material = RegisterMaterial(BasicMaterialKey);
@@ -282,8 +282,8 @@ void Renderer::CreateRenderResoucre()
 	SetCurrentEffect(BasicEffectKey);
 	SetCurrentRenderState(BasicRenderStateKey);
 
-	//오브젝트 생성
-	RegisterRenderableObject<Pawn>();
+	////오브젝트 생성
+	//Register<Pawn>();
 }
 
 void Renderer::Update(float inDeltaTime)
@@ -293,55 +293,94 @@ void Renderer::Update(float inDeltaTime)
 
 void Renderer::Render()
 {
-	//렌더상태 초기화 할까 말까??
-	m_curEffect->Apply(m_deviceContext.Get());
-	m_curRenderState->Apply(m_deviceContext.Get());
-	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), CbPerObjectKey);
-	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), CbPerFrameKey);
-
-	//cbPerFrame 업데이트
+	//Constant Buffer Per Frame
 	{
 		cbPerFrame cb = {};
-		cb.DirLight = m_dirLight;
-		cb.PointLight = m_pointLight;
-		cb.SpotLight = m_spotLight;
+		//cb.DirLight = m_dirLight;
+		//cb.PointLight = m_pointLight;
+		//cb.SpotLight = m_spotLight;
+
 		cb.EyePosW = ToVector4(m_cmrPosition, true);
 
-		m_curEffect->UpdateConstantBuffer(
-			m_deviceContext.Get(),
-			CbPerFrameKey,
-			cb
-		);
+		m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerFrameKey, cb);
 	}
 
-	for (const auto& obj : m_rObjRepo)
+	//Constant Buffer Per Object
+	for (const auto* mesh : m_cMashRendererRepo)
 	{
-		//cbPerObjct 업데이트
-		cbPerObject cb = {};
+		if (mesh == nullptr)
+		{
+			//mesh는 삭제시 즉시 삭제하지 않고, 나중에 한 꺼번에 삭제됨
+			//완전히 삭제되기 전까지는 nullptr 상태로 존재함
+			continue;
+		}
 
-		const Transform& t = obj->GetTransform();
-		const Mesh* m = obj->GetMesh();
+		const Mesh* m = mesh->GetMesh();
+		const CTransform* t = mesh->GetTransform();
+
+		//상수 버퍼 설정
+		Matrix wMat = t->GetWorldMatrix();
+
+		cbPerObject cb = {};
+		cb.Material = *mesh->GetMaterial();
+		cb.World = ::XMMatrixTranspose(t->GetWorldMatrix());
+		cb.WorldInvTranspose = t->GetWorldMatrixInverse();
+
+		m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerObjectKey, cb);
 
 		m->BindBuffers(m_deviceContext.Get());
-
-		cb.World = ::XMMatrixTranspose(t.GetWorldMatrix());
-		cb.WorldInvTranspose = ::XMMatrixInverse(nullptr, t.GetWorldMatrix());
-		cb.ViewProj = ::XMMatrixTranspose(m_viewMat * m_projMat);
-
-		cb.Material = *obj->GetMaterial();
-
-		m_curEffect->UpdateConstantBuffer(
-			m_deviceContext.Get(),
-			CbPerObjectKey,
-			cb
-		);
-		m_curEffect->BindConstantBuffer(
-			m_deviceContext.Get(),
-			CbPerObjectKey
-		);
-
 		RenderIndices(m->GetIndexBufferSize());
 	}
+
+	////렌더상태 초기화 할까 말까??
+	//m_curEffect->Apply(m_deviceContext.Get());
+	//m_curRenderState->Apply(m_deviceContext.Get());
+	//m_curEffect->BindConstantBuffer(m_deviceContext.Get(), CbPerObjectKey);
+	//m_curEffect->BindConstantBuffer(m_deviceContext.Get(), CbPerFrameKey);
+	//
+	////cbPerFrame 업데이트
+	//{
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//}
+	//
+	//for (const auto& obj : m_rObjRepo)
+	//{
+	//	//cbPerObjct 업데이트
+	//	cbPerObject cb = {};
+	//
+	//	const Transform& t = obj->GetTransform();
+	//	const Mesh* m = obj->GetMesh();
+	//
+	//	m->BindBuffers(m_deviceContext.Get());
+	//
+	//	cb.World = ::XMMatrixTranspose(t.GetWorldMatrix());
+	//	cb.WorldInvTranspose = ::XMMatrixInverse(nullptr, t.GetWorldMatrix());
+	//	cb.ViewProj = ::XMMatrixTranspose(m_viewMat * m_projMat);
+	//
+	//	cb.Material = *obj->GetMaterial();
+	//
+	//	m_curEffect->UpdateConstantBuffer(
+	//		m_deviceContext.Get(),
+	//		CbPerObjectKey,
+	//		cb
+	//	);
+	//	m_curEffect->BindConstantBuffer(
+	//		m_deviceContext.Get(),
+	//		CbPerObjectKey
+	//	);
+	//
+	//	RenderIndices(m->GetIndexBufferSize());
+	//}
 
 }
 
@@ -409,7 +448,6 @@ void Renderer::UpdateCameraAction(float inDeltaTime)
 	}
 
 }
-
 
 void Renderer::ResizeWindow(const WindowSize& winSize)
 {
@@ -548,6 +586,6 @@ void Renderer::LoadAndCopileShaderFromFile(
 		outInBlob,
 		errorBlob.GetAddressOf());
 
-	CHECK_FAILED_MESSAGE(hr, MA::StringToWstring((char*)errorBlob->GetBufferPointer()).c_str());
+	CHECK_FAILED_MESSAGE(hr, CM::StringToWstring((char*)errorBlob->GetBufferPointer()).c_str());
 }
 

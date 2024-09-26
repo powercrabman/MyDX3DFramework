@@ -2,22 +2,22 @@
 
 #define ASSERT(cond, hint) assert(cond)
 
-#define CHECK_FAILED(hr) 									   							\
-	if (FAILED(hr))																		\
-	{																					\
-		auto& buffer = WBuffer512::GetInst(); \
-		buffer.Input(L"DirectX Fail!\nError Code: %d", static_cast<int>(hr));														\
-		WinUtile::Alert(buffer.c_str(), L"Error");												\
-		PostQuitMessage(0);																\
+#define CHECK_FAILED(hr) 									   										\
+	if (FAILED(hr))																					\
+	{																								\
+		auto& buffer = Buffer512W::GetInst();														\
+		buffer.Input(L"DirectX Fail!\nError Code: %d", static_cast<int>(hr));						\
+		WinUtile::Alert(buffer.c_str(), L"Error");													\
+		PostQuitMessage(0);																			\
 	}
 
 #define CHECK_FAILED_MESSAGE(hr, msg) 									   							\
-	if (FAILED(hr))																		\
-	{			\
-		auto& buffer = WBuffer512::GetInst(); \
-		buffer.Input(L"DirectX Fail!\nError Code: %d\nMessage: %s", static_cast<int>(hr), msg);													\
-		WinUtile::Alert(buffer.c_str(), L"Error");												\
-		PostQuitMessage(0);																\
+	if (FAILED(hr))																					\
+	{																								\
+		auto& buffer = Buffer512W::GetInst();													    \
+		buffer.Input(L"DirectX Fail!\nError Code: %d\nMessage: %s", static_cast<int>(hr), msg);		\
+		WinUtile::Alert(buffer.c_str(), L"Error");													\
+		PostQuitMessage(0);																			\
 	}
 
 #define VERTIFY(cond, hint)														   \
@@ -41,3 +41,5 @@ inline static classname& GetInst() \
 #define KEY_AWAY(keycode) InputManager::GetInst().GetKeyAway(keycode)
 
 #define NODISCARD [[nodiscard]]
+
+#define USING_SUPER(classname)		using Super = classname

@@ -18,8 +18,8 @@ private:
 	uint32 m_indexBufferSize = 0;
 
 	ComPtr<ID3D11Buffer> m_vertexBuffer = nullptr;
-	uint32 m_strides = 0;	//TEMP
-	uint32 m_offset = 0;	//TEMP
+	uint32 m_strides = 0;
+	uint32 m_offset = 0;
 };
 
 template<typename VertexType>

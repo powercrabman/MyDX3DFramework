@@ -1,15 +1,14 @@
 #pragma once
-#include "RenderableObject.h"
+#include "GameObject.h"
 
-class Pawn : public RenderableObject
+class Pawn : public GameObject
 {
 public:
-	Pawn();
+	Pawn() = default;
 	virtual ~Pawn() = default;
 
-	void Init() override;
+	void Initialize() override;
 	void Update(float inDeltaTime) override;
 
 private:
 };
-

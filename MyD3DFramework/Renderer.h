@@ -1,6 +1,7 @@
 #pragma once
 
-class RenderableObject;
+class CMeshRenderer;
+class CLight;
 
 class Renderer
 {
@@ -69,20 +70,13 @@ public:
 	inline Effect* RegisterEffect(const std::wstring& inKey);
 	inline Mesh* RegisterMesh(const std::wstring& inKey);
 	inline RenderState* RegisterRenderState(const std::wstring& inKey);
-
-	template<typename Ty>
-	inline RenderableObject* RegisterRenderableObject()
-	{
-		static_assert(std::is_base_of<RenderableObject, Ty>::value);
-
-		std::unique_ptr<RenderableObject> inst = std::make_unique<Ty>();
-		inst->Init();
-		RenderableObject* returnObj = inst.get();
-		m_rObjRepo.push_back(std::move(inst));
-
-		return returnObj;
-	}
 	inline Material* RegisterMaterial(const std::wstring& inKey);
+
+	inline void RegisterCMeshRenderer(CMeshRenderer* inMesh);
+	inline void CleanGarbageInCMeshRendererList();
+
+	template<typename ObjectType>
+	inline ObjectType* RegisterGameObject();
 
 public:
 	//참조용 Static 변수들
@@ -131,9 +125,12 @@ private:
 	//Constant Buffer Struct
 	cbPerObject m_cbPerObject = {};
 	cbPerFrame m_cbPerFrame = {};
+	
+	//3D 메쉬 집합
+	std::vector<CMeshRenderer*> m_cMashRendererRepo{1024};
 
-	//모델(임시)
-	std::vector<std::unique_ptr<RenderableObject>> m_rObjRepo;
+	//빛
+	//std::array<CLight*, USABLE_LIGHT_MAXIMUM_COUNT> m_cLightRepo;
 
 	//카메라(임시)
 	Vector3 m_cmrLook = Vector3{ 0.f,0.f,1.f };
@@ -147,9 +144,9 @@ private:
 	float m_fov = ::XMConvertToRadians(45.f);
 
 	//광원(임시)
-	DirectionalLight m_dirLight = {};
-	PointLight m_pointLight = {};
-	SpotLight m_spotLight = {};
+	//DirectionalLight m_dirLight = {};
+	//PointLight m_pointLight = {};
+	//SpotLight m_spotLight = {};
 };
 
 inline bool Renderer::IsInitalized() const
@@ -263,6 +260,31 @@ inline Material* Renderer::RegisterMaterial(const std::wstring& inKey)
 	return returnObj;
 }
 
+inline void Renderer::RegisterCMeshRenderer(CMeshRenderer* inMesh)
+{
+	if (inMesh != nullptr)
+	{
+		m_cMashRendererRepo.push_back(inMesh);
+	}
+}
+
+inline void Renderer::CleanGarbageInCMeshRendererList()
+{
+	std::vector<CMeshRenderer*> newVector;
+	size_t repoLen = m_cMashRendererRepo.size();
+	newVector.reserve(repoLen);
+
+	for (size_t i = 0; i < repoLen; ++i)
+	{
+		if (m_cMashRendererRepo[i] != nullptr)
+		{
+			newVector.push_back(m_cMashRendererRepo[i]);
+		}
+	}
+
+	m_cMashRendererRepo = std::move(newVector);
+}
+
 inline Mesh* Renderer::GetMesh(const std::wstring& inKey)
 {
 	assert(m_meshRepo.contains(inKey));
@@ -288,4 +310,19 @@ inline void Renderer::SetCurrentRenderState(const std::wstring& inKey)
 inline void Renderer::RenderIndices(uint32 indicesCount)
 {
 	m_deviceContext->DrawIndexed(indicesCount, 0, 0);
+}
+
+template<typename ObjectType>
+inline ObjectType* Renderer::RegisterGameObject()
+{
+	static_assert(std::is_base_of<GameObject, ObjectType>::value);
+
+	std::unique_ptr<> inst = std::make_unique<ObjectType>();
+	inst->InitalizeCore();
+	inst->SetTypeInfo(CM::TypeTrait<ObjectType>::GetInfo());
+
+	ObjectType* returnObj = inst.get();
+	m_rObjRepo.push_back(std::move(inst));
+
+	return returnObj;
 }

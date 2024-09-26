@@ -1,6 +1,6 @@
 #pragma once
 
-namespace MA
+namespace CM
 {
 	inline std::string WstringToString(const std::wstring& inStr)
     {

@@ -50,6 +50,10 @@ using namespace DirectX::SimpleMath;
 //STL
 #include <array>
 
+//MyContainer
+#include "SortedVector.h"
+#include "CircularArray.h"
+
 //MyInclude
 #include "Types.h"
 #include "EngineConfig.h"
@@ -62,7 +66,7 @@ using namespace DirectX::SimpleMath;
 #include "BufferPool.h"
 #include "Algorithm.h"
 #include "SimpleMathAdv.h"
-#include "Transform.h"
+#include "TypeTrait.h"
 
 //About Rendering
 #include "Mesh.h"
@@ -71,7 +75,6 @@ using namespace DirectX::SimpleMath;
 #include "ContantBuffers.h"
 #include "Effect.h"
 #include "RenderState.h"
-#include "RenderableObject.h" //나중에 GameObject.h 로 변경
 
 //Resource
 #include "Font.h"

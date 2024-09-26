@@ -32,10 +32,10 @@
       <Filter>99.Headers</Filter>
     </ClInclude>
     <ClInclude Include="GameTimer.h">
-      <Filter>03.Module</Filter>
+      <Filter>03.System</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
-      <Filter>03.Module</Filter>
+      <Filter>03.System</Filter>
     </ClInclude>
     <ClInclude Include="WindowsUtile.h">
       <Filter>02.Windows</Filter>
@@ -44,13 +44,13 @@
       <Filter>02.Windows\WindowProc</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
-      <Filter>03.Module</Filter>
+      <Filter>03.System</Filter>
     </ClInclude>
     <ClInclude Include="Enums.h">
       <Filter>99.Headers</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
-      <Filter>03.Module</Filter>
+      <Filter>03.System</Filter>
     </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>04.Resource\Font</Filter>
@@ -67,44 +67,71 @@
     <ClInclude Include="SimpleMathAdv.h">
       <Filter>99.Headers\Utility\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>06.RenderModules</Filter>
-    </ClInclude>
     <ClInclude Include="Vertex.h">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClInclude>
     <ClInclude Include="ContantBuffers.h">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClInclude>
     <ClInclude Include="Effect.h">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClInclude>
     <ClInclude Include="RenderState.h">
-      <Filter>06.RenderModules</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderableObject.h">
-      <Filter>05.Object\Private</Filter>
-    </ClInclude>
-    <ClInclude Include="IGameObject.h">
-      <Filter>05.Object\Private</Filter>
-    </ClInclude>
-    <ClInclude Include="Pawn.h">
-      <Filter>05.Object\Game</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClInclude>
     <ClInclude Include="EngineConfig.h">
       <Filter>01.Engine</Filter>
     </ClInclude>
-    <ClInclude Include="LightStruct.h">
-      <Filter>06.RenderModules</Filter>
+    <ClInclude Include="CTransform.h">
+      <Filter>06.GameModules\Attribute</Filter>
     </ClInclude>
-    <ClInclude Include="LightObject.h">
-      <Filter>05.Object\Private\Light</Filter>
+    <ClInclude Include="GameObject.h">
+      <Filter>05.GameObject\Abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularArray.h">
+      <Filter>99.Headers\Utility\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="SortedVector.h">
+      <Filter>99.Headers\Utility\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstexprHash.h">
+      <Filter>99.Headers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>05.GameObject\Concrete</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttribute.h">
+      <Filter>06.GameModules\Abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>06.GameModules\Abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="CMeshRenderer.h">
+      <Filter>06.GameModules\Attribute</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeTrait.h">
+      <Filter>99.Headers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CDirectionalLight.h">
+      <Filter>06.GameModules\Attribute\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="CBehavior.h">
+      <Filter>06.GameModules\Abstract\CBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="CLight.h">
+      <Filter>06.GameModules\Abstract\CBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="CPointLight.h">
+      <Filter>06.GameModules\Attribute\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="CSpotLight.h">
+      <Filter>06.GameModules\Attribute\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -128,9 +155,6 @@
     <Filter Include="02.Windows">
       <UniqueIdentifier>{fd47494b-142e-425a-b6df-8f48a6fd19d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Module">
-      <UniqueIdentifier>{e694dfbf-7c2f-41f5-a6e2-f99bacfd50f0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Windows\WindowProc">
       <UniqueIdentifier>{88749dda-40c1-432b-b215-a32832f2a45d}</UniqueIdentifier>
     </Filter>
@@ -149,29 +173,50 @@
     <Filter Include="99.Headers\Utility\Math">
       <UniqueIdentifier>{30d3bf42-960a-4cce-8dad-e28db940d889}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Object">
-      <UniqueIdentifier>{feb580ef-5ac5-4dee-a760-4cdf7ba495ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.RenderModules">
+    <Filter Include="07.RenderModules">
       <UniqueIdentifier>{8221b782-8374-4d33-a989-eefa5ba9118e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.RenderModules\Shader">
+    <Filter Include="07.RenderModules\Shader">
       <UniqueIdentifier>{7c882b67-ef5c-4f3a-8ff7-8297a4597a0f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.RenderModules\Shader\Transform">
+    <Filter Include="07.RenderModules\Shader\Transform">
       <UniqueIdentifier>{6590a010-c3a0-4c41-917f-59de16ae2aa9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.RenderModules\Shader\Light+Trans">
+    <Filter Include="07.RenderModules\Shader\Light+Trans">
       <UniqueIdentifier>{b0a1ee0e-148b-4071-bc56-413b7f1bf831}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Object\Game">
-      <UniqueIdentifier>{d8dc1dab-e9bc-4a61-8b95-cc67975a42bb}</UniqueIdentifier>
+    <Filter Include="05.GameObject">
+      <UniqueIdentifier>{feb580ef-5ac5-4dee-a760-4cdf7ba495ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Object\Private">
-      <UniqueIdentifier>{fd4c0937-7d46-41a6-ac8d-cbc9007bbb50}</UniqueIdentifier>
+    <Filter Include="03.System">
+      <UniqueIdentifier>{e694dfbf-7c2f-41f5-a6e2-f99bacfd50f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05.Object\Private\Light">
-      <UniqueIdentifier>{e68cf528-f3e8-4481-9202-32034a11a4f2}</UniqueIdentifier>
+    <Filter Include="05.GameObject\Abstract">
+      <UniqueIdentifier>{019bfbe2-d4d1-4c30-b135-2d85daf87400}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.GameModules">
+      <UniqueIdentifier>{f8036edb-80a5-431c-942d-468ffcdd0835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.GameModules\Attribute">
+      <UniqueIdentifier>{5faf1144-6109-4cfb-91c9-c08b07756cfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Headers\Utility\Container">
+      <UniqueIdentifier>{209fc5c4-5031-4bbe-a1a0-9a35a929ce23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.GameObject\Concrete">
+      <UniqueIdentifier>{a1ef300d-f231-43fd-be55-4510bebc31a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.GameModules\Abstract">
+      <UniqueIdentifier>{12cad8e6-eddd-4c97-a2c3-78ae78c2af62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.GameModules\Behavior">
+      <UniqueIdentifier>{aef79aa2-bad6-4122-9d08-b5e65d462a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.GameModules\Attribute\Light">
+      <UniqueIdentifier>{0f0c2a6a-e08d-42d1-8513-7efb53aea42e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.GameModules\Abstract\CBehavior">
+      <UniqueIdentifier>{44f5167e-fe27-4c9f-aa6d-6f2d970594cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -188,10 +233,10 @@
       <Filter>02.Windows</Filter>
     </ClCompile>
     <ClCompile Include="GameTimer.cpp">
-      <Filter>03.Module</Filter>
+      <Filter>03.System</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>03.Module</Filter>
+      <Filter>03.System</Filter>
     </ClCompile>
     <ClCompile Include="WindowsUtile.cpp">
       <Filter>02.Windows</Filter>
@@ -203,10 +248,10 @@
       <Filter>99.Headers</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
-      <Filter>03.Module</Filter>
+      <Filter>03.System</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
-      <Filter>03.Module</Filter>
+      <Filter>03.System</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
       <Filter>04.Resource\Font</Filter>
@@ -223,41 +268,68 @@
     <ClCompile Include="SimpleMathAdv.cpp">
       <Filter>99.Headers\Utility\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>06.RenderModules</Filter>
-    </ClCompile>
     <ClCompile Include="Vertex.cpp">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClCompile>
     <ClCompile Include="ContantBuffers.cpp">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClCompile>
     <ClCompile Include="Effect.cpp">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClCompile>
     <ClCompile Include="RenderState.cpp">
-      <Filter>06.RenderModules</Filter>
+      <Filter>07.RenderModules</Filter>
     </ClCompile>
-    <ClCompile Include="IGameObject.cpp">
-      <Filter>05.Object\Private</Filter>
+    <ClCompile Include="CTransform.cpp">
+      <Filter>06.GameModules\Attribute</Filter>
     </ClCompile>
-    <ClCompile Include="RenderableObject.cpp">
-      <Filter>05.Object\Private</Filter>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>05.GameObject\Abstract</Filter>
+    </ClCompile>
+    <ClCompile Include="CircularArray.cpp">
+      <Filter>99.Headers\Utility\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="SortedVector.cpp">
+      <Filter>99.Headers\Utility\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstexprHash.cpp">
+      <Filter>99.Headers\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Pawn.cpp">
-      <Filter>05.Object\Game</Filter>
+      <Filter>05.GameObject\Concrete</Filter>
     </ClCompile>
-    <ClCompile Include="LightStruct.cpp">
-      <Filter>06.RenderModules</Filter>
+    <ClCompile Include="CAttribute.cpp">
+      <Filter>06.GameModules\Abstract</Filter>
     </ClCompile>
-    <ClCompile Include="LightObject.cpp">
-      <Filter>05.Object\Private\Light</Filter>
+    <ClCompile Include="Component.cpp">
+      <Filter>06.GameModules\Abstract</Filter>
+    </ClCompile>
+    <ClCompile Include="CMeshRenderer.cpp">
+      <Filter>06.GameModules\Attribute</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeTrait.cpp">
+      <Filter>99.Headers\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="CDirectionalLight.cpp">
+      <Filter>06.GameModules\Attribute\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="CBehavior.cpp">
+      <Filter>06.GameModules\Abstract\CBehavior</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight.cpp">
+      <Filter>06.GameModules\Abstract\CBehavior</Filter>
+    </ClCompile>
+    <ClCompile Include="CPointLight.cpp">
+      <Filter>06.GameModules\Attribute\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="CSpotLight.cpp">
+      <Filter>06.GameModules\Attribute\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -276,21 +348,21 @@
       <Filter>99.Headers\Default</Filter>
     </None>
     <None Include="ShaderHeader.hlsli">
-      <Filter>06.RenderModules\Shader</Filter>
+      <Filter>07.RenderModules\Shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SimpleVertexShader.hlsl">
-      <Filter>06.RenderModules\Shader\Transform</Filter>
+      <Filter>07.RenderModules\Shader\Transform</Filter>
     </FxCompile>
     <FxCompile Include="SimplePixelShader.hlsl">
-      <Filter>06.RenderModules\Shader\Transform</Filter>
+      <Filter>07.RenderModules\Shader\Transform</Filter>
     </FxCompile>
     <FxCompile Include="LightVertexShader.hlsl">
-      <Filter>06.RenderModules\Shader\Light+Trans</Filter>
+      <Filter>07.RenderModules\Shader\Light+Trans</Filter>
     </FxCompile>
     <FxCompile Include="LightPixelShader.hlsl">
-      <Filter>06.RenderModules\Shader\Light+Trans</Filter>
+      <Filter>07.RenderModules\Shader\Light+Trans</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

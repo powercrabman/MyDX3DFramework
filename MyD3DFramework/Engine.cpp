@@ -41,7 +41,7 @@ bool Engine::Init(HINSTANCE inHinst)
 	ResourceManager::GetInst().LoadResource();
 
 	//메모리 풀 생성
-	WBuffer512::GetInst();
+	Buffer512W::GetInst();
 
 	Renderer::GetInst().CreateRenderResoucre();
 
@@ -69,7 +69,7 @@ void Engine::Render()
 
 	//성능측정
 	r.Render();
-	RenderDebugData();
+	//RenderDebugData();
 
 	//스왑체인
 	r.Present();
@@ -134,7 +134,7 @@ void Engine::DebugHandler()
 void Engine::RenderDebugData()
 {
 	const static Vector2 initialPosition = { 10.f,10.f };
-	WBuffer512& buffer = WBuffer512::GetInst();
+	Buffer512W& buffer = Buffer512W::GetInst();
 
 	//성능측정
 	GameTimer& t = GameTimer::GetInst();

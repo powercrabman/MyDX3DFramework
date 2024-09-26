@@ -1,3 +1,5 @@
+#include "EngineConfig.h"
+
 // ---------------------------------------
 //  구조체
 // ---------------------------------------
@@ -52,16 +54,22 @@ cbuffer cPerObject : register(b0)
 {
     matrix gWorld;
     matrix gWorldInvTranspose;
-    matrix gViewProj;
     Material gMaterial;
 };
 
 cbuffer cbPerFrame : register(b1)
 {
-    DirectionalLight gDirLight;
-    PointLight gPointLight;
-    SpotLight gSpotLight;
-    float3 gEyePosW;
+    DirectionalLight gDirLight[DIRECTIONAL_LIGHT_MAXIMUM_COUNT];
+    PointLight gPointLight[POINT_LIGHT_MAXIMUM_COUNT];
+    SpotLight gSpotLight[SPOT_LIGHT_MAXIMUM_COUNT];
+
+    matrix gViewProj;
+    float4 gEyePosW;
+    
+    unsigned int gDirLightCount;
+    unsigned int gPointLightCount;
+    unsigned int gSpotLightCount;
+    float Pad;
 }
 // ---------------------------------------
 //  선형 변환만 정의하는 버텍스 쉐이더
@@ -79,10 +87,10 @@ struct SIMPLE_VS_OUTPUT
 struct LIGHT_VS_INPUT
 {
     //로컬 좌표
-    float4 PosL : POSITION;
+    float3 PosL : POSITION;
 
     //로컬 법선벡터
-    float4 NormalL : NORMAL;
+    float3 NormalL : NORMAL;
 };
 
 struct LIGHT_VS_OUTPUT
@@ -90,7 +98,7 @@ struct LIGHT_VS_OUTPUT
     //동차 좌표계 좌표
     float4 PosH : SV_POSITION;
 
-    //월드 좌표게 좌표(광원 계산을 위함)
+    //월드 좌표계 좌표(광원 계산을 위함)
     float3 PosW : POSITION;
     
     //월드 좌표계 법선벡터(광원 계산을 위함)

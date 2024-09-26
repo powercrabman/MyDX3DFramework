@@ -34,7 +34,7 @@ public:
 		assert(!m_cbRepo.contains(inConstantBufferName));
 
 		ConstantBufferInfo cbInfo = {};
-
+		
 		D3D11_BUFFER_DESC desc = {};
 		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		desc.ByteWidth = inContantBuffeStructSize;
@@ -141,7 +141,7 @@ public:
 			std::byte* bufferData = static_cast<std::byte*>(mappedResource.pData);
 			for (size_t i = 0; i < bufferSize; ++i)
 			{
-				auto& b = WBuffer512::GetInst();
+				auto& b = Buffer512W::GetInst();
 				b.Input(L"Byte[%zu] = %d\n", i, bufferData[i]);
 				WinUtile::OutputLog(b.c_str());
 			}

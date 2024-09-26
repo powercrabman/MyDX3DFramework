@@ -148,35 +148,44 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Algorithm.h" />
+    <ClInclude Include="CAttribute.h" />
+    <ClInclude Include="CBehavior.h" />
     <ClInclude Include="BufferPool.h" />
+    <ClInclude Include="CDirectionalLight.h" />
+    <ClInclude Include="CircularArray.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ConstexprHash.h" />
     <ClInclude Include="ContantBuffers.h" />
+    <ClInclude Include="CPointLight.h" />
+    <ClInclude Include="CSpotLight.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineConfig.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="IGameObject.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="InputManager.h" />
-    <ClInclude Include="LightObject.h" />
-    <ClInclude Include="LightStruct.h" />
+    <ClInclude Include="CLight.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="CMeshRenderer.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="RenderableObject.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderState.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ShaderIncludeHelper.h" />
     <ClInclude Include="SimpleMathAdv.h" />
+    <ClInclude Include="SortedVector.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Transform.h" />
+    <ClInclude Include="CTransform.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Macro.h" />
+    <ClInclude Include="TypeTrait.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="WindowsApp.h" />
     <ClInclude Include="Structs.h" />
@@ -185,21 +194,29 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algorithm.cpp" />
+    <ClCompile Include="CAttribute.cpp" />
+    <ClCompile Include="CBehavior.cpp" />
     <ClCompile Include="BufferPool.cpp" />
+    <ClCompile Include="CDirectionalLight.cpp" />
+    <ClCompile Include="CircularArray.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ConstexprHash.cpp" />
     <ClCompile Include="ContantBuffers.cpp" />
+    <ClCompile Include="CPointLight.cpp" />
+    <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Font.cpp" />
-    <ClCompile Include="IGameObject.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="LightObject.cpp" />
-    <ClCompile Include="LightStruct.cpp" />
+    <ClCompile Include="CLight.cpp" />
     <ClCompile Include="Main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="CMeshRenderer.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -207,14 +224,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="RenderableObject.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderState.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ShaderIncludeHelper.cpp" />
     <ClCompile Include="SimpleMathAdv.cpp" />
+    <ClCompile Include="SortedVector.cpp" />
     <ClCompile Include="Structs.cpp" />
-    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="CTransform.cpp" />
+    <ClCompile Include="TypeTrait.cpp" />
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="WindowsApp.cpp" />
     <ClCompile Include="WindowsProc.cpp" />

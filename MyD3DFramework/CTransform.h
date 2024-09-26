@@ -1,10 +1,11 @@
 #pragma once
+#include "CAttribute.h"
 
-class Transform final
+class CTransform : public CAttribute
 {
 public:
-	Transform() = default;
-	~Transform() = default;
+	CTransform() = default;
+	virtual ~CTransform() = default;
 
 	inline void SetPosition(const Vector3& inVector);
 	inline void SetRotateDegree(float inYaw, float inPitch, float inRoll);
@@ -29,12 +30,12 @@ private:
 	Vector3 m_scaling = Vector3::One;
 };
 
-inline void Transform::SetPosition(const Vector3& inVector)
+inline void CTransform::SetPosition(const Vector3& inVector)
 {
 	m_translate = inVector;
 }
 
-inline void Transform::SetRotateDegree(float inYaw, float inPitch, float inRoll)
+inline void CTransform::SetRotateDegree(float inYaw, float inPitch, float inRoll)
 {
 	inYaw = ::XMConvertToRadians(inYaw);
 	inPitch = ::XMConvertToRadians(inPitch);
@@ -42,22 +43,22 @@ inline void Transform::SetRotateDegree(float inYaw, float inPitch, float inRoll)
 	m_rotate = Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-inline void Transform::SetRotate(float inYaw, float inPitch, float inRoll)
+inline void CTransform::SetRotate(float inYaw, float inPitch, float inRoll)
 {
 	m_rotate = Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-inline void Transform::SetScale(const Vector3& inScale)
+inline void CTransform::SetScale(const Vector3& inScale)
 {
 	m_scaling = inScale;
 }
 
-inline void Transform::AddPosition(const Vector3& inVector)
+inline void CTransform::AddPosition(const Vector3& inVector)
 {
 	m_translate += inVector;
 }
 
-inline void Transform::AddRotateDegree(float inYaw, float inPitch, float inRoll)
+inline void CTransform::AddRotateDegree(float inYaw, float inPitch, float inRoll)
 {
 	inYaw = ::XMConvertToRadians(inYaw);
 	inPitch = ::XMConvertToRadians(inPitch);
@@ -65,17 +66,17 @@ inline void Transform::AddRotateDegree(float inYaw, float inPitch, float inRoll)
 	m_rotate *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-inline void Transform::AddRotate(float inYaw, float inPitch, float inRoll)
+inline void CTransform::AddRotate(float inYaw, float inPitch, float inRoll)
 {
 	m_rotate *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-inline void Transform::AddScale(const Vector3& inScale)
+inline void CTransform::AddScale(const Vector3& inScale)
 {
 	m_scaling += inScale;
 }
 
-inline Matrix Transform::GetWorldMatrix() const
+inline Matrix CTransform::GetWorldMatrix() const
 {
 	return ::XMMatrixAffineTransformation(
 		m_scaling,
@@ -85,7 +86,8 @@ inline Matrix Transform::GetWorldMatrix() const
 	);
 }
 
-inline Matrix Transform::GetWorldMatrixInverse() const
+inline Matrix CTransform::GetWorldMatrixInverse() const
 {
-	return ::XMMatrixTranspose(GetWorldMatrix());
+	return ::XMMatrixInverse(nullptr, GetWorldMatrix());
 }
+
