@@ -15,18 +15,20 @@ public:
         assert(m_owner);
         return m_owner;
     }
-    inline CM::TypeInfo GetTypeInfo() const { return m_typeInfo; }
+    inline CM::TypeID GetTypeInfo() const { return m_typeID; }
 
     inline void Enable() { m_enable = true; }
     inline void Disable() { m_enable = false; }
     inline bool IsEnable() const { return m_enable; }
+
+    inline const std::wstring& GetName() const;
 
 protected:
     Component();
 
 private:
     virtual inline void InitComponent(
-        const CM::TypeInfo& inTypeInfo,
+        const CM::TypeID& inTypeID,
         GameObject* inOwner,
         const std::wstring& inName
     ) final;
@@ -34,24 +36,28 @@ private:
 private:
     std::wstring m_name = {};
 
-    CM::TypeInfo m_typeInfo = {};
+    CM::TypeID m_typeID = {};
     GameObject* m_owner = nullptr;
 
     bool m_enable = true;
 };
 
+inline const std::wstring& Component::GetName() const
+{
+    return m_name;
+}
+
 inline Component::Component()
 {
 }
 
-inline void Component::InitComponent(const CM::TypeInfo& inTypeInfo, GameObject* inOwner, const std::wstring& inName)
+inline void Component::InitComponent(const CM::TypeID& inTypeID, GameObject* inOwner, const std::wstring& inName)
 {
     //생성자 간략화를 위해서 사용
-
     assert(inOwner);
 
     m_name = inName;
     m_owner = inOwner;
-    m_typeInfo = inTypeInfo;
+    m_typeID = inTypeID;
 }
 

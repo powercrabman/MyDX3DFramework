@@ -75,21 +75,6 @@ public:
 	inline void RegisterCMeshRenderer(CMeshRenderer* inMesh);
 	inline void CleanGarbageInCMeshRendererList();
 
-	template<typename ObjectType, typename ...Args>
-	inline ObjectType* RegisterGameObject(Args... args)
-	{
-		static_assert(std::is_base_of<GameObject, ObjectType>::value);
-
-		std::unique_ptr<> inst = std::make_unique<ObjectType>(args...);
-		inst->InitalizeCore();
-		inst->SetTypeInfo(CM::TypeTrait<ObjectType>::GetInfo());
-
-		ObjectType* returnObj = inst.get();
-		m_rObjRepo.push_back(std::move(inst));
-
-		return returnObj;
-	}
-
 public:
 	//참조용 Static 변수들
 	const static std::wstring BasicEffectKey;
@@ -101,7 +86,7 @@ public:
 	const static std::wstring CbPerObjectKey;
 
 private:
-	Renderer() = default;
+	Renderer();;
 	~Renderer() = default;
 
 private:
@@ -139,7 +124,7 @@ private:
 	cbPerFrame m_cbPerFrame = {};
 	
 	//3D 메쉬 집합
-	std::vector<CMeshRenderer*> m_cMashRendererRepo{1024};
+	std::vector<CMeshRenderer*> m_cMashRendererRepo;
 
 	//빛
 	//std::array<CLight*, USABLE_LIGHT_MAXIMUM_COUNT> m_cLightRepo;
@@ -295,6 +280,11 @@ inline void Renderer::CleanGarbageInCMeshRendererList()
 	}
 
 	m_cMashRendererRepo = std::move(newVector);
+}
+
+inline Renderer::Renderer()
+{
+	m_cMashRendererRepo.reserve(1024);
 }
 
 inline Mesh* Renderer::GetMesh(const std::wstring& inKey)

@@ -43,3 +43,9 @@ inline static classname& GetInst() \
 #define NODISCARD [[nodiscard]]
 
 #define USING_SUPER(classname)		using Super = classname
+
+#ifdef _DEBUG
+#define  TEMP_TYPE int
+#else
+#define TEMP_TYPE static_assert(false, "You must change this part! template type fail.")
+#endif

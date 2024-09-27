@@ -121,9 +121,6 @@
     <ClInclude Include="CDirectionalLight.h">
       <Filter>06.GameModules\Attribute\Light</Filter>
     </ClInclude>
-    <ClInclude Include="CBehavior.h">
-      <Filter>06.GameModules\Abstract\CBehavior</Filter>
-    </ClInclude>
     <ClInclude Include="CLight.h">
       <Filter>06.GameModules\Abstract\CBehavior</Filter>
     </ClInclude>
@@ -136,11 +133,17 @@
     <ClInclude Include="SceneManager.h">
       <Filter>03.System</Filter>
     </ClInclude>
+    <ClInclude Include="DevScene.h">
+      <Filter>04.GameScene\Concrete</Filter>
+    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>04.GameScene\Abstract</Filter>
     </ClInclude>
-    <ClInclude Include="DevScene.h">
-      <Filter>04.GameScene\Concrete</Filter>
+    <ClInclude Include="CTag.h">
+      <Filter>06.GameModules\Attribute</Filter>
+    </ClInclude>
+    <ClInclude Include="CBehavior.h">
+      <Filter>06.GameModules\Abstract</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -218,9 +221,6 @@
     <Filter Include="06.GameModules\Attribute\Light">
       <UniqueIdentifier>{0f0c2a6a-e08d-42d1-8513-7efb53aea42e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.GameModules\Abstract\CBehavior">
-      <UniqueIdentifier>{44f5167e-fe27-4c9f-aa6d-6f2d970594cc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.GameScene">
       <UniqueIdentifier>{0e1a8674-65c9-481c-b799-4c5e89457b52}</UniqueIdentifier>
     </Filter>
@@ -235,6 +235,9 @@
     </Filter>
     <Filter Include="04.GameScene\Concrete">
       <UniqueIdentifier>{4b8b861d-a73a-47a5-a9fb-4049e7fa9a88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.GameModules\Abstract\CBehavior">
+      <UniqueIdentifier>{44f5167e-fe27-4c9f-aa6d-6f2d970594cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -337,9 +340,6 @@
     <ClCompile Include="CDirectionalLight.cpp">
       <Filter>06.GameModules\Attribute\Light</Filter>
     </ClCompile>
-    <ClCompile Include="CBehavior.cpp">
-      <Filter>06.GameModules\Abstract\CBehavior</Filter>
-    </ClCompile>
     <ClCompile Include="CLight.cpp">
       <Filter>06.GameModules\Abstract\CBehavior</Filter>
     </ClCompile>
@@ -357,6 +357,12 @@
     </ClCompile>
     <ClCompile Include="DevScene.cpp">
       <Filter>04.GameScene\Concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="CTag.cpp">
+      <Filter>06.GameModules\Attribute</Filter>
+    </ClCompile>
+    <ClCompile Include="CBehavior.cpp">
+      <Filter>06.GameModules\Abstract</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -377,6 +383,7 @@
     <None Include="ShaderHeader.hlsli">
       <Filter>07.RenderModules\Shader</Filter>
     </None>
+    <None Include="ObjectRepo Optimize Steragy.txt" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SimpleVertexShader.hlsl">

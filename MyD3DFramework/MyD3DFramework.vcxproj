@@ -158,6 +158,7 @@
     <ClInclude Include="ContantBuffers.h" />
     <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CSpotLight.h" />
+    <ClInclude Include="CTag.h" />
     <ClInclude Include="DevScene.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="ContantBuffers.cpp" />
     <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
+    <ClCompile Include="CTag.cpp" />
     <ClCompile Include="DevScene.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -272,6 +274,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </None>
     <None Include="packages.config" />
+    <None Include="ObjectRepo Optimize Steragy.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2022.vcxproj">

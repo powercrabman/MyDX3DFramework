@@ -3,7 +3,7 @@
 
 class GameObject
 {
-	friend class Renderer; /* 나중에 ObjectManager로 변경 */
+	friend class Scene;
 
 public:
 	GameObject();
@@ -37,8 +37,8 @@ private:
 	CM::TypeInfo m_typeInfo = {};
 
 	//컴포넌트를 저정하는 컨테이너
-	std::unordered_map<CM::TypeID, std::vector<std::unique_ptr<Component>>> m_compRepo{ 16 };
-	std::vector<CBehavior*> m_updateCompRepo{ 16 };
+	std::unordered_map<CM::TypeID, std::vector<std::unique_ptr<Component>>> m_compRepo;
+	std::vector<CBehavior*> m_updateCompRepo;
 };
 
 template<typename CompTy, typename ...Args>
@@ -111,6 +111,9 @@ inline bool GameObject::HasComponent()
 inline GameObject::GameObject()
 {
 	m_objectID = ++ObjectIDCounter;
+
+	m_compRepo.reserve(16);
+	m_updateCompRepo.reserve(16);
 }
 
 inline void GameObject::SetTypeInfo(const CM::TypeInfo& inTypeInfo)
