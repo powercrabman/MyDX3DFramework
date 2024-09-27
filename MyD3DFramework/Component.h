@@ -16,7 +16,6 @@ public:
         return m_owner;
     }
     inline CM::TypeInfo GetTypeInfo() const { return m_typeInfo; }
-    inline uint64 GetComponentID() const { return m_componentID; }
 
     inline void Enable() { m_enable = true; }
     inline void Disable() { m_enable = false; }
@@ -26,12 +25,14 @@ protected:
     Component();
 
 private:
-    inline void SetTypeInfo(const CM::TypeInfo& inTypeInfo);
-    inline void SetOwner(GameObject* inOwner);
+    virtual inline void InitComponent(
+        const CM::TypeInfo& inTypeInfo,
+        GameObject* inOwner,
+        const std::wstring& inName
+    ) final;
 
 private:
-    static uint64 ComponentIDCounter;
-    uint64 m_componentID = 0;
+    std::wstring m_name = {};
 
     CM::TypeInfo m_typeInfo = {};
     GameObject* m_owner = nullptr;
@@ -41,16 +42,16 @@ private:
 
 inline Component::Component()
 {
-    m_componentID = ++ComponentIDCounter;
 }
 
-inline void Component::SetTypeInfo(const CM::TypeInfo& inTypeInfo)
+inline void Component::InitComponent(const CM::TypeInfo& inTypeInfo, GameObject* inOwner, const std::wstring& inName)
 {
+    //생성자 간략화를 위해서 사용
+
+    assert(inOwner);
+
+    m_name = inName;
+    m_owner = inOwner;
     m_typeInfo = inTypeInfo;
 }
 
-inline void Component::SetOwner(GameObject* inOwner)
-{
-    assert(inOwner);
-    m_owner = inOwner;
-}

@@ -31,14 +31,13 @@ private:
 	inline void SetTypeInfo(const CM::TypeInfo& inTypeInfo);
 
 private:
-	static uint64 ObjectIDCounter;
+	inline static uint64 ObjectIDCounter = 0;
 	uint64 m_objectID = 0;
 
 	CM::TypeInfo m_typeInfo = {};
 
 	//컴포넌트를 저정하는 컨테이너
-	using StrCompPair = std::pair<std::wstring, std::unique_ptr<Component>>;
-	std::unordered_map<uint64, std::vector<StrCompPair>> m_compRepo{ 16 };
+	std::unordered_map<CM::TypeID, std::vector<std::unique_ptr<Component>>> m_compRepo{ 16 };
 	std::vector<CBehavior*> m_updateCompRepo{ 16 };
 };
 

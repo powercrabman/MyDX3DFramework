@@ -2,6 +2,8 @@
 
 namespace CM
 {
+    using TypeID = uint64;
+
     struct TypeInfo
     {
         inline bool operator==(const TypeInfo& inOther) const

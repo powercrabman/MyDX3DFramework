@@ -75,8 +75,20 @@ public:
 	inline void RegisterCMeshRenderer(CMeshRenderer* inMesh);
 	inline void CleanGarbageInCMeshRendererList();
 
-	template<typename ObjectType>
-	inline ObjectType* RegisterGameObject();
+	template<typename ObjectType, typename ...Args>
+	inline ObjectType* RegisterGameObject(Args... args)
+	{
+		static_assert(std::is_base_of<GameObject, ObjectType>::value);
+
+		std::unique_ptr<> inst = std::make_unique<ObjectType>(args...);
+		inst->InitalizeCore();
+		inst->SetTypeInfo(CM::TypeTrait<ObjectType>::GetInfo());
+
+		ObjectType* returnObj = inst.get();
+		m_rObjRepo.push_back(std::move(inst));
+
+		return returnObj;
+	}
 
 public:
 	//참조용 Static 변수들
@@ -312,17 +324,3 @@ inline void Renderer::RenderIndices(uint32 indicesCount)
 	m_deviceContext->DrawIndexed(indicesCount, 0, 0);
 }
 
-template<typename ObjectType>
-inline ObjectType* Renderer::RegisterGameObject()
-{
-	static_assert(std::is_base_of<GameObject, ObjectType>::value);
-
-	std::unique_ptr<> inst = std::make_unique<ObjectType>();
-	inst->InitalizeCore();
-	inst->SetTypeInfo(CM::TypeTrait<ObjectType>::GetInfo());
-
-	ObjectType* returnObj = inst.get();
-	m_rObjRepo.push_back(std::move(inst));
-
-	return returnObj;
-}

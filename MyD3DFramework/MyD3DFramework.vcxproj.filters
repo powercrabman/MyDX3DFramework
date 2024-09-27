@@ -53,7 +53,7 @@
       <Filter>03.System</Filter>
     </ClInclude>
     <ClInclude Include="Font.h">
-      <Filter>04.Resource\Font</Filter>
+      <Filter>08.Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="BufferPool.h">
       <Filter>99.Headers\Utility</Filter>
@@ -133,6 +133,15 @@
     <ClInclude Include="CSpotLight.h">
       <Filter>06.GameModules\Attribute\Light</Filter>
     </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>03.System</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>04.GameScene\Abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="DevScene.h">
+      <Filter>04.GameScene\Concrete</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="MyD3DFramework.ico">
@@ -157,12 +166,6 @@
     </Filter>
     <Filter Include="02.Windows\WindowProc">
       <UniqueIdentifier>{88749dda-40c1-432b-b215-a32832f2a45d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Resource">
-      <UniqueIdentifier>{c40b9c7d-1f7d-4644-92fb-5c8828997fd5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Resource\Font">
-      <UniqueIdentifier>{424c54d0-28eb-4ed3-8552-db2c7301f8a5}</UniqueIdentifier>
     </Filter>
     <Filter Include="99.Headers\Utility">
       <UniqueIdentifier>{ead7b941-b6e4-4b56-b500-97f7286bbee9}</UniqueIdentifier>
@@ -218,6 +221,21 @@
     <Filter Include="06.GameModules\Abstract\CBehavior">
       <UniqueIdentifier>{44f5167e-fe27-4c9f-aa6d-6f2d970594cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.GameScene">
+      <UniqueIdentifier>{0e1a8674-65c9-481c-b799-4c5e89457b52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08.Resource">
+      <UniqueIdentifier>{c40b9c7d-1f7d-4644-92fb-5c8828997fd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08.Resource\Font">
+      <UniqueIdentifier>{424c54d0-28eb-4ed3-8552-db2c7301f8a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.GameScene\Abstract">
+      <UniqueIdentifier>{1f3b69c9-397b-448f-b684-0453653c5705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.GameScene\Concrete">
+      <UniqueIdentifier>{4b8b861d-a73a-47a5-a9fb-4049e7fa9a88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -254,7 +272,7 @@
       <Filter>03.System</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
-      <Filter>04.Resource\Font</Filter>
+      <Filter>08.Resource\Font</Filter>
     </ClCompile>
     <ClCompile Include="BufferPool.cpp">
       <Filter>99.Headers\Utility</Filter>
@@ -330,6 +348,15 @@
     </ClCompile>
     <ClCompile Include="CSpotLight.cpp">
       <Filter>06.GameModules\Attribute\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>03.System</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>04.GameScene\Abstract</Filter>
+    </ClCompile>
+    <ClCompile Include="DevScene.cpp">
+      <Filter>04.GameScene\Concrete</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
