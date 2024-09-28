@@ -3,9 +3,14 @@
 
 class DevScene : public Scene
 {
-	// Scene을(를) 통해 상속됨
+public:
+	DevScene() {}
+	virtual ~DevScene() {}
+
 	void EnterScene() override;
 	void UpdateScene(float inDeltaTime) override;
 	void ExitScene() override;
+
+private:
 };
 

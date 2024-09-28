@@ -9,6 +9,8 @@ C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\ConstexprHash.cpp;C:\U
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\ContantBuffers.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\ContantBuffers.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\CPointLight.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\CPointLight.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\CSpotLight.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\CSpotLight.obj
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\CTag.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\CTag.obj
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\DevScene.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\DevScene.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Effect.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\Effect.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Engine.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\Engine.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Font.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\Font.obj
@@ -20,11 +22,12 @@ C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Main.cpp;C:\Users\alsx
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Material.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\Material.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Mesh.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\Mesh.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\CMeshRenderer.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\CMeshRenderer.obj
-C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Pawn.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\Pawn.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\pch.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\pch.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Renderer.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\Renderer.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\RenderState.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\RenderState.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\ResourceManager.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\ResourceManager.obj
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Scene.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\Scene.obj
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\SceneManager.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\SceneManager.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\ShaderIncludeHelper.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\ShaderIncludeHelper.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\SimpleMathAdv.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\SimpleMathAdv.obj
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\SortedVector.cpp;C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\x64\Debug\SortedVector.obj

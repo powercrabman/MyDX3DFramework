@@ -3,7 +3,6 @@
 #include "WindowsApp.h"
 #include "Engine.h"
 #include "CTransform.h"
-#include "Pawn.h"
 #include "CMeshRenderer.h"
 #include <fstream>
 

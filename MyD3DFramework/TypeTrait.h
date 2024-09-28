@@ -2,51 +2,52 @@
 
 namespace CM
 {
-    using TypeID = uint64;
+	struct TypeID
+	{
+		inline bool operator==(const TypeID& inOther) const
+		{
+			return Value == inOther.Value;
+		}
 
-    struct TypeInfo
-    {
-        inline bool operator==(const TypeInfo& inOther) const
-        {
-            return ID == inOther.ID
-                && TypeName == inOther.TypeName;
-        }
+		const void* Value;
+	};
 
-        uint64 ID = {};
-        const char* TypeName = {};
-    };
+	class ITypeTrait
+	{
+	protected:
+		ITypeTrait() = default;
+		virtual ~ITypeTrait() = default;
+	};
 
-    class TypeTraitBase
-    {
-    protected:
-        static uint64 InstTypeID()
-        {
-            uint64 result = m_currentTypeID;
-            m_currentTypeID += ID_COUNT_STEP;
+	template <
+		typename Type,
+		typename = std::is_class<Type>,
+		typename = std::enable_if_t<!std::is_pointer_v<Type>>
+	>
+	class TypeTrait : public ITypeTrait
+	{
+	public:
+		constexpr static TypeID ID()
+		{
+			return m_typeID;
+		}
 
-            return result;
-        }
-
-    private:
-        enum { ID_COUNT_STEP = 1 };
-        inline static size_t m_currentTypeID = 0;
-    };
-
-    template <typename Type>
-    class TypeTrait : TypeTraitBase
-    {
-    public:
-        static TypeInfo GetInfo()
-        {
-            static TypeInfo trait = []() {
-                TypeInfo result = {};
-                result.ID = InstTypeID();
-                result.TypeName = typeid(Type);
-
-                return result;
-                };
-
-            return trait;
-        }
-    };
+	private:
+		constexpr static char m_value{};
+		constexpr static TypeID m_typeID{ &m_value };
+	};
 }
+
+//TypeID 해시 특수화
+namespace std
+{
+	template<>
+	struct hash<CM::TypeID>
+	{
+		size_t operator()(const CM::TypeID& typeId) const
+		{
+			return std::hash<const void*>{}(typeId.Value);
+		}
+	};
+}
+

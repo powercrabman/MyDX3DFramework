@@ -4,8 +4,6 @@ class GameObject;
 
 class Component
 {
-   //template <typename CompTy, typename ...Args>
-   //friend inline CompTy* GameObject::RegisterComponent(const std::wstring& inHashKey, Args ...args);
     friend class GameObject;
 
 public:

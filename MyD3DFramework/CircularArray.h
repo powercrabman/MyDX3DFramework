@@ -2,6 +2,7 @@
 
 namespace CM
 {
+
 	template <typename Ty, size_t CAPACITY>
 	class CircularArray {
 	public:

@@ -9,12 +9,11 @@ void Scene::EnterSceneCore()
 
 void Scene::UpdateSceneCore(float inDeltaTime)
 {
-	for (GameObject* obj : m_updateObjRepo)
+
+	for (size_t i = 0; i < m_validItemSize; ++i)
 	{
-		if (obj)
-		{
-			obj->UpdateCore(inDeltaTime);
-		}
+		GameObject* obj = m_updateObjRepo[i];
+		obj->Update(inDeltaTime);
 	}
 
 	UpdateScene(inDeltaTime);

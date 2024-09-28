@@ -103,9 +103,6 @@
     <ClInclude Include="ConstexprHash.h">
       <Filter>99.Headers\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Pawn.h">
-      <Filter>05.GameObject\Concrete</Filter>
-    </ClInclude>
     <ClInclude Include="CAttribute.h">
       <Filter>06.GameModules\Abstract</Filter>
     </ClInclude>
@@ -321,9 +318,6 @@
     </ClCompile>
     <ClCompile Include="ConstexprHash.cpp">
       <Filter>99.Headers\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Pawn.cpp">
-      <Filter>05.GameObject\Concrete</Filter>
     </ClCompile>
     <ClCompile Include="CAttribute.cpp">
       <Filter>06.GameModules\Abstract</Filter>
