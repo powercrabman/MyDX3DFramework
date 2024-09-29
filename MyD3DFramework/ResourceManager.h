@@ -8,7 +8,7 @@ private:
 	~ResourceManager() = default;
 
 public:
-	void Init();
+	void Initialize();
 	void LoadResource();
 
 	void LoadFont();

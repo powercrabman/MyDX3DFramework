@@ -1,4 +1,6 @@
 #pragma once
+#include "CMeshRenderer.h"
+#include "FastCompVector.h"
 
 class CMeshRenderer;
 class CLight;
@@ -13,15 +15,11 @@ public:
 	inline bool IsInitalized() const;
 
 	//리소스 생성
-	void CreateDirectXTKResource();
-	void CreateRenderResoucre();
+	void InitializeDirectXTKResource();
+	void InitializeRenderResoucre();
 
 	//렌더링 코어 함수
-	void Update(float inDeltaTime);
 	void Render();
-
-	//추가 업데이트 함수
-	void UpdateCameraAction(float inDeltaTime);
 
 	//추가 렌더링 함수
 	inline void RenderIndices(uint32 indicesCount);
@@ -67,13 +65,13 @@ public:
 		ID3DBlob** outInppBlob);
 
 	//리소스 관련
-	inline Effect* RegisterEffect(const std::wstring& inKey);
-	inline Mesh* RegisterMesh(const std::wstring& inKey);
-	inline RenderState* RegisterRenderState(const std::wstring& inKey);
-	inline Material* RegisterMaterial(const std::wstring& inKey);
+	inline Effect* CreateEffect(const std::wstring& inKey);
+	inline Mesh* CreateMesh(const std::wstring& inKey);
+	inline RenderState* CreateRenderState(const std::wstring& inKey);
+	inline Material* CreateMaterial(const std::wstring& inKey);
 
 	inline void RegisterCMeshRenderer(CMeshRenderer* inMesh);
-	inline void CleanGarbageInCMeshRendererList();
+	inline void UnRegisterCMeshRenderer(CMeshRenderer* inMesh);
 
 public:
 	//참조용 Static 변수들
@@ -124,26 +122,7 @@ private:
 	cbPerFrame m_cbPerFrame = {};
 	
 	//3D 메쉬 집합
-	std::vector<CMeshRenderer*> m_cMashRendererRepo;
-
-	//빛
-	//std::array<CLight*, USABLE_LIGHT_MAXIMUM_COUNT> m_cLightRepo;
-
-	//카메라(임시)
-	Vector3 m_cmrLook = Vector3{ 0.f,0.f,1.f };
-	Vector3 m_cmrPosition = Vector3{ 0.f,3.f,0.f };
-	Vector3 m_worldUpAxis = Vector3{ 0.f,1.f,0.f };
-	float m_nearPlane = 0.5f;
-	float m_farPlane = 100.f;
-
-	Matrix m_viewMat = Matrix::Identity;
-	Matrix m_projMat = Matrix::Identity;
-	float m_fov = ::XMConvertToRadians(45.f);
-
-	//광원(임시)
-	//DirectionalLight m_dirLight = {};
-	//PointLight m_pointLight = {};
-	//SpotLight m_spotLight = {};
+	CM::FastCompVector<CMeshRenderer*> m_cMeshRendererRepo{ 1024 };
 };
 
 inline bool Renderer::IsInitalized() const
@@ -227,7 +206,7 @@ inline RenderState* Renderer::GetRenderState(const std::wstring& inKey)
 	return m_renderStateRepo[inKey].get();
 }
 
-inline Effect* Renderer::RegisterEffect(const std::wstring& inKey)
+inline Effect* Renderer::CreateEffect(const std::wstring& inKey)
 {
 	assert(!m_effectRepo.contains(inKey));
 	std::unique_ptr<Effect> inst = std::make_unique<Effect>();
@@ -237,7 +216,7 @@ inline Effect* Renderer::RegisterEffect(const std::wstring& inKey)
 	return returnObj;
 }
 
-inline Mesh* Renderer::RegisterMesh(const std::wstring& inKey)
+inline Mesh* Renderer::CreateMesh(const std::wstring& inKey)
 {
 	assert(!m_meshRepo.contains(inKey));
 	std::unique_ptr<Mesh> inst = std::make_unique<Mesh>();
@@ -247,7 +226,7 @@ inline Mesh* Renderer::RegisterMesh(const std::wstring& inKey)
 	return returnObj;
 }
 
-inline Material* Renderer::RegisterMaterial(const std::wstring& inKey)
+inline Material* Renderer::CreateMaterial(const std::wstring& inKey)
 {
 	assert(!m_materialRepo.contains(inKey));
 	std::unique_ptr<Material> inst = std::make_unique<Material>();
@@ -259,32 +238,16 @@ inline Material* Renderer::RegisterMaterial(const std::wstring& inKey)
 
 inline void Renderer::RegisterCMeshRenderer(CMeshRenderer* inMesh)
 {
-	if (inMesh != nullptr)
-	{
-		m_cMashRendererRepo.push_back(inMesh);
-	}
+	m_cMeshRendererRepo.Insert(inMesh);
 }
 
-inline void Renderer::CleanGarbageInCMeshRendererList()
+inline void Renderer::UnRegisterCMeshRenderer(CMeshRenderer* inMesh)
 {
-	std::vector<CMeshRenderer*> newVector;
-	size_t repoLen = m_cMashRendererRepo.size();
-	newVector.reserve(repoLen);
-
-	for (size_t i = 0; i < repoLen; ++i)
-	{
-		if (m_cMashRendererRepo[i] != nullptr)
-		{
-			newVector.push_back(m_cMashRendererRepo[i]);
-		}
-	}
-
-	m_cMashRendererRepo = std::move(newVector);
+	m_cMeshRendererRepo.Remove(inMesh);
 }
 
 inline Renderer::Renderer()
 {
-	m_cMashRendererRepo.reserve(1024);
 }
 
 inline Mesh* Renderer::GetMesh(const std::wstring& inKey)

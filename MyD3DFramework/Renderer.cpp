@@ -168,15 +168,15 @@ bool Renderer::InitD3D11Device()
 	return true;
 }
 
-void Renderer::CreateDirectXTKResource()
+void Renderer::InitializeDirectXTKResource()
 {
 	m_spriteBatch = std::make_unique<SpriteBatch>(m_deviceContext.Get());
 }
 
-void Renderer::CreateRenderResoucre()
+void Renderer::InitializeRenderResoucre()
 {
 	//이펙트 생성
-	Effect* effect = RegisterEffect(BasicEffectKey);
+	Effect* effect = CreateEffect(BasicEffectKey);
 
 	effect->SetProperties(
 		m_device.Get(),
@@ -193,7 +193,7 @@ void Renderer::CreateRenderResoucre()
 	);
 
 	//메쉬 생성
-	Mesh* mesh = RegisterMesh(CubeMeshKey);
+	Mesh* mesh = CreateMesh(CubeMeshKey);
 
 	//버텍스 버퍼 생성
 	std::vector<VertexNormal> vertices = {
@@ -228,7 +228,7 @@ void Renderer::CreateRenderResoucre()
 	mesh->SetIndexBuffer(m_device.Get(), indices);
 
 	//RnederState 설정
-	RenderState* renderState = RegisterRenderState(BasicRenderStateKey);
+	RenderState* renderState = CreateRenderState(BasicRenderStateKey);
 	renderState->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	renderState->SetRasterizerState(m_device.Get());
 
@@ -252,20 +252,19 @@ void Renderer::CreateRenderResoucre()
 		CONSTANT_BUFFER_APPLY_PIXEL_SHADER
 	);
 
-
 	//뷰 투영 행렬 초기화
-	const static Vector3 s_cmrLookAt{ 0.f, 0.f, 5.f };
-	m_viewMat = ::XMMatrixLookAtLH(m_cmrPosition, s_cmrLookAt, m_worldUpAxis);
-	m_cmrLook = s_cmrLookAt - m_cmrPosition;
-	m_cmrLook.Normalize();
-
-	m_projMat = ::XMMatrixPerspectiveFovLH(
-		m_fov,
-		WindowsApp::GetInst().GetAspectRatio(),
-		m_nearPlane,
-		m_farPlane);
-
-	//광원 초기화
+	//const static Vector3 s_cmrLookAt{ 0.f, 0.f, 5.f };
+	//m_viewMat = ::XMMatrixLookAtLH(m_cmrPosition, s_cmrLookAt, m_worldUpAxis);
+	//m_cmrLook = s_cmrLookAt - m_cmrPosition;
+	//m_cmrLook.Normalize();
+	//
+	//m_projMat = ::XMMatrixPerspectiveFovLH(
+	//	m_fov,
+	//	WindowsApp::GetInst().GetAspectRatio(),
+	//	m_nearPlane,
+	//	m_farPlane);
+	//
+	////광원 초기화
 	//m_dirLight.Ambient = Color(0.2f, 0.2f, 0.2f, 1.f);
 	//m_dirLight.Diffuse = Color(1.0f, 0.95f, 0.8f, 1.f);
 	//m_dirLight.Specular = Color(1.0f, 1.0f, 1.0f, 1.f);
@@ -273,63 +272,55 @@ void Renderer::CreateRenderResoucre()
 	//m_dirLight.Direction.Normalize();
 
 	//머테리얼 설정
-	Material* material = RegisterMaterial(BasicMaterialKey);
+	Material* material = CreateMaterial(BasicMaterialKey);
 	material->Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
 	material->Diffuse = Color(0.5f, 0.5f, 0.5f, 1.f);
 	material->Specular = Color(0.8f, 0.8f, 0.8f, 16.f);
 
 	SetCurrentEffect(BasicEffectKey);
 	SetCurrentRenderState(BasicRenderStateKey);
-
-	////오브젝트 생성
-	//Register<Pawn>();
-}
-
-void Renderer::Update(float inDeltaTime)
-{
-	UpdateCameraAction(inDeltaTime);
 }
 
 void Renderer::Render()
 {
-	//Constant Buffer Per Frame
-	{
-		cbPerFrame cb = {};
-		//cb.DirLight = m_dirLight;
-		//cb.PointLight = m_pointLight;
-		//cb.SpotLight = m_spotLight;
-
-		cb.EyePosW = ToVector4(m_cmrPosition, true);
-
-		m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerFrameKey, cb);
-	}
-
-	//Constant Buffer Per Object
-	for (const auto* mesh : m_cMashRendererRepo)
-	{
-		if (mesh == nullptr)
-		{
-			//mesh는 삭제시 즉시 삭제하지 않고, 나중에 한 꺼번에 삭제됨
-			//완전히 삭제되기 전까지는 nullptr 상태로 존재함
-			continue;
-		}
-
-		const Mesh* m = mesh->GetMesh();
-		const CTransform* t = mesh->GetTransform();
-
-		//상수 버퍼 설정
-		Matrix wMat = t->GetWorldMatrix();
-
-		cbPerObject cb = {};
-		cb.Material = *mesh->GetMaterial();
-		cb.World = ::XMMatrixTranspose(t->GetWorldMatrix());
-		cb.WorldInvTranspose = t->GetWorldMatrixInverse();
-
-		m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerObjectKey, cb);
-
-		m->BindBuffers(m_deviceContext.Get());
-		RenderIndices(m->GetIndexBufferSize());
-	}
+	////Constant Buffer Per Frame
+	//{
+	//	cbPerFrame cb = {};
+	//	//cb.DirLight = m_dirLight;
+	//	//cb.PointLight = m_pointLight;
+	//	//cb.SpotLight = m_spotLight;
+	//
+	//	cb.EyePosW = ToVector4(m_cmrPosition, true);
+	//
+	//	m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerFrameKey, cb);
+	//}
+	//
+	////Constant Buffer Per Object
+	//for (const auto* mesh : m_cMashRendererRepo)
+	//{
+	//	if (mesh == nullptr)
+	//	{
+	//		//mesh는 삭제시 즉시 삭제하지 않고, 나중에 한 꺼번에 삭제됨
+	//		//완전히 삭제되기 전까지는 nullptr 상태로 존재함
+	//		continue;
+	//	}
+	//
+	//	const Mesh* m = mesh->GetMesh();
+	//	const CTransform* t = mesh->GetTransform();
+	//
+	//	//상수 버퍼 설정
+	//	Matrix wMat = t->GetWorldMatrix();
+	//
+	//	cbPerObject cb = {};
+	//	cb.Material = *mesh->GetMaterial();
+	//	cb.World = ::XMMatrixTranspose(t->GetWorldMatrix());
+	//	cb.WorldInvTranspose = t->GetWorldMatrixInverse();
+	//
+	//	m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerObjectKey, cb);
+	//
+	//	m->BindBuffers(m_deviceContext.Get());
+	//	RenderIndices(m->GetIndexBufferSize());
+	//}
 
 	////렌더상태 초기화 할까 말까??
 	//m_curEffect->Apply(m_deviceContext.Get());
@@ -381,72 +372,32 @@ void Renderer::Render()
 	//	RenderIndices(m->GetIndexBufferSize());
 	//}
 
-}
 
-void Renderer::UpdateCameraAction(float inDeltaTime)
-{
-	static const float s_rotateSpeed = ::XMConvertToRadians(90.f);
-	float s_rotateDelta = inDeltaTime * s_rotateSpeed;
-
-	//Move Camera
+	//오브젝트 렌더링
+	
+	for (const CMeshRenderer* meshComp : m_cMeshRendererRepo.GetVector())
 	{
-		static float s_cmrMoveSpeed = 3.f;
-		static float s_cmrRotateSpeed = ::XMConvertToRadians(30.f);
-
-		if (KEY_HOLD(eKeyCode::A))
+		if (meshComp == nullptr)
 		{
-			Vector3 dir = -m_worldUpAxis.Cross(m_cmrLook);
-			m_cmrPosition += dir * s_cmrMoveSpeed * inDeltaTime;
+			break;
 		}
 
-		if (KEY_HOLD(eKeyCode::D))
+		if (!meshComp->IsEnable())
 		{
-			Vector3 dir = m_worldUpAxis.Cross(m_cmrLook);
-			m_cmrPosition += dir * s_cmrMoveSpeed * inDeltaTime;
+			continue;
 		}
 
-		if (KEY_HOLD(eKeyCode::S))
-		{
-			m_cmrPosition += -m_cmrLook * s_cmrMoveSpeed * inDeltaTime;
-		}
-
-		if (KEY_HOLD(eKeyCode::W))
-		{
-			m_cmrPosition += m_cmrLook * s_cmrMoveSpeed * inDeltaTime;
-		}
-
-		if (KEY_HOLD(eKeyCode::Space))
-		{
-			m_cmrPosition.y += s_cmrMoveSpeed * inDeltaTime;
-		}
-
-		if (KEY_HOLD(eKeyCode::L_Shift))
-		{
-			m_cmrPosition.y += -s_cmrMoveSpeed * inDeltaTime;
-		}
-
-		if (KEY_HOLD(eKeyCode::Left))
-		{
-			m_cmrLook = ::XMVector3Rotate(m_cmrLook, Quaternion::CreateFromYawPitchRoll(-s_cmrRotateSpeed * inDeltaTime, 0.f, 0.f));
-		}
-
-		if (KEY_HOLD(eKeyCode::Right))
-		{
-			m_cmrLook = ::XMVector3Rotate(m_cmrLook, Quaternion::CreateFromYawPitchRoll(s_cmrRotateSpeed * inDeltaTime, 0.f, 0.f));
-		}
-
-		if (KEY_HOLD(eKeyCode::Up))
-		{
-			m_cmrLook = ::XMVector3Rotate(m_cmrLook, Quaternion::CreateFromYawPitchRoll(0.f, -s_cmrRotateSpeed * inDeltaTime, 0.f));
-		}
-
-		if (KEY_HOLD(eKeyCode::Down))
-		{
-			m_cmrLook = ::XMVector3Rotate(m_cmrLook, Quaternion::CreateFromYawPitchRoll(0.f, s_cmrRotateSpeed * inDeltaTime, 0.f));
-		}
+		/* 렌더링 수행 */
 	}
-
 }
+
+//========================================
+// 
+//	1. Light 관리 
+//  2. 상수버퍼 관리
+//	3. 렌더링 테스트 하면 끝! 
+// 
+//========================================
 
 void Renderer::ResizeWindow(const WindowSize& winSize)
 {
@@ -538,7 +489,7 @@ void Renderer::DrawString(const wchar_t* inStr, const Vector2& inScreenPos, eFon
 }
 
 
-inline RenderState* Renderer::RegisterRenderState(const std::wstring& inKey)
+inline RenderState* Renderer::CreateRenderState(const std::wstring& inKey)
 {
 	assert(!m_renderStateRepo.contains(inKey));
 	std::unique_ptr<RenderState> inst = std::make_unique<RenderState>();

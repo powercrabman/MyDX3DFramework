@@ -10,4 +10,3 @@ public:
 protected:
 	CBehavior() = default;
 };
-

@@ -28,10 +28,12 @@ public:
 
 	template<typename CompType>
 	inline CompType* GetComponentByNameOrNull(const std::wstring& inName);
+	//컴파일 타임 문자열 해싱을 통해서 최적화 + 가독성 향상 가능
 
 	//컴포넌트 삭제
 	template<typename CompType>
 	inline void RemoveComponent(const std::wstring& inCompName);
+	inline void RemoveComponent(const Component* inCompToRemove);
 
 	//updateComp 가비지 컬렉터
 	inline void CleanGarbage();
@@ -41,21 +43,69 @@ private:
 	virtual void Update(float inDeltaTime) = 0;
 
 private:
-	inline static uint64 ObjectIDCounter = 0;
+	inline static uint64 sObjectIDCounter = 0;
 	uint64 m_objectID = 0;
 
 	//컴포넌트를 저정하는 컨테이너
+	constexpr inline static size_t sReserveCapacity = 16;
 	std::unordered_map<CM::TypeID, std::vector<std::unique_ptr<Component>>> m_compRepo;
 	std::vector<CBehavior*> m_updateCompRepo;
 	size_t m_validCompSizeInVector = 0;
 };
 
-
 inline GameObject::GameObject()
 {
-	m_objectID = ObjectIDCounter++;
+	m_objectID = sObjectIDCounter++;
+
+	m_compRepo.reserve(sReserveCapacity);
+	m_updateCompRepo.reserve(sReserveCapacity);
 }
 
+inline void GameObject::RemoveComponent(const Component* inCompToRemove)
+{
+	std::vector<std::unique_ptr<Component>>& compTypeVec = m_compRepo[inCompToRemove->GetTypeInfo()];
+	auto iterToDelete = std::find_if(compTypeVec.begin(), compTypeVec.end(),
+		[&inCompToRemove](const std::unique_ptr<Component>& inOther)
+		{
+			return inOther.get() == inCompToRemove;
+		}
+	);
+
+	if (iterToDelete == compTypeVec.end())
+	{
+		return;
+	}
+
+	Component* cmpToDelete = iterToDelete->get();
+	CBehavior* successor = nullptr;
+
+	if (inCompToRemove->IsUpdateable())
+	{
+		size_t updateCompRepoSize = m_updateCompRepo.size();
+
+		assert(updateCompRepoSize > 0);
+
+		if (updateCompRepoSize == 1)
+		{
+			m_updateCompRepo[0] = nullptr;
+			m_validCompSizeInVector = 0;
+		}
+		else
+		{
+			successor = m_updateCompRepo[m_validCompSizeInVector - 1];
+			m_updateCompRepo[cmpToDelete->GetIndex()] = successor;
+			m_updateCompRepo[m_validCompSizeInVector - 1] = nullptr;
+			--m_validCompSizeInVector;
+		}
+	}
+
+	if (successor)
+	{
+		successor->SetIndex(cmpToDelete->GetIndex());
+	}
+
+	compTypeVec.erase(iterToDelete);
+}
 
 inline void GameObject::CleanGarbage()
 {
@@ -159,6 +209,7 @@ inline CompType* GameObject::GetComponentByNameOrNull(const std::wstring& inName
 	return nullptr;
 }
 
+//컴포넌트 삭제
 template<typename CompType>
 inline void GameObject::RemoveComponent(const std::wstring& inCompName)
 {
@@ -207,3 +258,4 @@ inline void GameObject::RemoveComponent(const std::wstring& inCompName)
 
 	compTypeVec.erase(iterToDelete);
 }
+

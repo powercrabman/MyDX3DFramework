@@ -50,10 +50,6 @@ using namespace DirectX::SimpleMath;
 //STL
 #include <array>
 
-//MyContainer
-#include "SortedVector.h"
-#include "CircularArray.h"
-
 //MyInclude
 #include "Types.h"
 #include "EngineConfig.h"
@@ -67,6 +63,10 @@ using namespace DirectX::SimpleMath;
 #include "Algorithm.h"
 #include "SimpleMathAdv.h"
 #include "TypeTrait.h"
+
+//MyContainer
+#include "SortedVector.h"
+#include "CircularArray.h"
 
 //About Rendering
 #include "Mesh.h"

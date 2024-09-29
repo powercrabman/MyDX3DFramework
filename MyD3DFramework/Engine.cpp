@@ -4,13 +4,15 @@
 #include "GameTimer.h"
 #include "Renderer.h"
 #include "InputManager.h"
+#include "SceneManager.h"
+#include "DevScene.h"
 
-bool Engine::Init(HINSTANCE inHinst)
+bool Engine::Initialize(HINSTANCE inHinst)
 {
 	//COM 라이브러리 초기화
 	CHECK_FAILED(::CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED));
 
-	if (!WindowsApp::GetInst().Init(inHinst, L"My D3DX Program", L"My D3DX Program"))
+	if (!WindowsApp::GetInst().Initialize(inHinst, L"My D3DX Program", L"My D3DX Program"))
 	{
 		return false;
 	}
@@ -21,7 +23,7 @@ bool Engine::Init(HINSTANCE inHinst)
 	}
 
 	//DX 의존성 객체 생성
-	Renderer::GetInst().CreateDirectXTKResource();
+	Renderer::GetInst().InitializeDirectXTKResource();
 
 	//윈도우 사이즈 설정
 	WindowsApp::GetInst().ResizeWindow(
@@ -34,16 +36,20 @@ bool Engine::Init(HINSTANCE inHinst)
 	GameTimer::GetInst().Reset();
 
 	//입력 장치 초기화
-	InputManager::GetInst().Init();
+	InputManager::GetInst().Initialize();
 
 	//리소스 초기화
-	ResourceManager::GetInst().Init();
+	ResourceManager::GetInst().Initialize();
 	ResourceManager::GetInst().LoadResource();
 
 	//메모리 풀 생성
 	Buffer512W::GetInst();
 
-	Renderer::GetInst().CreateRenderResoucre();
+	Renderer::GetInst().InitializeRenderResoucre();
+
+	//씬 관리
+	SceneManager::GetInst().InitializeScene();
+	SceneManager::GetInst().SwitchScene<DevScene>(); //씬 설정 
 
 	return true;
 }
@@ -56,10 +62,10 @@ void Engine::Update()
 
 	//InputManager 업데이트
 	InputManager::GetInst().Update();
-	DebugHandler();
+	//DebugHandler(); // 지금 사용하지 않음
 
-	//렌더링 머신 업데이트
-	Renderer::GetInst().Update(timer.GetDeltaTime());
+	//Scene 업데이트
+	SceneManager::GetInst().GetCurrentScene()->UpdateSceneCore(timer.GetDeltaTime());
 }
 
 void Engine::Render()

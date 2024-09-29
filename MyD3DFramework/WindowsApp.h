@@ -9,7 +9,7 @@ private:
 public:
 	DEFINE_SINGLE(WindowsApp);
 
-	bool Init(
+	bool Initialize(
 		HINSTANCE inHinst,
 		const std::wstring& titleName,
 		const std::wstring& className

@@ -8,7 +8,7 @@ class Scene
 public:
 	virtual ~Scene() = default;
 
-	//씬 메인 함수							
+	//씬 메인 함수
 	void EnterSceneCore();
 	void UpdateSceneCore(float inDeltaTime);
 	void ExitSceneCore();
@@ -24,6 +24,7 @@ public:
 
 	/* 삭제 */
 	inline void RemoveGameObject(uint64 inID);
+	inline void RemoveGameObject(GameObject* inObject);
 
 	/* 가비지 컬렉터 */
 	inline void CleanGarbge();
@@ -34,13 +35,11 @@ protected:
 	virtual void EnterScene() = 0;
 	virtual void UpdateScene(float inDeltaTime) = 0;
 	virtual void ExitScene() = 0;
-private:
-	//CM::TypeInfo m_typeInfo = {};
 
-	using GameObjectRef = std::unique_ptr<GameObject>;
+private:
 	constexpr inline static size_t sReserveCapacity = 1024;
 
-	std::unordered_map<size_t, std::pair<size_t, GameObjectRef>> m_gameObjRepo;
+	std::unordered_map<size_t, std::pair<size_t, std::unique_ptr<GameObject>>> m_gameObjRepo;
 	std::vector<GameObject*> m_updateObjRepo;
 	size_t m_validObjSizeinVector = 0;
 };
@@ -49,7 +48,7 @@ template<typename ObjType, typename ...Args>
 inline GameObject* Scene::CreateGameObject(Args && ...args)
 {
 	static_assert(std::is_base_of<GameObject, ObjType>::value, "ObjType is not derivation of GameObject");
-	GameObjectRef obj = std::make_unique<ObjType>(std::forward<Args>(args)...);
+	 std::unique_ptr<GameObject> obj = std::make_unique<ObjType>(std::forward<Args>(args)...);
 	GameObject* ptr = obj.get();
 
 	//배열에 업데이트
@@ -131,6 +130,11 @@ inline void Scene::RemoveGameObject(uint64 inID)
 	//해쉬 속 ItemB의 배열 인덱스 업데이트
 	size_t oldID = m_updateObjRepo[arrayIdx]->GetObjectID();
 	m_gameObjRepo[oldID].first = arrayIdx;
+}
+
+inline void Scene::RemoveGameObject(GameObject* inObject)
+{
+	RemoveGameObject(inObject->GetObjectID());
 }
 
 /* 가비지 컬렉터 */

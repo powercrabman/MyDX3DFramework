@@ -18,3 +18,7 @@ void CMeshRenderer::RegisterToRenderer()
 	Renderer::GetInst().RegisterCMeshRenderer(this); 
 }
 
+CMeshRenderer::~CMeshRenderer()
+{
+	Renderer::GetInst().UnRegisterCMeshRenderer(this);
+}

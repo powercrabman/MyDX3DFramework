@@ -115,9 +115,6 @@
     <ClInclude Include="CDirectionalLight.h">
       <Filter>06.GameModules\Attribute\Light</Filter>
     </ClInclude>
-    <ClInclude Include="CLight.h">
-      <Filter>06.GameModules\Abstract\CBehavior</Filter>
-    </ClInclude>
     <ClInclude Include="CPointLight.h">
       <Filter>06.GameModules\Attribute\Light</Filter>
     </ClInclude>
@@ -133,14 +130,20 @@
     <ClInclude Include="Scene.h">
       <Filter>04.GameScene\Abstract</Filter>
     </ClInclude>
-    <ClInclude Include="CTag.h">
-      <Filter>06.GameModules\Attribute</Filter>
-    </ClInclude>
     <ClInclude Include="CBehavior.h">
       <Filter>06.GameModules\Abstract</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>05.GameObject\Abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="CLight.h">
+      <Filter>06.GameModules\Attribute\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="CCamera.h">
+      <Filter>06.GameModules\Attribute</Filter>
+    </ClInclude>
+    <ClInclude Include="FastCompVector.h">
+      <Filter>99.Headers\Utility\Container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -232,9 +235,6 @@
     </Filter>
     <Filter Include="04.GameScene\Concrete">
       <UniqueIdentifier>{4b8b861d-a73a-47a5-a9fb-4049e7fa9a88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.GameModules\Abstract\CBehavior">
-      <UniqueIdentifier>{44f5167e-fe27-4c9f-aa6d-6f2d970594cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -331,9 +331,6 @@
     <ClCompile Include="CDirectionalLight.cpp">
       <Filter>06.GameModules\Attribute\Light</Filter>
     </ClCompile>
-    <ClCompile Include="CLight.cpp">
-      <Filter>06.GameModules\Abstract\CBehavior</Filter>
-    </ClCompile>
     <ClCompile Include="CPointLight.cpp">
       <Filter>06.GameModules\Attribute\Light</Filter>
     </ClCompile>
@@ -349,14 +346,20 @@
     <ClCompile Include="DevScene.cpp">
       <Filter>04.GameScene\Concrete</Filter>
     </ClCompile>
-    <ClCompile Include="CTag.cpp">
-      <Filter>06.GameModules\Attribute</Filter>
-    </ClCompile>
     <ClCompile Include="CBehavior.cpp">
       <Filter>06.GameModules\Abstract</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>05.GameObject\Abstract</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight.cpp">
+      <Filter>06.GameModules\Attribute\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="CCamera.cpp">
+      <Filter>06.GameModules\Attribute</Filter>
+    </ClCompile>
+    <ClCompile Include="FastCompVector.cpp">
+      <Filter>99.Headers\Utility\Container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

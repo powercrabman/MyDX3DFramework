@@ -18,7 +18,7 @@ public:
 	inline void AddScale(const Vector3& inScale);
 
 	inline Vector3 GetPosition() const { return m_translate; }
-	inline Quaternion GetRotate() const { return m_rotate; }
+	inline Quaternion GetRotate() const { return m_rotator; }
 	inline Vector3 GetScale() const { return m_scaling; }
 
 	inline Matrix GetWorldMatrix() const;
@@ -26,7 +26,7 @@ public:
 
 private:
 	Vector3 m_translate = Vector3::Zero;
-	Quaternion m_rotate = Quaternion::Identity;
+	Quaternion m_rotator = Quaternion::Identity;
 	Vector3 m_scaling = Vector3::One;
 };
 
@@ -40,12 +40,12 @@ inline void CTransform::SetRotateDegree(float inYaw, float inPitch, float inRoll
 	inYaw = ::XMConvertToRadians(inYaw);
 	inPitch = ::XMConvertToRadians(inPitch);
 	inRoll = ::XMConvertToRadians(inRoll);
-	m_rotate = Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
+	m_rotator = Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
 inline void CTransform::SetRotate(float inYaw, float inPitch, float inRoll)
 {
-	m_rotate = Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
+	m_rotator = Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
 inline void CTransform::SetScale(const Vector3& inScale)
@@ -63,12 +63,12 @@ inline void CTransform::AddRotateDegree(float inYaw, float inPitch, float inRoll
 	inYaw = ::XMConvertToRadians(inYaw);
 	inPitch = ::XMConvertToRadians(inPitch);
 	inRoll = ::XMConvertToRadians(inRoll);
-	m_rotate *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
+	m_rotator *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
 inline void CTransform::AddRotate(float inYaw, float inPitch, float inRoll)
 {
-	m_rotate *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
+	m_rotator *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
 inline void CTransform::AddScale(const Vector3& inScale)
@@ -81,7 +81,7 @@ inline Matrix CTransform::GetWorldMatrix() const
 	return ::XMMatrixAffineTransformation(
 		m_scaling,
 		Vector3::Zero,
-		m_rotate,
+		m_rotator,
 		m_translate
 	);
 }

@@ -85,7 +85,7 @@ private:
 	virtual ~InputManager() = default;
 
 public:
-	void Init();
+	void Initialize();
 	void Update();
 
 	inline bool GetKeyHold(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Hold; }

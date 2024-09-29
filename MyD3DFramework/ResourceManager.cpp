@@ -4,7 +4,7 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-void ResourceManager::Init()
+void ResourceManager::Initialize()
 {
 	m_resourcePath = fs::current_path().parent_path();
 	m_resourcePath += L"\\Resource\\";

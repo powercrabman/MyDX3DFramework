@@ -11,6 +11,5 @@ public:
 	void UpdateScene(float inDeltaTime) override;
 	void ExitScene() override;
 
-private:
 };
 

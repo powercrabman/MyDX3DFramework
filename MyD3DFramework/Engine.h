@@ -5,7 +5,7 @@ class Engine final
 public:
 	DEFINE_SINGLE(Engine);
 
-	bool Init(HINSTANCE inHInst);
+	bool Initialize(HINSTANCE inHInst);
 	int Run();
 
 	void SetAppPauseState(bool trigger);

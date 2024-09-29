@@ -7,9 +7,10 @@ class CTransform;
 
 class CMeshRenderer : public CAttribute
 {
+	friend class Renderer;
 public:
 	CMeshRenderer(const CTransform* inOwnerTrans);
-	virtual ~CMeshRenderer() = default;
+	virtual ~CMeshRenderer();
 
 	void RegisterToRenderer();
 	
@@ -21,6 +22,12 @@ public:
 	inline const Material* GetMaterial() const;
 
 private:
+	inline void SetIndex(uint64 inIdx);
+	inline uint64 GetIndex() const { return m_index; }
+
+private:
+	uint64 m_index = UINT64_MAX;
+
 	Mesh* m_mesh = nullptr;
 	Material* m_material = nullptr;
 	const CTransform* m_ownerTrans = nullptr;
@@ -43,8 +50,14 @@ inline const Material* CMeshRenderer::GetMaterial() const
 	return m_material;
 }
 
+inline void CMeshRenderer::SetIndex(uint64 inIdx)
+{
+	m_index = inIdx;
+}
+
 inline CMeshRenderer::CMeshRenderer(const CTransform* inOwnerTrans)
 	: m_ownerTrans(inOwnerTrans)
 {
 	ASSERT(inOwnerTrans, "트랜스폼이 nullptr 입니다.");
 }
+

@@ -2,7 +2,7 @@
 #include "InputManager.h"
 #include "WindowsApp.h"
 
-void InputManager::Init()
+void InputManager::Initialize()
 {
 	std::fill(m_stateList.begin(), m_stateList.end(), eKeyState::Away);
 	m_hwnd = WindowsApp::GetInst().GetHwnd();
