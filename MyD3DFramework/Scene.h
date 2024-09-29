@@ -17,10 +17,13 @@ public:
 	inline GameObject* CreateGameObject(Args&&...args);
 
 	/* 탐색 */
-	GameObject* GetGameObject(uint64 inID);
+	inline GameObject* GetGameObjectOrNull(uint64 inID);
+
+	/* 탐색2 */
+	inline GameObject* FindGameObjectOrNull(const std::function<bool(const GameObject*)>& inFindFunction);
 
 	/* 삭제 */
-	void RemoveGameObject(uint64 inID);
+	inline void RemoveGameObject(uint64 inID);
 
 	/* 가비지 컬렉터 */
 	inline void CleanGarbge();
@@ -39,7 +42,7 @@ private:
 
 	std::unordered_map<size_t, std::pair<size_t, GameObjectRef>> m_gameObjRepo;
 	std::vector<GameObject*> m_updateObjRepo;
-	size_t m_validItemSize = 0;
+	size_t m_validObjSizeinVector = 0;
 };
 
 template<typename ObjType, typename ...Args>
@@ -52,30 +55,48 @@ inline GameObject* Scene::CreateGameObject(Args && ...args)
 	//배열에 업데이트
 	size_t backIndex = m_updateObjRepo.size();
 
-	assert(backIndex >= m_validItemSize);
+	assert(backIndex >= m_validObjSizeinVector);
 
-	if (backIndex == m_validItemSize)
+	if (backIndex == m_validObjSizeinVector)
 	{
 		m_updateObjRepo.push_back(ptr);
-		++m_validItemSize;
+		++m_validObjSizeinVector;
 	}
 	else
 	{
-		m_updateObjRepo[m_validItemSize++] = ptr;
+		m_updateObjRepo[m_validObjSizeinVector++] = ptr;
 	}
 
 	//해쉬에 업데이트
-	m_gameObjRepo[ptr->GetObjectID()] = std::make_pair(m_validItemSize - 1, std::move(obj));
+	m_gameObjRepo[ptr->GetObjectID()] = std::make_pair(m_validObjSizeinVector - 1, std::move(obj));
 
 	return ptr;
 }
 
 /* 탐색 */
-inline GameObject* Scene::GetGameObject(uint64 inID)
+inline GameObject* Scene::GetGameObjectOrNull(uint64 inID)
 {
 	auto iter = m_gameObjRepo.find(inID);
-	assert(iter != m_gameObjRepo.end());
-	return (*iter).second.second.get();
+	if (iter != m_gameObjRepo.end())
+	{
+		return iter->second.second.get();
+	}
+	return nullptr;
+}
+
+/* 탐색2 */
+inline GameObject* Scene::FindGameObjectOrNull(const std::function<bool(const GameObject*)>& inFindFunction)
+{
+	for (size_t i = 0; i < m_validObjSizeinVector; ++i)
+	{
+		GameObject* obj = m_updateObjRepo[i];
+		if (inFindFunction(obj))
+		{
+			return obj;
+		}
+	}
+
+	return nullptr;
 }
 
 /* 삭제 */
@@ -89,21 +110,20 @@ inline void Scene::RemoveGameObject(uint64 inID)
 	size_t arrayIdx = (*iter).second.first;
 
 	//만약 요소가 1개라면 early return
-	if (m_validItemSize == 1)
+	if (m_validObjSizeinVector == 1)
 	{
-		m_updateObjRepo[0] = nullptr;
-
 		//해쉬 속 기존 ItemA 요소 제거
+		m_updateObjRepo[0] = nullptr;
 		m_gameObjRepo.erase(inID);
-		--m_validItemSize;
+		m_validObjSizeinVector = 0;
 
 		return;
 	}
 
 	//ItemA와 ItemB를 찾은후 자리 변경, ItemA는 nullptr로 변경
-	m_updateObjRepo[arrayIdx] = m_updateObjRepo[m_validItemSize - 1];
-	m_updateObjRepo[m_validItemSize - 1] = nullptr;
-	--m_validItemSize;
+	m_updateObjRepo[arrayIdx] = m_updateObjRepo[m_validObjSizeinVector - 1];
+	m_updateObjRepo[m_validObjSizeinVector - 1] = nullptr;
+	--m_validObjSizeinVector;
 
 	//해쉬 속 기존 ItemA 요소 제거
 	m_gameObjRepo.erase(inID);
@@ -116,8 +136,12 @@ inline void Scene::RemoveGameObject(uint64 inID)
 /* 가비지 컬렉터 */
 inline void Scene::CleanGarbge()
 {
-	m_updateObjRepo.erase(m_updateObjRepo.begin() + m_validItemSize, m_updateObjRepo.end());
+	if (m_validObjSizeinVector < m_updateObjRepo.size())
+	{
+		m_updateObjRepo.erase(m_updateObjRepo.begin() + m_validObjSizeinVector, m_updateObjRepo.end());
+	}
 }
+
 
 inline Scene::Scene()
 {

@@ -1,92 +1,44 @@
 #pragma once
-
-class CBehavior;
+#include "CBehavior.h"
 
 class GameObject
 {
 	friend class Scene;
 public:
-	GameObject();
+	inline GameObject();
 	virtual ~GameObject() = default;
 
 	virtual void InitalizeCore();
 	virtual void UpdateCore(float inDeltaTime);
 
 	inline uint64 GetObjectID() const { return m_objectID; }
-	//inline CM::TypeInfo GetTypeInfo() const { return m_typeInfo; }
 
-	//template <typename CompTy, typename ...Args>
-	//inline CompTy* RegisterComponent(const std::wstring& inStringKey, Args ...args)
-	//{
-	//	static_assert(std::is_base_of<Component, CompTy>::value, "컴포넌트 형식이 아닙니다.");
-	//	static_assert(!std::is_same<Component, CompTy>::value, "Component는 직접 생성할 수 없습니다.");
-	//
-	//	TypeInfo tInfo = CM::TypeTrait<CompTy>::GetInfo();
-	//	assert(!m_compRepo.contains(tInfo.ID) && "이미 해당 타입의 컴포넌트가 존재합니다.");
-	//
-	//	// 컴포넌트 생성
-	//	std::unique_ptr<CompTy> cmp = std::make_unique<CompTy>(std::forward<Args>(args)...);
-	//	CompTy* cPtr = cmp.get();
-	//
-	//	// 소유자 및 타입 정보 설정
-	//	cmp->SetOwner(this);
-	//	cmp->SetTypeInfo(tInfo);
-	//
-	//	// 해당 타입의 컴포넌트가 없다면 새로 추가
-	//	auto repo = m_compRepo.find(tInfo.ID);
-	//	if (repo == m_compRepo.end())
-	//	{
-	//		std::vector<StrCompPair> vec{ 8 };
-	//		vec.emplace_back(std::make_pair(inStringKey, std::move(cmp)));
-	//		m_compRepo[tInfo.ID] = std::move(vec);
-	//	}
-	//	else
-	//	{
-	//		repo->second.emplace_back(std::make_pair(inStringKey, std::move(cmp)));
-	//	}
-	//
-	//	// 만약 CBehavior에서 상속받은 타입이면 업데이트 목록에 추가
-	//	if constexpr (std::is_base_of<CBehavior, CompTy>::value)
-	//	{
-	//		m_updateCompRepo.push_back(static_cast<CBehavior*>(cPtr));
-	//	}
-	//
-	//	return cPtr;
-	//}
-	//
-	//template <typename CompTy>
-	//inline CompTy* GetComponent(const std::wstring& inStringKey)
-	//{
-	//	static_assert(std::is_base_of<Component, CompTy>::value, "컴포넌트 형식이 아닙니다.");
-	//	ASSERT(HasComponent<CompTy>(), "컴포넌트가 존재하지 않습니다.");
-	//
-	//	const auto& repo = m_compRepo[TypeTrait<CompTy>::GetInfo().ID];
-	//
-	//	for (const auto& compPair : repo)
-	//	{
-	//		if (compPair.first == inStringKey)
-	//		{
-	//			Component* cmp = compPair.second.get();
-	//			assert(CM::TypeTrait<CompTy>::GetInfo() == cmp->GetTypeInfo() && "컴포넌트의 타입이 일치하지 않습니다.");
-	//			return static_cast<CompTy*>(cmp);
-	//		}
-	//	}
-	//
-	//	assert(false, "컴포넌트가 존재하지 않습니다.");
-	//	return nullptr;
-	//}
-	//
-	//template <typename CompTy>
-	//inline bool HasComponent()
-	//{
-	//	return m_compRepo.contains(TypeTrait<CompTy>::GetInfo().ID);
-	//}
+	//컴포넌트 생성
+	template <typename CompType, typename ...Args>
+	inline CompType* CreateComponent(Args&& ...args, const std::wstring& inCompName);
+
+	template<typename CompType>
+	inline bool HasComponent();
+	
+	template<typename CompType>
+	inline CompType* GetComponentOrNull();
+
+	template<typename CompType>
+	inline std::vector<std::unique_ptr<Component>>& GetComponents();
+
+	template<typename CompType>
+	inline CompType* GetComponentByNameOrNull(const std::wstring& inName);
+
+	//컴포넌트 삭제
+	template<typename CompType>
+	inline void RemoveComponent(const std::wstring& inCompName);
+
+	//updateComp 가비지 컬렉터
+	inline void CleanGarbage();
 
 private:
 	virtual void Initialize() = 0;
 	virtual void Update(float inDeltaTime) = 0;
-
-	//inline void SetTypeInfo(const CM::TypeInfo& inTypeInfo);
 
 private:
 	inline static uint64 ObjectIDCounter = 0;
@@ -95,17 +47,163 @@ private:
 	//컴포넌트를 저정하는 컨테이너
 	std::unordered_map<CM::TypeID, std::vector<std::unique_ptr<Component>>> m_compRepo;
 	std::vector<CBehavior*> m_updateCompRepo;
+	size_t m_validCompSizeInVector = 0;
 };
 
-//inline GameObject::GameObject()
-//{
-//	m_objectID = ++ObjectIDCounter;
-//
-//	m_compRepo.reserve(16);
-//	m_updateCompRepo.reserve(16);
-//}
 
-//inline void GameObject::SetTypeInfo(const CM::TypeInfo& inTypeInfo)
-//{
-//	m_typeInfo = inTypeInfo;
-//}
+inline GameObject::GameObject()
+{
+	m_objectID = ObjectIDCounter++;
+}
+
+
+inline void GameObject::CleanGarbage()
+{
+	if (m_validCompSizeInVector < m_updateCompRepo.size())
+	{
+		m_updateCompRepo.erase(m_updateCompRepo.begin() + m_validCompSizeInVector, m_updateCompRepo.end());
+	}
+}
+
+//컴포넌트 생성
+template<typename CompType, typename ...Args>
+inline CompType* GameObject::CreateComponent(Args && ...args, const std::wstring& inCompName)
+{
+	static_assert(std::is_base_of<Component, CompType>::value, "CompType is not derived from Component.");
+
+	std::unique_ptr<CompType> cmp = std::make_unique<CompType>(std::forward<Args>(args)...);
+	cmp->InitComponent<CompType>(this, inCompName);
+	CompType* ptr = cmp.get();
+
+	// CBehavior 인 경우 처리
+	if constexpr (std::is_base_of<CBehavior, CompType>::value)
+	{
+		size_t endIdx = m_updateCompRepo.size();
+		assert(endIdx >= m_validCompSizeInVector);
+
+		if (endIdx == m_validCompSizeInVector)
+		{
+			m_updateCompRepo.push_back(ptr);
+		}
+		else
+		{
+			m_updateCompRepo[m_validCompSizeInVector] = ptr;
+		}
+
+		ptr->SetIndex(m_validCompSizeInVector);
+		++m_validCompSizeInVector;
+	}
+
+	// 해시맵에 등록
+	size_t idxInVector = m_validCompSizeInVector - 1;
+	if (HasComponent<CompType>())
+	{
+		m_compRepo[CM::TypeTrait<CompType>::ID()].push_back(std::move(cmp));
+	}
+	else
+	{
+		std::vector<std::unique_ptr<Component>> vec;
+		vec.reserve(8);
+		vec.push_back(std::move(cmp));
+		m_compRepo[CM::TypeTrait<CompType>::ID()] = std::move(vec);
+	}
+
+	return ptr;
+}
+
+//특정 타입의 컴포넌트가 존재하는가
+template<typename CompType>
+inline bool GameObject::HasComponent()
+{
+	static_assert(std::is_base_of<Component, CompType>::value, "CompType is not derived from Component.");
+	return m_compRepo.contains(CM::TypeTrait<CompType>::ID());
+}
+
+template<typename CompType>
+inline CompType* GameObject::GetComponentOrNull()
+{
+	static_assert(std::is_base_of<Component, CompType>::value, "CompType is not derived from Component.");
+	auto iter = m_compRepo.find(CM::TypeTrait<CompType>::ID());
+
+	if (iter == m_compRepo.end() || iter->second.empty())
+	{
+		return nullptr;
+	}
+
+	return iter->second[0].get();
+}
+
+template<typename CompType>
+inline std::vector<std::unique_ptr<Component>>& GameObject::GetComponents()
+{
+	static_assert(std::is_base_of<Component, CompType>::value, "CompType is not derived from Component.");
+	auto iter = m_compRepo.find(CM::TypeTrait<CompType>::ID());
+	VERTIFY(iter != m_compRepo.end(), "GetComponents의 잘못된 사용");
+	return iter->second;
+}
+
+template<typename CompType>
+inline CompType* GameObject::GetComponentByNameOrNull(const std::wstring& inName)
+{
+	static_assert(std::is_base_of<Component, CompType>::value, "CompType is not derived from Component.");
+	auto& objVec = GetComponents<CompType>();
+
+	for (auto& ptr : objVec)
+	{
+		if (ptr->GetName() == inName)
+		{
+			return ptr.get();
+		}
+	}
+
+	return nullptr;
+}
+
+template<typename CompType>
+inline void GameObject::RemoveComponent(const std::wstring& inCompName)
+{
+	static_assert(std::is_base_of<Component, CompType>::value, "CompType is not derived from Component.");
+
+	std::vector<std::unique_ptr<Component>>& compTypeVec = GetComponents<CompType>();
+	auto iterToDelete = std::find_if(compTypeVec.begin(), compTypeVec.end(),
+		[&inCompName](const std::unique_ptr<Component>& inOther)
+		{
+			return inOther->GetName() == inCompName;
+		}
+	);
+
+	if (iterToDelete == compTypeVec.end())
+	{
+		return;
+	}
+
+	Component* cmpToDelete = iterToDelete->get();
+	Component* successor = nullptr;
+
+	if constexpr (std::is_base_of<CBehavior, CompType>::value)
+	{
+		size_t updateCompRepoSize = m_updateCompRepo.size();
+
+		assert(updateCompRepoSize > 0);
+
+		if (updateCompRepoSize == 1)
+		{
+			m_updateCompRepo[0] = nullptr;
+			m_validCompSizeInVector = 0;
+		}
+		else
+		{
+			successor = m_updateCompRepo[m_validCompSizeInVector - 1];
+			m_updateCompRepo[cmpToDelete->GetIndex()] = successor;
+			m_updateCompRepo[m_validCompSizeInVector - 1] = nullptr;
+			--m_validCompSizeInVector;
+		}
+	}
+
+	if (successor)
+	{
+		successor->SetIndex(cmpToDelete->GetIndex());
+	}
+
+	compTypeVec.erase(iterToDelete);
+}

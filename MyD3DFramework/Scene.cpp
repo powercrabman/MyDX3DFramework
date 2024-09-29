@@ -10,7 +10,7 @@ void Scene::EnterSceneCore()
 void Scene::UpdateSceneCore(float inDeltaTime)
 {
 
-	for (size_t i = 0; i < m_validItemSize; ++i)
+	for (size_t i = 0; i < m_validObjSizeinVector; ++i)
 	{
 		GameObject* obj = m_updateObjRepo[i];
 		obj->Update(inDeltaTime);

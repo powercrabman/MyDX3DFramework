@@ -91,9 +91,6 @@
     <ClInclude Include="CTransform.h">
       <Filter>06.GameModules\Attribute</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>05.GameObject\Abstract</Filter>
-    </ClInclude>
     <ClInclude Include="CircularArray.h">
       <Filter>99.Headers\Utility\Container</Filter>
     </ClInclude>
@@ -141,6 +138,9 @@
     </ClInclude>
     <ClInclude Include="CBehavior.h">
       <Filter>06.GameModules\Abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>05.GameObject\Abstract</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -307,9 +307,6 @@
     <ClCompile Include="CTransform.cpp">
       <Filter>06.GameModules\Attribute</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>05.GameObject\Abstract</Filter>
-    </ClCompile>
     <ClCompile Include="CircularArray.cpp">
       <Filter>99.Headers\Utility\Container</Filter>
     </ClCompile>
@@ -357,6 +354,9 @@
     </ClCompile>
     <ClCompile Include="CBehavior.cpp">
       <Filter>06.GameModules\Abstract</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>05.GameObject\Abstract</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

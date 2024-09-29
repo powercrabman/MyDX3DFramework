@@ -27,7 +27,7 @@ namespace CM
 	class TypeTrait : public ITypeTrait
 	{
 	public:
-		constexpr static TypeID ID()
+		constexpr inline static TypeID ID()
 		{
 			return m_typeID;
 		}

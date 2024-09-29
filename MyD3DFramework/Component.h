@@ -25,14 +25,25 @@ protected:
     Component();
 
 private:
-    virtual inline void InitComponent(
-        const CM::TypeID& inTypeID,
+    template<typename CompType>
+    inline void InitComponent(
         GameObject* inOwner,
         const std::wstring& inName
-    ) final;
+    )
+    {
+        //생성자 간략화를 위해서 사용
+        assert(inOwner);
+        m_name = inName;
+        m_owner = inOwner;
+        m_typeID = CM::TypeTrait<CompType>::ID();
+    }
+
+    inline void SetIndex(size_t inIdx);
+    inline size_t GetIndex();
 
 private:
     std::wstring m_name = {};
+    size_t m_index = UINT64_MAX;
 
     CM::TypeID m_typeID = {};
     GameObject* m_owner = nullptr;
@@ -49,13 +60,13 @@ inline Component::Component()
 {
 }
 
-inline void Component::InitComponent(const CM::TypeID& inTypeID, GameObject* inOwner, const std::wstring& inName)
+inline void Component::SetIndex(size_t inIdx)
 {
-    //생성자 간략화를 위해서 사용
-    assert(inOwner);
+    m_index = inIdx;
+}
 
-    m_name = inName;
-    m_owner = inOwner;
-    m_typeID = inTypeID;
+inline size_t Component::GetIndex()
+{
+    return m_index;
 }
 
