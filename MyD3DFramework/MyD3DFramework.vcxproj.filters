@@ -145,6 +145,9 @@
     <ClInclude Include="FastCompVector.h">
       <Filter>99.Headers\Utility\Container</Filter>
     </ClInclude>
+    <ClInclude Include="Name.h">
+      <Filter>99.Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="MyD3DFramework.ico">
@@ -360,6 +363,9 @@
     </ClCompile>
     <ClCompile Include="FastCompVector.cpp">
       <Filter>99.Headers\Utility\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="Name.cpp">
+      <Filter>99.Headers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

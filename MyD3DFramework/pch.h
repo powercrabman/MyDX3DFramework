@@ -63,6 +63,7 @@ using namespace DirectX::SimpleMath;
 #include "Algorithm.h"
 #include "SimpleMathAdv.h"
 #include "TypeTrait.h"
+#include "Name.h"
 
 //MyContainer
 #include "SortedVector.h"

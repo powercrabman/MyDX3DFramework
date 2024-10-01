@@ -46,7 +46,8 @@ private:
 	inline static uint64 sObjectIDCounter = 0;
 	uint64 m_objectID = 0;
 
-	//컴포넌트를 저정하는 컨테이너
+
+	/* 컴포넌트 관련 */
 	constexpr inline static size_t sReserveCapacity = 16;
 	std::unordered_map<CM::TypeID, std::vector<std::unique_ptr<Component>>> m_compRepo;
 	std::vector<CBehavior*> m_updateCompRepo;

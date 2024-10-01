@@ -21,6 +21,10 @@ C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\CMeshRenderer.h(5,7): 
       C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Material.h(3,8):
       'Material' 선언을 참조하십시오.
   
+  Name.cpp
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Name.h(16,9): error C2059: 구문 오류: '}'
+  (소스 파일 '/Name.cpp'을(를) 컴파일하는 중)
+  
   Renderer.cpp
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\CMeshRenderer.h(5,7): warning C4099: 'Material': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
   (소스 파일 '/Renderer.cpp'을(를) 컴파일하는 중)
@@ -40,7 +44,6 @@ C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\CMeshRenderer.h(5,7): 
       C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Material.h(3,8):
       'Material' 선언을 참조하십시오.
   
-  Scene.cpp
   WindowsApp.cpp
 C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\CMeshRenderer.h(5,7): warning C4099: 'Material': 처음에는 'struct'을(를) 사용하여 형식 이름을 표시했는데 이제는 'class'을(를) 사용하여 표시합니다.
   (소스 파일 '/WindowsApp.cpp'을(를) 컴파일하는 중)
@@ -57,5 +60,4 @@ C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\WindowsApp.cpp(114,12)
   (소스 파일 '/WindowsApp.cpp'을(를) 컴파일하는 중)
   
   코드를 생성하고 있습니다...
-C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Renderer.h(202,1): warning C4715: 'Renderer::GetFeatureLevelToString': 모든 제어 경로에서 값을 반환하지는 않습니다.
-  MyD3DFramework.vcxproj -> C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\MyD3DFramework.exe
+C:\Users\alsxm\Desktop\dev\MyDX3DFramework\MyD3DFramework\Renderer.h(195,1): warning C4715: 'Renderer::GetFeatureLevelToString': 모든 제어 경로에서 값을 반환하지는 않습니다.

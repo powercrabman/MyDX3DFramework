@@ -37,7 +37,6 @@ private:
     inline static uint32 sComponentIDCounter = 0;
     uint32 m_cmpID = 0;
 
-    std::wstring m_name = {};
     size_t m_index = UINT64_MAX; //설계상 Component에는 포함시키지 않는게 맞음, 이는 현재 설계상 충분히 분리할 수 있음
 
     CM::TypeID m_typeID = {};
