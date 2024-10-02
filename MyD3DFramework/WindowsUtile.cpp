@@ -3,13 +3,13 @@
 #include "WindowsApp.h"
 #include "WindowsUtile.h"
 
-void WinUtile::Alert(const std::wstring& msg, const std::wstring& tag = L"Alert")
+void WinUtile::Alert(std::wstring_view msg, std::wstring_view tag)
 {
 	HWND hwnd = WindowsApp::GetInst().GetHwnd();
-	::MessageBox(hwnd, msg.c_str(), tag.c_str(), MB_OK);
+	::MessageBox(hwnd, msg.data(), tag.data(), MB_OK);
 }
 
-void WinUtile::Alert(HWND hwnd, const std::wstring& msg, const std::wstring& tag = L"Alert")
+void WinUtile::Alert(HWND hwnd, std::wstring_view msg, std::wstring_view tag)
 {
-	::MessageBox(hwnd, msg.c_str(), tag.c_str(), MB_OK);
+	::MessageBox(hwnd, msg.data(), tag.data(), MB_OK);
 }

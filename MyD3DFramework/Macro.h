@@ -44,8 +44,9 @@ inline static classname& GetInst() \
 
 #define USING_SUPER(classname)		using Super = classname
 
-#ifdef _DEBUG
-#define  TEMP_TYPE int
+#ifdef _DEBUG && (true)
+#define TODO(msg) static_assert(false, msg)
 #else
-#define TEMP_TYPE static_assert(false, "You must change this part! template type fail.")
+#define TODO(mas)
 #endif
+

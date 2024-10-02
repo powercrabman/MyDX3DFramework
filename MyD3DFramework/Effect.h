@@ -13,20 +13,20 @@ public:
 	virtual ~Effect() = default;
 
 	void SetProperties(
-		ID3D11Device* inDevice,
-		const std::wstring& inVertexShaderFilePath,
-		const std::string& inVertexShaderEntryPointName,
-		const std::string& inVertexShaderModelVersion,
-		const std::wstring& inPixelShaderFilePath,
-		const std::string& inPixelShaderEntryPointName,
-		const std::string& inPixelShaderModelVersion,
+		ID3D11Device* inDevice, 
+		std::wstring_view inVertexShaderFilePath, 
+		std::string_view inVertexShaderEntryPointName, 
+		std::string_view inVertexShaderModelVersion, 
+		std::wstring_view inPixelShaderFilePath, 
+		std::string_view inPixelShaderEntryPointName, 
+		std::string_view inPixelShaderModelVersion, 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inInputElementDesc
 	);
 
 	void RegisterConstantBuffer(
 		ID3D11Device* inDevice,
 		uint32 inContantBuffeStructSize,
-		const std::wstring inConstantBufferName,
+		const std::string inConstantBufferName,
 		uint32 inSlotToUse,
 		uint32 inApplyFlags
 	)
@@ -64,7 +64,7 @@ public:
 	template <typename ConstantBufferStruct>
 	inline void UpdateConstantBuffer(
 		ID3D11DeviceContext* inDeviceContext,
-		const std::wstring& inConstantBufferKey,
+		const std::string& inConstantBufferKey,
 		const ConstantBufferStruct& inStructData
 	)
 	{
@@ -76,7 +76,7 @@ public:
 
 	inline void BindConstantBuffer(
 		ID3D11DeviceContext* inDeviceContext,
-		const std::wstring& inConstantBufferKey
+		const std::string& inConstantBufferKey
 	)
 	{
 		assert(m_cbRepo.contains(inConstantBufferKey));
@@ -104,7 +104,7 @@ public:
 	inline void PrintDebugLogAboutConstantBuffer(
 		ID3D11Device* device,
 		ID3D11DeviceContext* context,
-		const std::wstring& key
+		const std::string& key
 	)
 	{
 		ComPtr<ID3D11Buffer> constantBuffer = m_cbRepo[key].ConstantBuffer;
@@ -169,5 +169,5 @@ private:
 	ComPtr<ID3D11VertexShader> m_vertexShader = nullptr;
 	ComPtr<ID3D11PixelShader> m_pixelShader = nullptr;
 
-	std::unordered_map<std::wstring, ConstantBufferInfo> m_cbRepo;
+	std::unordered_map<std::string, ConstantBufferInfo> m_cbRepo;
 };

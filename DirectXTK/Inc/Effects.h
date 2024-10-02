@@ -929,7 +929,7 @@ namespace DirectX
 
             void __cdecl SetDirectory(_In_opt_z_ const wchar_t* path) noexcept;
 
-            // Property.
+            // Properties.
             ID3D11Device* GetDevice() const noexcept;
 
         private:
@@ -967,7 +967,7 @@ namespace DirectX
 
             void __cdecl SetDirectory(_In_opt_z_ const wchar_t* path) noexcept;
 
-            // Property.
+            // Properties.
             ID3D11Device* GetDevice() const noexcept;
 
         private:
@@ -1025,7 +1025,7 @@ namespace DirectX
 
             void __cdecl SetDirectory(_In_opt_z_ const wchar_t* path) noexcept;
 
-            // Property.
+            // Properties.
             ID3D11Device* GetDevice() const noexcept;
 
         private:

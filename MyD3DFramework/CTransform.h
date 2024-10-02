@@ -7,22 +7,25 @@ public:
 	CTransform() = default;
 	virtual ~CTransform() = default;
 
-	inline void SetPosition(const Vector3& inVector);
-	inline void SetRotateDegree(float inYaw, float inPitch, float inRoll);
-	inline void SetRotate(float inYaw, float inPitch, float inRoll);
-	inline void SetScale(const Vector3& inScale);
+	void SetPosition(const Vector3& inVector);
+	void SetRotateDegree(float inYaw, float inPitch, float inRoll);
+	void SetRotateDegree(const Vector3& inVector);
+	void SetRotate(float inYaw, float inPitch, float inRoll);
+	void SetRotate(const Vector3& inVector);
+	void SetScale(const Vector3& inScale);
 
-	inline void AddPosition(const Vector3& inVector);
-	inline void AddRotateDegree(float inYaw, float inPitch, float inRoll);
-	inline void AddRotate(float inYaw, float inPitch, float inRoll);
-	inline void AddScale(const Vector3& inScale);
+	void AddPosition(const Vector3& inVector);
+	void AddRotateDegree(float inYaw, float inPitch, float inRoll);
+	void AddRotate(float inYaw, float inPitch, float inRoll);
+	void AddScale(const Vector3& inScale);
 
-	inline Vector3 GetPosition() const { return m_translate; }
-	inline Quaternion GetRotate() const { return m_rotator; }
-	inline Vector3 GetScale() const { return m_scaling; }
+	Vector3 GetPosition() const { return m_translate; }
+	Quaternion GetRotate() const { return m_rotator; }
+	Vector3 GetScale() const { return m_scaling; }
+	Vector3 GetLookVector() const { return  ::XMVector3Rotate(Vector3{ 0.f,0.f,1.f }, m_rotator); }
 
-	inline Matrix GetWorldMatrix() const;
-	inline Matrix GetWorldMatrixInverse() const;
+	Matrix GetWorldMatrix() const;
+	Matrix GetWorldMatrixInverse() const;
 
 private:
 	Vector3 m_translate = Vector3::Zero;
@@ -30,9 +33,14 @@ private:
 	Vector3 m_scaling = Vector3::One;
 };
 
-inline void CTransform::SetPosition(const Vector3& inVector)
+void CTransform::SetPosition(const Vector3& inVector)
 {
 	m_translate = inVector;
+}
+
+inline void CTransform::SetRotate(const Vector3& inVector)
+{
+	m_rotator = Quaternion::CreateFromYawPitchRoll(inVector);
 }
 
 inline void CTransform::SetRotateDegree(float inYaw, float inPitch, float inRoll)
@@ -43,22 +51,31 @@ inline void CTransform::SetRotateDegree(float inYaw, float inPitch, float inRoll
 	m_rotator = Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-inline void CTransform::SetRotate(float inYaw, float inPitch, float inRoll)
+inline void CTransform::SetRotateDegree(const Vector3& inVector)
+{
+	m_rotator = Quaternion::CreateFromYawPitchRoll(
+		::XMConvertToRadians(inVector.x),
+		::XMConvertToRadians(inVector.y),
+		::XMConvertToRadians(inVector.z)
+	);
+}
+
+void CTransform::SetRotate(float inYaw, float inPitch, float inRoll)
 {
 	m_rotator = Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-inline void CTransform::SetScale(const Vector3& inScale)
+void CTransform::SetScale(const Vector3& inScale)
 {
 	m_scaling = inScale;
 }
 
-inline void CTransform::AddPosition(const Vector3& inVector)
+void CTransform::AddPosition(const Vector3& inVector)
 {
 	m_translate += inVector;
 }
 
-inline void CTransform::AddRotateDegree(float inYaw, float inPitch, float inRoll)
+void CTransform::AddRotateDegree(float inYaw, float inPitch, float inRoll)
 {
 	inYaw = ::XMConvertToRadians(inYaw);
 	inPitch = ::XMConvertToRadians(inPitch);
@@ -66,17 +83,17 @@ inline void CTransform::AddRotateDegree(float inYaw, float inPitch, float inRoll
 	m_rotator *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-inline void CTransform::AddRotate(float inYaw, float inPitch, float inRoll)
+void CTransform::AddRotate(float inYaw, float inPitch, float inRoll)
 {
 	m_rotator *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-inline void CTransform::AddScale(const Vector3& inScale)
+void CTransform::AddScale(const Vector3& inScale)
 {
 	m_scaling += inScale;
 }
 
-inline Matrix CTransform::GetWorldMatrix() const
+Matrix CTransform::GetWorldMatrix() const
 {
 	return ::XMMatrixAffineTransformation(
 		m_scaling,
@@ -86,7 +103,7 @@ inline Matrix CTransform::GetWorldMatrix() const
 	);
 }
 
-inline Matrix CTransform::GetWorldMatrixInverse() const
+Matrix CTransform::GetWorldMatrixInverse() const
 {
 	return ::XMMatrixInverse(nullptr, GetWorldMatrix());
 }

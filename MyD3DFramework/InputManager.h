@@ -88,10 +88,10 @@ public:
 	void Initialize();
 	void Update();
 
-	inline bool GetKeyHold(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Hold; }
-	inline bool GetKeyPress(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Press; }
-	inline bool GetKeyRelease(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Release; }
-	inline bool GetKeyAway(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Away; }
+	bool GetKeyHold(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Hold; }
+	bool GetKeyPress(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Press; }
+	bool GetKeyRelease(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Release; }
+	bool GetKeyAway(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Away; }
 
 	POINT GetMousePos()const { return m_mousePos; }
 	POINT GetDeltaMousePos() const { return POINT{ m_mousePos.x - m_prevMousePos.x, m_mousePos.y - m_prevMousePos.y }; }

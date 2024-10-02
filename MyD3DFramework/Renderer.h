@@ -1,8 +1,10 @@
 #pragma once
+#include <fstream>
 #include "CMeshRenderer.h"
 #include "FastCompVector.h"
 
 class CMeshRenderer;
+class CCamera;
 class CLight;
 
 class Renderer
@@ -12,7 +14,7 @@ public:
 
 	//초기화 관련
 	bool InitD3D11Device();
-	inline bool IsInitalized() const;
+	bool IsInitalized() const;
 
 	//리소스 생성
 	void InitializeDirectXTKResource();
@@ -22,66 +24,71 @@ public:
 	void Render();
 
 	//추가 렌더링 함수
-	inline void RenderIndices(uint32 indicesCount);
+	void RenderIndices(uint32 indicesCount);
 
 	//창 크기 조절
 	void ResizeWindow(const WindowSize& winSize);
-	inline void SetFullScreen(bool trigger);
+	void SetFullScreen(bool trigger);
 
 	//더블 버퍼링
-	inline void ClearBuffer(XMVECTORF32 inClearColor);
-	inline void Present();
+	void ClearBuffer(XMVECTORF32 inClearColor);
+	void Present();
 
 	//리소스 정리
-	inline void CleanUp();
+	void CleanUp();
 
 	//화면에 문자열 그리기
-	void DrawString(const std::wstring& inStr, const Vector2& inScreenPos, eFont inFont, const XMVECTORF32& inColor, eFontAlign align = eFontAlign::Left, float scale = 1.f);
+	void DrawString(const std::string& inStr, const Vector2& inScreenPos, eFont inFont, const XMVECTORF32& inColor, eFontAlign align = eFontAlign::Left, float scale = 1.f);
 	void DrawString(const wchar_t* inStr, const Vector2& inScreenPos, eFont inFont, const XMVECTORF32& inColor, eFontAlign align = eFontAlign::Left, float scale = 1.f);
 
 	//Setter Getter
-	NODISCARD inline ID3D11Device5* GetDeivce() const { ASSERT(m_device, L"디바이스가 Nullptr입니다."); return m_device.Get(); }
+	NODISCARD ID3D11Device5* GetDeivce() const { ASSERT(m_device, L"디바이스가 Nullptr입니다."); return m_device.Get(); }
 
-	NODISCARD inline D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
-	NODISCARD inline std::wstring GetFeatureLevelToString() const;
+	NODISCARD D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
+	NODISCARD std::string GetFeatureLevelToString() const;
 
-	NODISCARD inline Effect* GetEffect(const std::wstring& inKey);
-	NODISCARD inline Effect* GetCurrentEffect() const { assert(m_curEffect); return m_curEffect; }
+	NODISCARD Effect* GetEffect(const std::string& inKey);
+	NODISCARD Effect* GetCurrentEffect() const { assert(m_curEffect); return m_curEffect; }
 
-	NODISCARD inline RenderState* GetRenderState(const std::wstring& inKey);
-	NODISCARD inline RenderState* GetCurrentRenderState() const { assert(m_curRenderState); return m_curRenderState; }
+	NODISCARD RenderState* GetRenderState(const std::string& inKey);
+	NODISCARD RenderState* GetCurrentRenderState() const { assert(m_curRenderState); return m_curRenderState; }
 
-	NODISCARD inline Mesh* GetMesh(const std::wstring& inKey);
-	NODISCARD inline Material* GetMaterial(const std::wstring& inKey);
+	NODISCARD Mesh* GetMesh(const std::string& inKey);
+	NODISCARD Material* GetMaterial(const std::string& inKey);
 
-	inline void SetCurrentEffect(const std::wstring& inKey);
-	inline void SetCurrentRenderState(const std::wstring& inKey);
+	void SetCurrentEffect(const std::string& inKey);
+	void SetCurrentRenderState(const std::string& inKey);
+
+	// 카메라 관련 코드
+	void RegisterCamera(CCamera* inCamera);
+	void ReleaseCamera() { m_camera = nullptr; }
+	CCamera* GetCamera();
 
 	//쉐이더 코드 가져오기
 	void LoadAndCopileShaderFromFile(
-		const std::wstring& inFilename,
-		const std::string& inEntryPoint,
-		const std::string& inTarget,
+		std::wstring_view inFilename,
+		std::string_view inEntryPoint,
+		std::string_view inTarget,
 		ID3DBlob** outInppBlob);
 
 	//리소스 관련
-	inline Effect* CreateEffect(const std::wstring& inKey);
-	inline Mesh* CreateMesh(const std::wstring& inKey);
-	inline RenderState* CreateRenderState(const std::wstring& inKey);
-	inline Material* CreateMaterial(const std::wstring& inKey);
+	Effect* CreateEffect(const std::string& inKey);
+	Mesh* CreateMesh(const std::string& inKey);
+	RenderState* CreateRenderState(const std::string& inKey);
+	Material* CreateMaterial(const std::string& inKey);
 
-	inline void RegisterCMeshRenderer(CMeshRenderer* inMesh);
-	inline void UnRegisterCMeshRenderer(CMeshRenderer* inMesh);
+	void RegisterCMeshRenderer(CMeshRenderer* inMesh);
+	void UnRegisterCMeshRenderer(CMeshRenderer* inMesh);
 
 public:
 	//참조용 Static 변수들
-	const static std::wstring BasicEffectKey;
-	const static std::wstring CubeMeshKey;
-	const static std::wstring SphereMeshKey;
-	const static std::wstring BasicRenderStateKey;
-	const static std::wstring BasicMaterialKey;
-	const static std::wstring CbPerFrameKey;
-	const static std::wstring CbPerObjectKey;
+	const static std::string BasicEffectKey;
+	const static std::string CubeMeshKey;
+	const static std::string SphereMeshKey;
+	const static std::string BasicRenderStateKey;
+	const static std::string BasicMaterialKey;
+	const static std::string CbPerFrameKey;
+	const static std::string CbPerObjectKey;
 
 private:
 	Renderer();;
@@ -101,10 +108,10 @@ private:
 	D3D_FEATURE_LEVEL m_featureLevel = {};
 
 	//내부 리소스
-	std::unordered_map<std::wstring, std::unique_ptr<Effect>> m_effectRepo;
-	std::unordered_map<std::wstring, std::unique_ptr<Mesh>> m_meshRepo;
-	std::unordered_map<std::wstring, std::unique_ptr<RenderState>> m_renderStateRepo;
-	std::unordered_map<std::wstring, std::unique_ptr<Material>> m_materialRepo;
+	std::unordered_map<std::string, std::unique_ptr<Effect>> m_effectRepo;
+	std::unordered_map<std::string, std::unique_ptr<Mesh>> m_meshRepo;
+	std::unordered_map<std::string, std::unique_ptr<RenderState>> m_renderStateRepo;
+	std::unordered_map<std::string, std::unique_ptr<Material>> m_materialRepo;
 
 	//현재 사용중인 Effect 캐싱
 	Effect* m_curEffect = nullptr;
@@ -123,9 +130,12 @@ private:
 	
 	//3D 메쉬 집합
 	CM::FastCompVector<CMeshRenderer*> m_cMeshRendererRepo{ 1024 };
+
+	//카메라
+	CCamera* m_camera = nullptr;
 };
 
-inline bool Renderer::IsInitalized() const
+bool Renderer::IsInitalized() const
 {
 	return  (m_device != nullptr) &&
 		(m_deviceContext != nullptr) &&
@@ -136,7 +146,7 @@ inline bool Renderer::IsInitalized() const
 
 //더블 버퍼링
 
-inline void Renderer::ClearBuffer(XMVECTORF32 inClearColor)
+void Renderer::ClearBuffer(XMVECTORF32 inClearColor)
 {
 	m_deviceContext->ClearRenderTargetView(
 		m_renderTargetView.Get(),
@@ -149,13 +159,13 @@ inline void Renderer::ClearBuffer(XMVECTORF32 inClearColor)
 		0);
 }
 
-inline void Renderer::Present()
+void Renderer::Present()
 {
 	m_swapChain->Present(0, 0);
 }
 
 
-inline void Renderer::CleanUp()
+void Renderer::CleanUp()
 {
 	m_device.Reset();
 	m_deviceContext.Reset();
@@ -168,45 +178,45 @@ inline void Renderer::CleanUp()
 	m_spriteBatch.reset();
 }
 
-inline void Renderer::SetFullScreen(bool trigger)
+void Renderer::SetFullScreen(bool trigger)
 {
 	ASSERT(m_swapChain, L"스왑체인이 존재하지 않습니다.");
 	HRESULT hr = m_swapChain->SetFullscreenState(trigger, nullptr);
 	CHECK_FAILED(hr);
 }
 
-inline std::wstring Renderer::GetFeatureLevelToString() const
+std::string Renderer::GetFeatureLevelToString() const
 {
 	switch (m_featureLevel)
 	{
-	case D3D_FEATURE_LEVEL_1_0_CORE: return L"D3D_FEATURE_LEVEL_1_0_CORE";
-	case D3D_FEATURE_LEVEL_9_1:		 return L"D3D_FEATURE_LEVEL_9_1";
-	case D3D_FEATURE_LEVEL_9_2:		 return L"D3D_FEATURE_LEVEL_9_2";
-	case D3D_FEATURE_LEVEL_9_3:		 return L"D3D_FEATURE_LEVEL_9_3";
-	case D3D_FEATURE_LEVEL_10_0:	 return L"D3D_FEATURE_LEVEL_10_0";
-	case D3D_FEATURE_LEVEL_10_1:	 return L"D3D_FEATURE_LEVEL_10_1";
-	case D3D_FEATURE_LEVEL_11_0:	 return L"D3D_FEATURE_LEVEL_11_0";
-	case D3D_FEATURE_LEVEL_11_1:	 return L"D3D_FEATURE_LEVEL_11_1";
-	case D3D_FEATURE_LEVEL_12_0:	 return L"D3D_FEATURE_LEVEL_12_0";
-	case D3D_FEATURE_LEVEL_12_1:	 return L"D3D_FEATURE_LEVEL_12_1";
-	case D3D_FEATURE_LEVEL_12_2:	 return L"D3D_FEATURE_LEVEL_12_2";
+	case D3D_FEATURE_LEVEL_1_0_CORE: return "D3D_FEATURE_LEVEL_1_0_CORE";
+	case D3D_FEATURE_LEVEL_9_1:		 return "D3D_FEATURE_LEVEL_9_1";
+	case D3D_FEATURE_LEVEL_9_2:		 return "D3D_FEATURE_LEVEL_9_2";
+	case D3D_FEATURE_LEVEL_9_3:		 return "D3D_FEATURE_LEVEL_9_3";
+	case D3D_FEATURE_LEVEL_10_0:	 return "D3D_FEATURE_LEVEL_10_0";
+	case D3D_FEATURE_LEVEL_10_1:	 return "D3D_FEATURE_LEVEL_10_1";
+	case D3D_FEATURE_LEVEL_11_0:	 return "D3D_FEATURE_LEVEL_11_0";
+	case D3D_FEATURE_LEVEL_11_1:	 return "D3D_FEATURE_LEVEL_11_1";
+	case D3D_FEATURE_LEVEL_12_0:	 return "D3D_FEATURE_LEVEL_12_0";
+	case D3D_FEATURE_LEVEL_12_1:	 return "D3D_FEATURE_LEVEL_12_1";
+	case D3D_FEATURE_LEVEL_12_2:	 return "D3D_FEATURE_LEVEL_12_2";
 	default: ASSERT(false, L"알 수 없는 FeatureLevel.");
 	}
 }
 
-inline Effect* Renderer::GetEffect(const std::wstring& inKey)
+Effect* Renderer::GetEffect(const std::string& inKey)
 {
 	assert(m_effectRepo.contains(inKey));
 	return m_effectRepo[inKey].get();
 }
 
-inline RenderState* Renderer::GetRenderState(const std::wstring& inKey)
+RenderState* Renderer::GetRenderState(const std::string& inKey)
 {
 	assert(m_renderStateRepo.contains(inKey));
 	return m_renderStateRepo[inKey].get();
 }
 
-inline Effect* Renderer::CreateEffect(const std::wstring& inKey)
+Effect* Renderer::CreateEffect(const std::string& inKey)
 {
 	assert(!m_effectRepo.contains(inKey));
 	std::unique_ptr<Effect> inst = std::make_unique<Effect>();
@@ -216,7 +226,7 @@ inline Effect* Renderer::CreateEffect(const std::wstring& inKey)
 	return returnObj;
 }
 
-inline Mesh* Renderer::CreateMesh(const std::wstring& inKey)
+Mesh* Renderer::CreateMesh(const std::string& inKey)
 {
 	assert(!m_meshRepo.contains(inKey));
 	std::unique_ptr<Mesh> inst = std::make_unique<Mesh>();
@@ -226,7 +236,7 @@ inline Mesh* Renderer::CreateMesh(const std::wstring& inKey)
 	return returnObj;
 }
 
-inline Material* Renderer::CreateMaterial(const std::wstring& inKey)
+Material* Renderer::CreateMaterial(const std::string& inKey)
 {
 	assert(!m_materialRepo.contains(inKey));
 	std::unique_ptr<Material> inst = std::make_unique<Material>();
@@ -236,38 +246,38 @@ inline Material* Renderer::CreateMaterial(const std::wstring& inKey)
 	return returnObj;
 }
 
-inline void Renderer::RegisterCMeshRenderer(CMeshRenderer* inMesh)
+void Renderer::RegisterCMeshRenderer(CMeshRenderer* inMesh)
 {
 	m_cMeshRendererRepo.Insert(inMesh);
 }
 
-inline void Renderer::UnRegisterCMeshRenderer(CMeshRenderer* inMesh)
+void Renderer::UnRegisterCMeshRenderer(CMeshRenderer* inMesh)
 {
 	m_cMeshRendererRepo.Remove(inMesh);
 }
 
-inline Renderer::Renderer()
+Renderer::Renderer()
 {
 }
 
-inline Mesh* Renderer::GetMesh(const std::wstring& inKey)
+Mesh* Renderer::GetMesh(const std::string& inKey)
 {
 	assert(m_meshRepo.contains(inKey));
 	return m_meshRepo[inKey].get();
 }
 
-inline Material* Renderer::GetMaterial(const std::wstring& inKey)
+Material* Renderer::GetMaterial(const std::string& inKey)
 {
 	assert(m_materialRepo.contains(inKey));
 	return m_materialRepo[inKey].get();
 }
 
-inline void Renderer::SetCurrentEffect(const std::wstring& inKey)
+void Renderer::SetCurrentEffect(const std::string& inKey)
 {
 	m_curEffect = GetEffect(inKey);
 }
 
-inline void Renderer::SetCurrentRenderState(const std::wstring& inKey)
+void Renderer::SetCurrentRenderState(const std::string& inKey)
 {
 	m_curRenderState = GetRenderState(inKey);
 }
@@ -276,4 +286,55 @@ inline void Renderer::RenderIndices(uint32 indicesCount)
 {
 	m_deviceContext->DrawIndexed(indicesCount, 0, 0);
 }
+
+// 카메라 관련 코드
+inline void Renderer::RegisterCamera(CCamera* inCamera)
+{
+	assert(inCamera);
+	m_camera = inCamera;
+}
+
+CCamera* Renderer::GetCamera()
+{
+	assert(m_camera);
+	return m_camera;
+}
+
+//쉐이더 코드 가져오기
+
+void Renderer::LoadAndCopileShaderFromFile(std::wstring_view inFilename, std::string_view inEntryPoint, std::string_view inTarget, ID3DBlob** outInppBlob)
+{
+	std::wifstream file{ inFilename.data() };
+	VERTIFY(file.is_open(), L"쉐이더 파일 로드 실패");
+
+	std::wstringstream buffer = {};
+	buffer << file.rdbuf();
+
+	std::wstring shaderCode = buffer.str();
+
+	UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+	compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#else
+	compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#endif
+	ShaderIncludeHelper includeHelper = {};
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	HRESULT hr = D3DCompile(
+		shaderCode.c_str(),
+		shaderCode.size(),
+		nullptr,
+		nullptr,
+		&includeHelper,
+		inEntryPoint.data(),
+		inTarget.data(),
+		compileFlags,
+		0,
+		outInppBlob,
+		errorBlob.GetAddressOf());
+
+	CHECK_FAILED_MESSAGE(hr, CM::StringToWstring((char*)errorBlob->GetBufferPointer()).c_str());
+}
+
+//쉐이더 코드 가져오기
 

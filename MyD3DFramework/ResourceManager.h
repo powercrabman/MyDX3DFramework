@@ -12,9 +12,9 @@ public:
 	void LoadResource();
 
 	void LoadFont();
-	inline SpriteFont* GetFont(eFont inFont);
+	SpriteFont* GetFont(eFont inFont);
 
-	inline const std::wstring& GetResourcePath() const;
+	const std::wstring& GetResourcePath() const;
 
 private:
 	//로컬 경로
@@ -28,7 +28,7 @@ inline SpriteFont* ResourceManager::GetFont(eFont inFont)
 	return m_fontStorage[(size_t)inFont].get();
 }
 
-inline const std::wstring& ResourceManager::GetResourcePath() const
+const std::wstring& ResourceManager::GetResourcePath() const
 {
 	return m_resourcePath;
 }

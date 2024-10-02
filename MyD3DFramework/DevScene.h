@@ -10,6 +10,4 @@ public:
 	void EnterScene() override;
 	void UpdateScene(float inDeltaTime) override;
 	void ExitScene() override;
-
 };
-

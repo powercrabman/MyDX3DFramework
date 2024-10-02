@@ -527,7 +527,7 @@ namespace DirectX
             Matrix operator+ () const noexcept { return *this; }
             Matrix operator- () const noexcept;
 
-            // Property
+            // Properties
             Vector3 Up() const noexcept { return Vector3(_21, _22, _23); }
             void Up(const Vector3& v) noexcept { _21 = v.x; _22 = v.y; _23 = v.z; }
 
@@ -656,7 +656,7 @@ namespace DirectX
             // Assignment operators
             Plane& operator= (const XMVECTORF32& F) noexcept { x = F.f[0]; y = F.f[1]; z = F.f[2]; w = F.f[3]; return *this; }
 
-            // Property
+            // Properties
             Vector3 Normal() const noexcept { return Vector3(x, y, z); }
             void Normal(const Vector3& normal) noexcept { x = normal.x; y = normal.y; z = normal.z; }
 
@@ -824,7 +824,7 @@ namespace DirectX
             Color operator+ () const noexcept { return *this; }
             Color operator- () const noexcept;
 
-            // Property
+            // Properties
             float R() const noexcept { return x; }
             void R(float r) noexcept { x = r; }
 

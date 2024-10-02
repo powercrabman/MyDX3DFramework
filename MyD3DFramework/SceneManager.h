@@ -8,33 +8,33 @@ public:
 	~SceneManager() = default;
 
 	void InitializeScene();
-	inline Scene* GetCurrentScene() const { return m_curScene; }
+	Scene* GetCurrentScene() const { return m_curScene; }
 
 	/* ¾À º¯°æ */
 	template<typename SceneType>
-	inline void SwitchScene();
+	void SwitchScene();
 
 private:
 	SceneManager();
 	
 	/* ¾À »ý¼º */
 	template<typename SceneType>
-	inline Scene* CreateScene();
+	Scene* CreateScene();
 
 private:
-	constexpr inline static size_t sReserveCapacity = 32;
+	constexpr static size_t sReserveCapacity = 32;
 	std::unordered_map<CM::TypeID, std::unique_ptr<Scene>> m_sceneRepo;
 	Scene* m_curScene = nullptr;
 };
 
 
-inline SceneManager::SceneManager()
+SceneManager::SceneManager()
 {
 	m_sceneRepo.reserve(sReserveCapacity);
 }
 
 template<typename SceneType>
-inline Scene* SceneManager::CreateScene()
+Scene* SceneManager::CreateScene()
 {
 	static_assert(std::is_base_of<Scene, SceneType>::value, "SceneType is not base of Scene.");
 	std::unique_ptr<SceneType> sc = std::make_unique<SceneType>();
@@ -56,7 +56,7 @@ inline Scene* SceneManager::CreateScene()
 }
 
 template<typename SceneType>
-inline void SceneManager::SwitchScene()
+void SceneManager::SwitchScene()
 {
 	auto iter = m_sceneRepo.find(CM::TypeTrait<SceneType>::ID());
 	assert(iter != m_sceneRepo.end());

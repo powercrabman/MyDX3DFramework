@@ -147,7 +147,7 @@ void Engine::RenderDebugData()
 	buffer.Input(L"Fps: %lld\nDelta Time: %.7f\n", t.GetFPS(), t.GetDeltaTime());
 
 	//피쳐 레벨
-	buffer.Append(L"Feature Level: " + Renderer::GetInst().GetFeatureLevelToString());
+	buffer.Append(L"Feature Level: %s", Renderer::GetInst().GetFeatureLevelToString());
 
 	Renderer::GetInst().DrawString(buffer.c_str(), initialPosition, eFont::Consolas_16pt, Colors::LightGreen);
 }

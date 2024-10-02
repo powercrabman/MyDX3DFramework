@@ -526,7 +526,7 @@ void BasicPostProcess::SetEffect(Effect fx)
 }
 
 
-// Property
+// Properties
 void BasicPostProcess::SetSourceTexture(_In_opt_ ID3D11ShaderResourceView* value)
 {
     pImpl->texture = value;

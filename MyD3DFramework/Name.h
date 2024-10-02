@@ -2,26 +2,64 @@
 
 namespace CM
 {
+    constexpr size_t UNIQUE_KEY = UINT64_MAX;
+
     class Name
     {
         friend struct std::hash<Name>;
     public:
+
+        Name() = default;
+        Name(std::string_view inString, size_t inNumber);
+
+        bool operator==(const Name& inOther) const;
+
+        std::string_view ToString() const;
+
+    private:
+        using Iterator = std::unordered_map<std::string, size_t>::iterator;
         inline static std::unordered_map<std::string, size_t> sNamePool;
 
-        inline Name(const std::string& InString, size_t InNumber = 0);
-        inline bool operator==(const Name& Other) const;
-
-        inline std::string_view ToString() const;
+        static Iterator FindOrAdd(std::string_view inName);
 
     private:
-        inline static size_t FindOrAddName(const std::string& inName);
-
-    private:
-        std::string_view m_string;
+        std::string_view m_stringView;
 
         size_t m_nameID;
-        size_t m_additionalNumber;
+        size_t m_extraIndex = UNIQUE_KEY;
     };
+}
+
+inline CM::Name::Name(std::string_view inString, size_t inNumber)
+{
+    Iterator iter = FindOrAdd(inString);
+    m_nameID = iter->second;
+    m_stringView = iter->first;
+    m_extraIndex = inNumber;
+}
+
+inline bool CM::Name::operator==(const Name& Other) const
+{
+    return m_nameID == Other.m_nameID && m_extraIndex == Other.m_extraIndex;
+}
+
+inline std::string_view CM::Name::ToString() const
+{
+    return m_stringView;
+}
+
+inline CM::Name::Iterator CM::Name::FindOrAdd(std::string_view inName)
+{
+    std::string str = inName.data();
+    auto iter = sNamePool.find(str);
+    if (iter != sNamePool.end())
+    {
+        return iter;
+    }
+
+    size_t newIndex = sNamePool.size();
+    auto insertIter = sNamePool.emplace(str, newIndex);
+    return insertIter.first;
 }
 
 namespace std
@@ -32,40 +70,8 @@ namespace std
         size_t operator()(const CM::Name& inItem) const
         {
             size_t hashValue = std::hash<size_t>()(inItem.m_nameID);
-            hashValue ^= std::hash<size_t>()(inItem.m_additionalNumber) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<size_t>()(inItem.m_extraIndex) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
             return hashValue;
         }
     };
-}
-
-inline CM::Name::Name(const std::string& inString, size_t inAdditionalNumber)
-{
-    m_nameID = FindOrAddName(inString);
-    m_additionalNumber = inAdditionalNumber;
-    m_string = inString;
-}
-
-inline bool CM::Name::operator==(const Name& Other) const
-{
-    return m_nameID == Other.m_nameID && m_additionalNumber == Other.m_additionalNumber;
-}
-
-inline std::string_view CM::Name::ToString() const
-{
-    return m_string;
-}
-
-inline size_t CM::Name::FindOrAddName(const std::string& Name)
-{
-    for (const auto& pair : sNamePool)
-    {
-        if (pair.first == Name)
-        {
-            return pair.second;
-        }
-    }
-    std::string nameCopy(Name);
-    size_t newIndex = sNamePool.size();
-    sNamePool[nameCopy] = newIndex;
-    return newIndex;
 }

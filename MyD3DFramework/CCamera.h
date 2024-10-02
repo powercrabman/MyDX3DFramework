@@ -1,104 +1,115 @@
 #pragma once
 #include "CAttribute.h"
+#include "CTransform.h"
 #include "WindowsApp.h"
+#include "Renderer.h"
 
 class CCamera : public CAttribute
 {
 public:
-	CCamera(float inFov, float inNearPlane, float inFarPlane);
-	virtual ~CCamera() = default;
+	CCamera(float inFov, float inNearPlane, float inFarPlane, const CTransform* inTrans);
+	virtual ~CCamera();
 
-	inline void SetPosition(const Vector3& inVector);
-	inline void SetRotateDegree(float inYaw, float inPitch, float inRoll);
-	inline void SetRotate(float inYaw, float inPitch, float inRoll);
+	void SetOffsetPosition(const Vector3& inVector);
+	void SetOffsetRotateDegree(float inYaw, float inPitch, float inRoll);
+	void SetOffsetRotate(float inYaw, float inPitch, float inRoll);
 
-	inline void AddPosition(const Vector3& inVector);
-	inline void AddRotateDegree(float inYaw, float inPitch, float inRoll);
-	inline void AddRotate(float inYaw, float inPitch, float inRoll);
+	void AddOffsetPosition(const Vector3& inVector);
+	void AddOffsetRotateDegree(float inYaw, float inPitch, float inRoll);
+	void AddOffsetRotate(float inYaw, float inPitch, float inRoll);
 
-	inline Vector3 GetPosition() const { return m_translate; };
-	inline Quaternion GetRotate() const { return Quaternion::FromToRotation(sDefaultLook, m_lookTo); };
+	void ResetOffset();
 
-	inline void SetFOV(float inFov) { m_fov = inFov; }
-	inline void SetFOVDegree(float inFov) { m_fov = ::XMConvertToRadians(inFov); }
-	inline float GetFOV() const { return m_fov; }
+	void SetFOV(float inFov) { m_fov = inFov; }
+	void SetFOVDegree(float inFov) { m_fov = ::XMConvertToRadians(inFov); }
+	float GetFOV() const { return m_fov; }
 
-	inline void SetNearPlane(float inNearPlane);
-	inline void SetFarPlane(float inFarPlane);
+	void SetNearPlane(float inNearPlane);
+	void SetFarPlane(float inFarPlane);
 
-	inline Matrix GetViewMatrix(const Vector3& inUp = Vector3::Up) const;
-	inline Matrix GetPerspectiveMatrix() const;
+	Matrix GetViewMatrix(const Vector3& inUp = Vector3::Up) const;
+	Matrix GetPerspectiveMatrix() const;
+
+	void RegisterToMainCamera();
 
 private:
-	inline static Vector3 sDefaultLook{ 0.f,0.f,1.f };
+	const CTransform* m_ownerTrans = nullptr;
+	
+	Vector3 m_offsetPosition = Vector3::Zero;
+	Quaternion m_offsetRotator = Quaternion::Identity;
 
-	Vector3 m_translate = Vector3::Zero;
-	Vector3 m_lookTo = sDefaultLook;
 	float m_fov = ::XMConvertToRadians(45.f);
-
 	float m_nearPlane = 0.5f;
 	float m_farPlane = 100.f;
 };
 
-inline CCamera::CCamera(float inFov, float inNearPlane, float inFarPlane)
+inline CCamera::CCamera(float inFov, float inNearPlane, float inFarPlane, const CTransform* inTrans)
 	: m_fov(inFov)
 	, m_nearPlane(inNearPlane)
 	, m_farPlane(inFarPlane)
+	, m_ownerTrans(inTrans)
 {
 }
 
-inline void CCamera::SetPosition(const Vector3& inVector)
+inline void CCamera::SetOffsetPosition(const Vector3& inVector)
 {
-	m_translate = inVector;
+	m_offsetPosition = inVector;
 }
 
-inline void CCamera::SetRotateDegree(float inYaw, float inPitch, float inRoll)
-{
-	inYaw = ::XMConvertToRadians(inYaw);
-	inPitch = ::XMConvertToRadians(inPitch);
-	inRoll = ::XMConvertToRadians(inRoll);
-	m_lookTo = ::XMVector3Rotate(sDefaultLook, Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll));
-}
-
-inline void CCamera::SetRotate(float inYaw, float inPitch, float inRoll)
-{
-	m_lookTo = ::XMVector3Rotate(sDefaultLook, Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll));
-}
-
-inline void CCamera::AddPosition(const Vector3& inVector)
-{
-	m_translate += inVector;
-}
-
-inline void CCamera::AddRotateDegree(float inYaw, float inPitch, float inRoll)
+inline void CCamera::SetOffsetRotateDegree(float inYaw, float inPitch, float inRoll)
 {
 	inYaw = ::XMConvertToRadians(inYaw);
 	inPitch = ::XMConvertToRadians(inPitch);
 	inRoll = ::XMConvertToRadians(inRoll);
-	m_lookTo = ::XMVector3Rotate(m_lookTo, Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll));
+	m_offsetRotator *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-inline void CCamera::AddRotate(float inYaw, float inPitch, float inRoll)
+inline void CCamera::SetOffsetRotate(float inYaw, float inPitch, float inRoll)
 {
-	m_lookTo = ::XMVector3Rotate(m_lookTo, Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll));
+	m_offsetRotator *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-inline Matrix CCamera::GetViewMatrix(const Vector3& inUp) const
+inline void CCamera::AddOffsetPosition(const Vector3& inVector)
 {
-	return ::XMMatrixLookToLH(m_translate, m_lookTo, inUp);
+	m_offsetPosition += inVector;
 }
 
-inline Matrix CCamera::GetPerspectiveMatrix() const
+inline void CCamera::AddOffsetRotateDegree(float inYaw, float inPitch, float inRoll)
+{
+	inYaw = ::XMConvertToRadians(inYaw);
+	inPitch = ::XMConvertToRadians(inPitch);
+	inRoll = ::XMConvertToRadians(inRoll);
+	m_offsetRotator *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
+}
+
+inline void CCamera::AddOffsetRotate(float inYaw, float inPitch, float inRoll)
+{
+	m_offsetRotator *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
+}
+
+inline void CCamera::ResetOffset()
+{
+	Vector3 m_offsetPosition = Vector3::Zero;
+	Quaternion m_offsetRotator = Quaternion::Identity;
+}
+
+Matrix CCamera::GetViewMatrix(const Vector3& inUp) const
+{
+	Vector3 lookVec = ::XMVector3Rotate(Vector3{ 0.f,0.f,1.f }, m_offsetRotator * m_ownerTrans->GetRotate());
+	return ::XMMatrixLookToLH(m_ownerTrans->GetPosition() + m_offsetPosition, lookVec, inUp);
+}
+
+Matrix CCamera::GetPerspectiveMatrix() const
 {
 	return ::XMMatrixPerspectiveFovLH(m_fov, WindowsApp::GetInst().GetAspectRatio(), m_nearPlane, m_farPlane);
 }
 
-inline void CCamera::SetNearPlane(float inNearPlane)
+void CCamera::SetNearPlane(float inNearPlane)
 {
 	m_nearPlane = inNearPlane;
 }
 
-inline void CCamera::SetFarPlane(float inFarPlane)
+void CCamera::SetFarPlane(float inFarPlane)
 {
 	m_farPlane = inFarPlane;
 }

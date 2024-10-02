@@ -2,12 +2,12 @@
 #include "Renderer.h"
 #include "CMeshRenderer.h"
 
-void CMeshRenderer::SetMesh(const std::wstring& inMeshKey)
+void CMeshRenderer::SetMesh(const std::string& inMeshKey)
 {
 	m_mesh = Renderer::GetInst().GetMesh(inMeshKey);
 }
 
-void CMeshRenderer::SetMaterial(const std::wstring& inMaterialKey)
+void CMeshRenderer::SetMaterial(const std::string& inMaterialKey)
 {
 	m_material = Renderer::GetInst().GetMaterial(inMaterialKey);
 }

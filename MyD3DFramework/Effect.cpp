@@ -2,7 +2,7 @@
 #include "Effect.h"
 #include "Renderer.h"
 
-void Effect::SetProperties(ID3D11Device* inDevice, const std::wstring& inVertexShaderFilePath, const std::string& inVertexShaderEntryPointName, const std::string& inVertexShaderModelVersion, const std::wstring& inPixelShaderFilePath, const std::string& inPixelShaderEntryPointName, const std::string& inPixelShaderModelVersion, const std::vector<D3D11_INPUT_ELEMENT_DESC>& inInputElementDesc)
+void Effect::SetProperties(ID3D11Device* inDevice, std::wstring_view inVertexShaderFilePath, std::string_view inVertexShaderEntryPointName, std::string_view inVertexShaderModelVersion, std::wstring_view inPixelShaderFilePath, std::string_view inPixelShaderEntryPointName, std::string_view inPixelShaderModelVersion, const std::vector<D3D11_INPUT_ELEMENT_DESC>& inInputElementDesc)
 {
 	m_inputLayout.Reset();
 	m_vertexShader.Reset();

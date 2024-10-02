@@ -2,11 +2,11 @@
 
 namespace WinUtile
 {
-	void Alert(const std::wstring& msg, const std::wstring& tag);
-	void Alert(HWND hwnd, const std::wstring& msg, const std::wstring& tag);
-
-	inline void OutputLog(const std::wstring& msg)
+	inline void OutputLog(std::wstring_view msg)
 	{
-		::OutputDebugString(msg.c_str());
+		::OutputDebugString(msg.data());
 	}
+
+	void Alert(std::wstring_view msg, std::wstring_view tag = L"Alert");
+	void Alert(HWND hwnd, std::wstring_view msg, std::wstring_view tag = L"Alert");
 }

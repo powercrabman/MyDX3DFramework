@@ -11,10 +11,10 @@ private:
 public:
 	constexpr size_t Size() const { return SIZE; }
 
-	inline void Input(const std::wstring& inStr)
+	inline void Input(std::wstring_view inStr)
 	{
 		size_t length = min(inStr.size(), SIZE - 1); 
-		::memcpy(m_buffer, inStr.c_str(), length * sizeof(wchar_t));
+		::memcpy(m_buffer, inStr.data(), length * sizeof(wchar_t));
 		m_buffer[length] = L'\0';
 	}
 
@@ -46,13 +46,13 @@ public:
 		va_end(args);
 	}
 
-	inline void Append(const std::wstring& inStr)
+	inline void Append(std::wstring_view inStr)
 	{
 		size_t currentLength = wcslen(m_buffer);
 		size_t remainSpace = SIZE - currentLength - 1;
 		size_t lengthToCopy = min(inStr.size(), remainSpace);
 
-		::memcpy(m_buffer + currentLength, inStr.c_str(), lengthToCopy * sizeof(wchar_t));
+		::memcpy(m_buffer + currentLength, inStr.data(), lengthToCopy * sizeof(wchar_t));
 		m_buffer[currentLength + lengthToCopy] = L'\0';
 	}
 

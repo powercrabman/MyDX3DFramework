@@ -81,7 +81,7 @@ namespace DirectX
             // Shader control
             void __cdecl SetEffect(Effect fx);
 
-            // Property
+            // Properties
             void __cdecl SetSourceTexture(_In_opt_ ID3D11ShaderResourceView* value);
 
             // Sets multiplier for GaussianBlur_5x5
@@ -130,7 +130,7 @@ namespace DirectX
             // Shader control
             void __cdecl SetEffect(Effect fx);
 
-            // Property
+            // Properties
             void __cdecl SetSourceTexture(_In_opt_ ID3D11ShaderResourceView* value);
             void __cdecl SetSourceTexture2(_In_opt_ ID3D11ShaderResourceView* value);
 
@@ -204,7 +204,7 @@ namespace DirectX
             void __cdecl SetMRTOutput(bool value = true);
         #endif
 
-            // Property
+            // Properties
             void __cdecl SetHDRSourceTexture(_In_opt_ ID3D11ShaderResourceView* value);
 
             // Sets the Color Rotation Transform for HDR10 signal output

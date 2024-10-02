@@ -97,9 +97,6 @@
     <ClInclude Include="SortedVector.h">
       <Filter>99.Headers\Utility\Container</Filter>
     </ClInclude>
-    <ClInclude Include="ConstexprHash.h">
-      <Filter>99.Headers\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="CAttribute.h">
       <Filter>06.GameModules\Abstract</Filter>
     </ClInclude>
@@ -145,8 +142,11 @@
     <ClInclude Include="FastCompVector.h">
       <Filter>99.Headers\Utility\Container</Filter>
     </ClInclude>
+    <ClInclude Include="CameraObject.h">
+      <Filter>05.GameObject\Concrete</Filter>
+    </ClInclude>
     <ClInclude Include="Name.h">
-      <Filter>99.Headers</Filter>
+      <Filter>99.Headers\ID</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -239,6 +239,9 @@
     <Filter Include="04.GameScene\Concrete">
       <UniqueIdentifier>{4b8b861d-a73a-47a5-a9fb-4049e7fa9a88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99.Headers\ID">
+      <UniqueIdentifier>{2817ad6f-a9d4-440a-ad51-3ef1ee88246e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -316,9 +319,6 @@
     <ClCompile Include="SortedVector.cpp">
       <Filter>99.Headers\Utility\Container</Filter>
     </ClCompile>
-    <ClCompile Include="ConstexprHash.cpp">
-      <Filter>99.Headers\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="CAttribute.cpp">
       <Filter>06.GameModules\Abstract</Filter>
     </ClCompile>
@@ -364,8 +364,11 @@
     <ClCompile Include="FastCompVector.cpp">
       <Filter>99.Headers\Utility\Container</Filter>
     </ClCompile>
+    <ClCompile Include="CameraObject.cpp">
+      <Filter>05.GameObject\Concrete</Filter>
+    </ClCompile>
     <ClCompile Include="Name.cpp">
-      <Filter>99.Headers</Filter>
+      <Filter>99.Headers\ID</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

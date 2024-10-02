@@ -11,8 +11,8 @@ public:
 
 	bool Initialize(
 		HINSTANCE inHinst,
-		const std::wstring& titleName,
-		const std::wstring& className
+		std::wstring_view titleName,
+		std::wstring_view className
 	);
 
 	//윈도우 사이즈 제어
@@ -21,8 +21,8 @@ public:
 		bool setWinPosFlag = false,
 		const WindowPosition& inWinPos = WindowPosition::s_defaultWindowPosition);
 
-	inline HINSTANCE GetHInstance() const;
-	inline HWND GetHwnd() const;
+	HINSTANCE GetHInstance() const { return m_hinst; }
+	HWND GetHwnd() const { return m_hwnd; }
 
 	WindowSize GetWindowSize() const { return m_windowSize; }
 	float GetAspectRatio() const { return static_cast<float>(m_windowSize.Width) / m_windowSize.Height; }
@@ -38,16 +38,4 @@ private:
 
 	bool m_bFullScreen = false;
 };
-
-inline HWND WindowsApp::GetHwnd() const
-{
-	return m_hwnd;
-}
-
-inline HINSTANCE WindowsApp::GetHInstance() const
-{
-	return m_hinst;
-}
-
-
 

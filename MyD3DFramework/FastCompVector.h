@@ -15,7 +15,7 @@ namespace CM
 
 		inline void Insert(const CompType& inItem)
 		{
-			auto iter = m_hashRepo.find(inItem->GetComponentID());
+			auto iter = m_hashRepo.find(inItem->GetName());
 			assert(iter == m_hashRepo.end());
 
 			if (iter == m_hashRepo.end())
@@ -32,14 +32,14 @@ namespace CM
 					m_vecRepo[m_validSize] = inItem;
 				}
 
-				m_hashRepo[inItem->GetComponentID()] = std::make_pair(m_validSize, inItem);
+				m_hashRepo[inItem->GetName()] = std::make_pair(m_validSize, inItem);
 				++m_validSize;
 			}
 		}
 
 		inline void Remove(const CompType& inItem)
 		{
-			size_t inCompID = inItem->GetComponentID();
+			const CM::Name& inCompID = inItem->GetName();
 
 			auto iter = m_hashRepo.find(inCompID);
 
@@ -58,7 +58,7 @@ namespace CM
 					CompType nextComp = m_vecRepo[m_validSize - 1];
 					m_vecRepo[itemToRemove.first] = nextComp;
 					m_vecRepo[m_validSize - 1] = nullptr;
-					m_hashRepo[nextComp->GetComponentID()].first = itemToRemove.first;
+					m_hashRepo[nextComp->GetName()].first = itemToRemove.first;
 				}
 
 				m_hashRepo.erase(iter);
@@ -93,7 +93,7 @@ namespace CM
 	private:
 		using Pair = std::pair<size_t, CompType>;
 
-		std::unordered_map<size_t, Pair> m_hashRepo;
+		std::unordered_map<CM::Name, Pair> m_hashRepo;
 		std::vector<CompType> m_vecRepo;
 		size_t m_validSize = 0;
 	};

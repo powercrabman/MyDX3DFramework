@@ -17,7 +17,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-bool WindowsApp::Initialize(HINSTANCE inHinst, const std::wstring& titleName, const std::wstring& className)
+bool WindowsApp::Initialize(HINSTANCE inHinst, std::wstring_view titleName, std::wstring_view className)
 {
 	m_titleName = titleName;
 	m_windowClass = className;

@@ -44,6 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -148,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Algorithm.h" />
+    <ClInclude Include="CameraObject.h" />
     <ClInclude Include="CAttribute.h" />
     <ClInclude Include="CBehavior.h" />
     <ClInclude Include="BufferPool.h" />
@@ -155,7 +157,6 @@
     <ClInclude Include="CDirectionalLight.h" />
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="ConstexprHash.h" />
     <ClInclude Include="ContantBuffers.h" />
     <ClInclude Include="CPointLight.h" />
     <ClInclude Include="CSpotLight.h" />
@@ -199,6 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algorithm.cpp" />
+    <ClCompile Include="CameraObject.cpp" />
     <ClCompile Include="CAttribute.cpp" />
     <ClCompile Include="CBehavior.cpp" />
     <ClCompile Include="BufferPool.cpp" />
@@ -206,7 +208,6 @@
     <ClCompile Include="CDirectionalLight.cpp" />
     <ClCompile Include="CircularArray.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="ConstexprHash.cpp" />
     <ClCompile Include="ContantBuffers.cpp" />
     <ClCompile Include="CPointLight.cpp" />
     <ClCompile Include="CSpotLight.cpp" />
@@ -279,11 +280,6 @@
     <None Include="ObjectRepo Optimize Steragy.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2022.vcxproj">
-      <Project>{e0b52ae7-e160-4d32-bf3f-910b785e5a8e}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="SimplePixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -314,6 +310,11 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2022.vcxproj">
+      <Project>{e0b52ae7-e160-4d32-bf3f-910b785e5a8e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

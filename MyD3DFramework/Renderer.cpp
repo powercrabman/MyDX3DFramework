@@ -6,13 +6,13 @@
 #include "CMeshRenderer.h"
 #include <fstream>
 
-const std::wstring Renderer::BasicEffectKey = L"BasicEffect";
-const std::wstring Renderer::CubeMeshKey = L"CubeMesh";
-const std::wstring Renderer::SphereMeshKey = L"SphereMesh";
-const std::wstring Renderer::BasicRenderStateKey = L"BasicRenderState";
-const std::wstring Renderer::BasicMaterialKey = L"BasicMateral";
-const std::wstring Renderer::CbPerFrameKey = L"cbPerFrame";
-const std::wstring Renderer::CbPerObjectKey = L"cbPerObject";
+const std::string Renderer::BasicEffectKey = "BasicEffect";
+const std::string Renderer::CubeMeshKey = "CubeMesh";
+const std::string Renderer::SphereMeshKey = "SphereMesh";
+const std::string Renderer::BasicRenderStateKey = "BasicRenderState";
+const std::string Renderer::BasicMaterialKey = "BasicMateral";
+const std::string Renderer::CbPerFrameKey = "cbPerFrame";
+const std::string Renderer::CbPerObjectKey = "cbPerObject";
 
 bool Renderer::InitD3D11Device()
 {
@@ -454,7 +454,7 @@ void Renderer::ResizeWindow(const WindowSize& winSize)
 	m_deviceContext->RSSetViewports(1, &m_viewport);
 }
 
-void Renderer::DrawString(const std::wstring& inStr, const Vector2& inScreenPos, eFont inFont, const XMVECTORF32& inColor, eFontAlign align, float scale)
+void Renderer::DrawString(const std::string& inStr, const Vector2& inScreenPos, eFont inFont, const XMVECTORF32& inColor, eFontAlign align, float scale)
 {
 	m_spriteBatch->Begin();
 
@@ -489,7 +489,7 @@ void Renderer::DrawString(const wchar_t* inStr, const Vector2& inScreenPos, eFon
 }
 
 
-inline RenderState* Renderer::CreateRenderState(const std::wstring& inKey)
+inline RenderState* Renderer::CreateRenderState(const std::string& inKey)
 {
 	assert(!m_renderStateRepo.contains(inKey));
 	std::unique_ptr<RenderState> inst = std::make_unique<RenderState>();
@@ -497,45 +497,5 @@ inline RenderState* Renderer::CreateRenderState(const std::wstring& inKey)
 	m_renderStateRepo[inKey] = std::move(inst);
 
 	return returnObj;
-}
-
-
-void Renderer::LoadAndCopileShaderFromFile(
-	const std::wstring& inFilename,
-	const std::string& inEntryPoint,
-	const std::string& inTarget,
-	ID3DBlob** outInBlob)
-{
-	std::ifstream file(inFilename);
-	VERTIFY(file.is_open(), L"쉐이더 파일 로드 실패");
-
-	std::stringstream buffer = {};
-	buffer << file.rdbuf();
-
-	std::string shaderCode = buffer.str();
-
-	UINT compileFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)
-	compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#else
-	compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#endif
-
-	ShaderIncludeHelper includeHelper = {};
-	ComPtr<ID3DBlob> errorBlob = nullptr;
-	HRESULT hr = D3DCompile(
-		shaderCode.c_str(),
-		shaderCode.size(),
-		nullptr,
-		nullptr,
-		&includeHelper,
-		inEntryPoint.c_str(),
-		inTarget.c_str(),
-		compileFlags,
-		0,
-		outInBlob,
-		errorBlob.GetAddressOf());
-
-	CHECK_FAILED_MESSAGE(hr, CM::StringToWstring((char*)errorBlob->GetBufferPointer()).c_str());
 }
 
