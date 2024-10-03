@@ -6,6 +6,10 @@ CLight::CLight(eLightType inType, const CTransform* inOwnerTrans)
 	: m_type(inType)
 	, m_ownerTrans(inOwnerTrans)
 {
+}
+
+void CLight::Initialize()
+{
 	Renderer::GetInst().RegisterCLight(this);
 }
 

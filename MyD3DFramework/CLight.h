@@ -7,10 +7,12 @@ public:
 	CLight(eLightType inType, const CTransform* inOwnerTrans);
 	virtual ~CLight();;
 
+	virtual void Initialize() override;
+
 public:
 	inline void SetAmbient(const Color& inColor) { m_ambient = inColor; ColorClamp(m_ambient); }
 	inline void SetDiffuse(const Color& inColor) { m_diffuse = inColor; ColorClamp(m_diffuse); }
-	inline void SetSpecualer(const Color& inColor) { m_specular = inColor; ColorClamp(m_specular); }
+	inline void SetSpecular(const Color& inColor) { m_specular = inColor; ColorClamp(m_specular); }
 	inline void AddAmbient(const Color& inColor) { m_ambient += inColor; ColorClamp(m_ambient); }
 	inline void AddDiffuse(const Color& inColor) { m_diffuse += inColor; ColorClamp(m_diffuse); }
 	inline void AddSpecualer(const Color& inColor) { m_specular += inColor; ColorClamp(m_specular); }
@@ -38,9 +40,10 @@ public:
 	inline eLightType GetLightType() const;
 
 	inline void SetExponent(float inExponent);
-	inline float GetExpoent();
+	inline float GetExpoent() const;
 
 private:
+
 	inline void ColorClamp(Color& inLightColor)
 	{
 		Clamp(inLightColor.x);
@@ -130,7 +133,8 @@ inline void CLight::SetExponent(float inExponent)
 	m_exponent = inExponent;
 }
 
-inline float CLight::GetExpoent()
+inline float CLight::GetExpoent() const
 {
 	return m_exponent;
 }
+

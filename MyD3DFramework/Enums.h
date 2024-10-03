@@ -30,9 +30,9 @@ enum class eFont
 
 enum class eLightType
 {
-	Directional_Light,
-	Point_Light,
-	Spot_Light,
+	DirectionalLight,
+	PointLight,
+	SpotLight,
 
 	Count
 };

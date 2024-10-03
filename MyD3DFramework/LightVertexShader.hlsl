@@ -4,12 +4,11 @@ LIGHT_VS_OUTPUT VS(LIGHT_VS_INPUT input)
 {
     LIGHT_VS_OUTPUT result;
     
-    result.PosW = mul(float4(input.PosL, 1.f), gWorld);
+    result.PosW = mul(float4(input.PosL, 1.0f), gWorld);
     
-    //법선벡터 변환 및 정규화
-    result.NormalW = normalize(mul(float4(input.NormalL, 0.f), gWorldInvTranspose));
+    result.NormalW = normalize(mul(float4(input.NormalL, 0.0f), gWorldInvTranspose));
 
-    result.PosH = mul(float4(result.PosW, 1.f), gViewProj);
+    result.PosH = mul(float4(result.PosW, 1.0f), gViewProj);
 	
     return result;
 }

@@ -14,11 +14,21 @@ void CMeshRenderer::SetMaterial(const std::string& inMaterialKey)
 
 void CMeshRenderer::RegisterToRenderer()
 {
-	ASSERT(m_mesh, "메시가 설정되지 않았습니다.");
-	Renderer::GetInst().RegisterCMeshRenderer(this); 
+	Renderer::GetInst().RegisterCMeshRenderer(this);
 }
 
 CMeshRenderer::~CMeshRenderer()
 {
 	Renderer::GetInst().UnRegisterCMeshRenderer(this);
+}
+
+CMeshRenderer::CMeshRenderer(const CTransform* inOwnerTrans)
+	: m_ownerTrans(inOwnerTrans)
+{
+	ASSERT(inOwnerTrans, "트랜스폼이 nullptr 입니다.");
+}
+
+void CMeshRenderer::Initialize()
+{
+	RegisterToRenderer();
 }

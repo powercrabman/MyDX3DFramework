@@ -72,7 +72,7 @@ private:
 	size_t m_validCompSizeInVector = 0;
 };
 
-GameObject::GameObject()
+inline GameObject::GameObject()
 {
 	m_compRepo.reserve(sReserveCapacity);
 	m_updateCompRepo.reserve(sReserveCapacity);
@@ -126,7 +126,7 @@ inline void GameObject::SetupObject(std::string_view inNameOrEmpty, bool isExpli
 	}
 }
 
-void GameObject::CleanGarbage()
+inline void GameObject::CleanGarbage()
 {
 	if (m_validCompSizeInVector < m_updateCompRepo.size())
 	{
@@ -146,6 +146,7 @@ inline CompType* GameObject::CreateComponent(Args && ...args)
 
 	//이름 설정
 	cmp->SetupComponent<CompType>(this, CM::TypeTrait<CompType>::ID(), CM::GetTypeName<CompType>());
+	cmp->Initialize();
 
 	if constexpr (std::is_base_of<CBehavior, CompType>::value)
 	{
@@ -164,6 +165,7 @@ inline CompType* GameObject::CreateNamedComponent(std::string_view inCompName, A
 
 	std::unique_ptr<CompType> cmp = std::make_unique<CompType>(std::forward<Args>(args)...);
 	CompType* ptr = cmp.get();
+	cmp->Initialize();
 
 	//이름 설정
 	cmp->SetupComponent<CompType>(this, CM::TypeTrait<CompType>::ID(), inCompName);
@@ -179,14 +181,14 @@ inline CompType* GameObject::CreateNamedComponent(std::string_view inCompName, A
 
 //특정 타입의 컴포넌트가 존재하는가
 template<typename CompType>
-bool GameObject::HasComponent()
+inline bool GameObject::HasComponent()
 {
 	static_assert(std::is_base_of<Component, CompType>::value, "CompType is not derived from Component.");
 	return m_compRepo.contains(CM::TypeTrait<CompType>::ID());
 }
 
 template<typename CompType>
-CompType* GameObject::GetComponentOrNull()
+inline CompType* GameObject::GetComponentOrNull()
 {
 	static_assert(std::is_base_of<Component, CompType>::value, "CompType is not derived from Component.");
 	auto iter = m_compRepo.find(CM::TypeTrait<CompType>::ID());
@@ -200,7 +202,7 @@ CompType* GameObject::GetComponentOrNull()
 }
 
 template<typename CompType>
-std::vector<std::unique_ptr<Component>>& GameObject::GetComponents()
+inline std::vector<std::unique_ptr<Component>>& GameObject::GetComponents()
 {
 	static_assert(std::is_base_of<Component, CompType>::value, "CompType is not derived from Component.");
 	auto iter = m_compRepo.find(CM::TypeTrait<CompType>::ID());
@@ -209,7 +211,7 @@ std::vector<std::unique_ptr<Component>>& GameObject::GetComponents()
 }
 
 template<typename CompType>
-CompType* GameObject::GetComponentByNameOrNull(const CM::Name& inCompName)
+inline CompType* GameObject::GetComponentByNameOrNull(const CM::Name& inCompName)
 {
 	static_assert(std::is_base_of<Component, CompType>::value, "CompType is not derived from Component.");
 	auto& objVec = GetComponents<CompType>();

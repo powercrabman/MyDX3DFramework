@@ -1,8 +1,6 @@
 #pragma once
 #include "GameObject.h"
-
-class CTransform;
-class CKeyInput;
+#include "ComponentSet.h"
 
 class Pawn : public GameObject
 {
@@ -14,10 +12,9 @@ public:
 	void Update() override;
 
 private:
-
-
-private:
 	CTransform* m_trans = nullptr;
 	CKeyInput* m_keyInput = nullptr;
+	CMeshRenderer* m_meshCmp = nullptr;
 };
+
 

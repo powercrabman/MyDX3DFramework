@@ -3,6 +3,7 @@
 #include "CMeshRenderer.h"
 #include "CLight.h"
 #include "FastCompVector.h"
+#include "Mesh.h"
 
 class CCamera;
 class Effect;
@@ -25,7 +26,7 @@ public:
 	void Render();
 
 	//추가 렌더링 함수
-	void RenderIndices(uint32 indicesCount);
+	void RenderIndices(Mesh* inMesh);
 
 	//창 크기 조절
 	void ResizeWindow(const WindowSize& winSize);
@@ -46,7 +47,24 @@ public:
 	NODISCARD ID3D11Device5* GetDeivce() const { ASSERT(m_device, L"디바이스가 Nullptr입니다."); return m_device.Get(); }
 
 	NODISCARD D3D_FEATURE_LEVEL GetFeatureLevel() const { return m_featureLevel; }
-	NODISCARD std::string GetFeatureLevelToString() const;
+	NODISCARD const wchar_t* GetFeatureLevelToString() const
+	{
+		switch (m_featureLevel)
+		{
+		case D3D_FEATURE_LEVEL_1_0_CORE: return L"D3D_FEATURE_LEVEL_1_0_CORE";
+		case D3D_FEATURE_LEVEL_9_1:		 return L"D3D_FEATURE_LEVEL_9_1";
+		case D3D_FEATURE_LEVEL_9_2:		 return L"D3D_FEATURE_LEVEL_9_2";
+		case D3D_FEATURE_LEVEL_9_3:		 return L"D3D_FEATURE_LEVEL_9_3";
+		case D3D_FEATURE_LEVEL_10_0:	 return L"D3D_FEATURE_LEVEL_10_0";
+		case D3D_FEATURE_LEVEL_10_1:	 return L"D3D_FEATURE_LEVEL_10_1";
+		case D3D_FEATURE_LEVEL_11_0:	 return L"D3D_FEATURE_LEVEL_11_0";
+		case D3D_FEATURE_LEVEL_11_1:	 return L"D3D_FEATURE_LEVEL_11_1";
+		case D3D_FEATURE_LEVEL_12_0:	 return L"D3D_FEATURE_LEVEL_12_0";
+		case D3D_FEATURE_LEVEL_12_1:	 return L"D3D_FEATURE_LEVEL_12_1";
+		case D3D_FEATURE_LEVEL_12_2:	 return L"D3D_FEATURE_LEVEL_12_2";
+		default: ASSERT(false, L"알 수 없는 FeatureLevel.");
+		}
+	}
 
 	NODISCARD Effect* GetEffect(const std::string& inKey);
 	NODISCARD Effect* GetCurrentEffect() const { assert(m_curEffect); return m_curEffect; }
@@ -57,18 +75,17 @@ public:
 	NODISCARD Mesh* GetMesh(const std::string& inKey);
 	NODISCARD Material* GetMaterial(const std::string& inKey);
 
+	void BindBuffers(Mesh* inMesh);
+
 	void SetCurrentEffect(const std::string& inKey);
 	void SetCurrentRenderState(const std::string& inKey);
-
-	void BindMesh(Mesh* inMesh) { m_curMesh = inMesh; }
-	Mesh* GetBindedMesh() const { return m_curMesh; }
 
 	// 카메라 관련 코드
 	void RegisterCamera(CCamera* inCamera);
 	void ReleaseCamera() { m_camera = nullptr; }
 	CCamera* GetCamera();
 
-	//쉐이더 코드 가져오기
+	//쉐이더 코드 로드
 	void LoadAndCopileShaderFromFile(
 		std::wstring_view inFilename,
 		std::string_view inEntryPoint,
@@ -81,27 +98,21 @@ public:
 	RenderState* CreateRenderState(const std::string& inKey);
 	Material* CreateMaterial(const std::string& inKey);
 
-	void RegisterCMeshRenderer(CMeshRenderer* inMesh)
-	{
-		m_cMeshRendererRepo.Insert(inMesh);
-	}
-	void UnRegisterCMeshRenderer(CMeshRenderer* inMesh)
-	{
-		m_cMeshRendererRepo.Remove(inMesh);
-	}
+	void RegisterCMeshRenderer(CMeshRenderer* inMesh);
+	void UnRegisterCMeshRenderer(CMeshRenderer* inMesh);
 
 	void RegisterCLight(CLight* inLight);
 	void UnRegisterCLight(CLight* inLight);
 
 public:
 	//참조용 Static 변수들
-	const static std::string BasicEffectKey;
-	const static std::string CubeMeshKey;
-	const static std::string SphereMeshKey;
-	const static std::string BasicRenderStateKey;
-	const static std::string BasicMaterialKey;
-	const static std::string CbPerFrameKey;
-	const static std::string CbPerObjectKey;
+	const inline static std::string sBasicEffectKey = "BasicEffect";
+	const inline static std::string sCubeMeshKey = "CubeMesh";
+	const inline static std::string sSphereMeshKey = "SphereMesh";
+	const inline static std::string sBasicRenderStateKey = "BasicRenderState";
+	const inline static std::string sBasicMaterialKey = "BasicMateral";
+	const inline static std::string sCbPerFrameKey = "cbPerFrame";
+	const inline static std::string sCbPerObjectKey = "cbPerObject";
 
 private:
 	Renderer();;
@@ -129,6 +140,7 @@ private:
 	//현재 사용중인 Effect 캐싱
 	Effect* m_curEffect = nullptr;
 	RenderState* m_curRenderState = nullptr;
+	Mesh* m_curMesh = nullptr;
 
 	//DirectXTK
 	std::unique_ptr<SpriteBatch> m_spriteBatch = nullptr;
@@ -139,7 +151,6 @@ private:
 
 	//3D 메쉬 집합
 	CM::FastCompVector<CMeshRenderer*> m_cMeshRendererRepo;
-	Mesh* m_curMesh = nullptr;
 
 	//광원 
 	CM::Array<CLight*, DIRECTIONAL_LIGHT_MAXIMUM_COUNT> m_dirLightRepo = {};
@@ -160,7 +171,6 @@ inline bool Renderer::IsInitalized() const
 }
 
 //더블 버퍼링
-
 inline void Renderer::ClearBuffer(XMVECTORF32 inClearColor)
 {
 	m_deviceContext->ClearRenderTargetView(
@@ -198,25 +208,6 @@ inline void Renderer::SetFullScreen(bool trigger)
 	ASSERT(m_swapChain, L"스왑체인이 존재하지 않습니다.");
 	HRESULT hr = m_swapChain->SetFullscreenState(trigger, nullptr);
 	CHECK_FAILED(hr);
-}
-
-inline std::string Renderer::GetFeatureLevelToString() const
-{
-	switch (m_featureLevel)
-	{
-	case D3D_FEATURE_LEVEL_1_0_CORE: return "D3D_FEATURE_LEVEL_1_0_CORE";
-	case D3D_FEATURE_LEVEL_9_1:		 return "D3D_FEATURE_LEVEL_9_1";
-	case D3D_FEATURE_LEVEL_9_2:		 return "D3D_FEATURE_LEVEL_9_2";
-	case D3D_FEATURE_LEVEL_9_3:		 return "D3D_FEATURE_LEVEL_9_3";
-	case D3D_FEATURE_LEVEL_10_0:	 return "D3D_FEATURE_LEVEL_10_0";
-	case D3D_FEATURE_LEVEL_10_1:	 return "D3D_FEATURE_LEVEL_10_1";
-	case D3D_FEATURE_LEVEL_11_0:	 return "D3D_FEATURE_LEVEL_11_0";
-	case D3D_FEATURE_LEVEL_11_1:	 return "D3D_FEATURE_LEVEL_11_1";
-	case D3D_FEATURE_LEVEL_12_0:	 return "D3D_FEATURE_LEVEL_12_0";
-	case D3D_FEATURE_LEVEL_12_1:	 return "D3D_FEATURE_LEVEL_12_1";
-	case D3D_FEATURE_LEVEL_12_2:	 return "D3D_FEATURE_LEVEL_12_2";
-	default: ASSERT(false, L"알 수 없는 FeatureLevel.");
-	}
 }
 
 inline Effect* Renderer::GetEffect(const std::string& inKey)
@@ -261,13 +252,23 @@ inline Material* Renderer::CreateMaterial(const std::string& inKey)
 	return returnObj;
 }
 
+inline void Renderer::RegisterCMeshRenderer(CMeshRenderer* inMesh)
+{
+	m_cMeshRendererRepo.Insert(inMesh);
+}
+
+inline void Renderer::UnRegisterCMeshRenderer(CMeshRenderer* inMesh)
+{
+	m_cMeshRendererRepo.Remove(inMesh);
+}
+
 inline void Renderer::RegisterCLight(CLight* inLight)
 {
 	switch (inLight->GetLightType())
 	{
-	case eLightType::Directional_Light: m_dirLightRepo.PushBack(inLight); break;
-	case eLightType::Point_Light: m_pointLightRepo.PushBack(inLight); break;
-	case eLightType::Spot_Light: m_spotLightRepo.PushBack(inLight); break;
+	case eLightType::DirectionalLight: m_dirLightRepo.PushBack(inLight); break;
+	case eLightType::PointLight: m_pointLightRepo.PushBack(inLight); break;
+	case eLightType::SpotLight: m_spotLightRepo.PushBack(inLight); break;
 	default: assert(false);
 	}
 }
@@ -276,9 +277,9 @@ inline void Renderer::UnRegisterCLight(CLight* inLight)
 {
 	switch (inLight->GetLightType())
 	{
-	case eLightType::Directional_Light: m_dirLightRepo.Erase(inLight); break;
-	case eLightType::Point_Light: m_pointLightRepo.Erase(inLight); break;
-	case eLightType::Spot_Light: m_spotLightRepo.Erase(inLight); break;
+	case eLightType::DirectionalLight: m_dirLightRepo.Erase(inLight); break;
+	case eLightType::PointLight: m_pointLightRepo.Erase(inLight); break;
+	case eLightType::SpotLight: m_spotLightRepo.Erase(inLight); break;
 	default: assert(false);
 	}
 }
@@ -300,6 +301,15 @@ inline Material* Renderer::GetMaterial(const std::string& inKey)
 	return m_materialRepo[inKey].get();
 }
 
+inline void Renderer::BindBuffers(Mesh* inMesh)
+{
+	if (inMesh != m_curMesh)
+	{
+		inMesh->BindBuffers(m_deviceContext.Get());
+		m_curMesh = inMesh;
+	}
+}
+
 inline void Renderer::SetCurrentEffect(const std::string& inKey)
 {
 	m_curEffect = GetEffect(inKey);
@@ -310,9 +320,9 @@ inline void Renderer::SetCurrentRenderState(const std::string& inKey)
 	m_curRenderState = GetRenderState(inKey);
 }
 
-inline void Renderer::RenderIndices(uint32 indicesCount)
+inline void Renderer::RenderIndices(Mesh* inMesh)
 {
-	m_deviceContext->DrawIndexed(indicesCount, 0, 0);
+	m_deviceContext->DrawIndexed(inMesh->GetIndexBufferSize(), 0, 0);
 }
 
 // 카메라 관련 코드
@@ -331,13 +341,13 @@ inline CCamera* Renderer::GetCamera()
 //쉐이더 코드 가져오기
 inline void Renderer::LoadAndCopileShaderFromFile(std::wstring_view inFilename, std::string_view inEntryPoint, std::string_view inTarget, ID3DBlob** outInppBlob)
 {
-	std::wifstream file{ inFilename.data() };
+	std::ifstream file{ inFilename.data() };
 	VERTIFY(file.is_open(), L"쉐이더 파일 로드 실패");
 
-	std::wstringstream buffer = {};
+	std::stringstream buffer = {};
 	buffer << file.rdbuf();
 
-	std::wstring shaderCode = buffer.str();
+	std::string shaderCode = buffer.str();
 
 	UINT compileFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)

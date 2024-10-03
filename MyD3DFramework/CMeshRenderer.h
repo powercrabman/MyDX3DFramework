@@ -11,6 +11,8 @@ class CMeshRenderer : public CAttribute
 public:
 	CMeshRenderer(const CTransform* inOwnerTrans);
 	virtual ~CMeshRenderer();
+	
+	virtual void Initialize() override;
 
 	void RegisterToRenderer();
 	
@@ -53,11 +55,5 @@ inline Material* CMeshRenderer::GetMaterial() const
 inline void CMeshRenderer::SetIndex(uint64 inIdx)
 {
 	m_index = inIdx;
-}
-
-inline CMeshRenderer::CMeshRenderer(const CTransform* inOwnerTrans)
-	: m_ownerTrans(inOwnerTrans)
-{
-	ASSERT(inOwnerTrans, "트랜스폼이 nullptr 입니다.");
 }
 

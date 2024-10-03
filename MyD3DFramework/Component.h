@@ -8,6 +8,7 @@ class Component
 	friend class GameObject;
 public:
 	virtual ~Component() = default;
+	virtual void Initialize() {}
 
 	GameObject* GetOwner() const;
 	CM::TypeID GetTypeInfo() const { return m_typeID; }

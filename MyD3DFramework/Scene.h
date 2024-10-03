@@ -64,7 +64,7 @@ inline GameObject* Scene::GetGameObjectOrNull(const CM::Name& inObjName)
 }
 
 /* 탐색2 */
-GameObject* Scene::FindGameObjectOrNull(const std::function<bool(const GameObject*)>& inFindFunction)
+inline GameObject* Scene::FindGameObjectOrNull(const std::function<bool(const GameObject*)>& inFindFunction)
 {
 	for (size_t i = 0; i < m_validObjSizeinVector; ++i)
 	{
@@ -80,7 +80,7 @@ GameObject* Scene::FindGameObjectOrNull(const std::function<bool(const GameObjec
 
 
 /* 삭제 */
-void Scene::RemoveGameObject(const CM::Name inObjName)
+inline void Scene::RemoveGameObject(const CM::Name inObjName)
 {
 	//삭제할 요소 찾기
 	auto iter = m_gameObjRepo.find(inObjName);
@@ -113,13 +113,13 @@ void Scene::RemoveGameObject(const CM::Name inObjName)
 	m_gameObjRepo[oldName].first = arrayIdx;
 }
 
-void Scene::RemoveGameObject(GameObject* inObject)
+inline void Scene::RemoveGameObject(GameObject* inObject)
 {
 	RemoveGameObject(inObject->GetName());
 }
 
 /* 가비지 컬렉터 */
-void Scene::CleanGarbge()
+inline void Scene::CleanGarbge()
 {
 	if (m_validObjSizeinVector < m_updateObjRepo.size())
 	{
@@ -134,7 +134,7 @@ inline void Scene::ClearRepogitory()
 	m_validObjSizeinVector = 0;
 }
 
-Scene::Scene()
+inline Scene::Scene()
 {
 	m_gameObjRepo.reserve(sReserveCapacity);
 	m_updateObjRepo.reserve(sReserveCapacity);

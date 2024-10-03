@@ -45,6 +45,7 @@ bool Engine::Initialize(HINSTANCE inHinst)
 	//메모리 풀 생성
 	Buffer512W::GetInst();
 
+	//렌더링 리소스 생성
 	Renderer::GetInst().InitializeRenderResoucre();
 
 	//씬 관리
@@ -75,7 +76,7 @@ void Engine::Render()
 
 	//성능측정
 	r.Render();
-	//RenderDebugData();
+	RenderDebugData();
 
 	//스왑체인
 	r.Present();

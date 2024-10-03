@@ -19,7 +19,6 @@ public:
 private:
 	//로컬 경로
 	std::wstring m_resourcePath = {};
-
 	std::array<std::unique_ptr<SpriteFont>, (size_t)eFont::Count> m_fontStorage = {};
 };
 

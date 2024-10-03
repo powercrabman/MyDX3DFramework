@@ -3,11 +3,12 @@
 #include "CCamera.h"
 #include "CTransform.h"
 #include "CKeyInput.h"
+#include "CLight.h"
 
 CameraObject::CameraObject()
 {
 	m_trans = CreateComponent<CTransform>();
-	m_camera = CreateComponent<CCamera>(45.f, 0.5f, 100.f, m_trans);
+	m_camera = CreateComponent<CCamera>(::XMConvertToRadians(45.f), 0.5f, 100.f, m_trans);
 	m_input = CreateComponent<CKeyInput>();
 
 	/* ÀÎÇ² ¼³Á¤ */
@@ -20,68 +21,67 @@ CameraObject::CameraObject()
 	m_input->BindAction(eKeyCode::A, eKeyState::Hold, this, &CameraObject::TurnLeft);
 	m_input->BindAction(eKeyCode::D, eKeyState::Hold, this, &CameraObject::TurnRight);
 	m_input->BindAction(eKeyCode::W, eKeyState::Hold, this, &CameraObject::TurnUp);
-	m_input->BindAction(eKeyCode::S	, eKeyState::Hold, this, &CameraObject::TurnDown);
-
+	m_input->BindAction(eKeyCode::S, eKeyState::Hold, this, &CameraObject::TurnDown);
 }
 
 void CameraObject::Initialize()
 {
-	m_trans->SetPosition(Vector3::Zero);
+	m_trans->SetPosition(Vector3{0.f,3.f,-2.f});
 	m_trans->SetScale(Vector3::One);
-	m_trans->SetRotate(Vector3::One);
+	m_trans->SetRotateDegree(0, 15, 0);
 }
 
 void CameraObject::Update()
 {
 }
 
-void CameraObject::MoveLeft()
+ void CameraObject::MoveLeft()
 {
 	m_trans->AddPosition(m_trans->GetLeftVector() * sMoveSpeed * DELTA_TIME);
 }
 
-void CameraObject::MoveRight()
+ void CameraObject::MoveRight()
 {
 	m_trans->AddPosition(m_trans->GetRightVector() * sMoveSpeed * DELTA_TIME);
 }
 
-void CameraObject::MoveForward()
+ void CameraObject::MoveForward()
 {
 	m_trans->AddPosition(m_trans->GetForwardVector() * sMoveSpeed * DELTA_TIME);
 }
 
-void CameraObject::MoveBackward()
+ void CameraObject::MoveBackward()
 {
 	m_trans->AddPosition(m_trans->GetBackwardVector() * sMoveSpeed * DELTA_TIME);
 }
 
-void CameraObject::MoveUp()
+ void CameraObject::MoveUp()
 {
 	m_trans->AddPosition(m_trans->GetUpVector() * sMoveSpeed * DELTA_TIME);
 }
 
-void CameraObject::MoveDown()
+ void CameraObject::MoveDown()
 {
 	m_trans->AddPosition(m_trans->GetDownVector() * sMoveSpeed * DELTA_TIME);
 }
 
-void CameraObject::TurnLeft()
+ void CameraObject::TurnLeft()
 {
 	m_trans->AddRotateDegree(-sTurnSpeed * DELTA_TIME, 0, 0);
 }
 
-void CameraObject::TurnRight()
+ void CameraObject::TurnRight()
 {
 	m_trans->AddRotateDegree(sTurnSpeed * DELTA_TIME, 0, 0);
 }
 
-void CameraObject::TurnDown()
-{
-	m_trans->AddRotateDegree(0, -sTurnSpeed * DELTA_TIME, 0);
-}
-
-void CameraObject::TurnUp()
+ void CameraObject::TurnDown()
 {
 	m_trans->AddRotateDegree(0, sTurnSpeed * DELTA_TIME, 0);
+}
+
+ void CameraObject::TurnUp()
+{
+	m_trans->AddRotateDegree(0, -sTurnSpeed * DELTA_TIME, 0);
 }
 

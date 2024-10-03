@@ -4,6 +4,7 @@
 class CTransform;
 class CCamera;
 class CKeyInput;
+class CLight;
 
 class CameraObject : public GameObject
 {
@@ -31,7 +32,8 @@ private:
 	CTransform* m_trans = {};
 	CCamera* m_camera = {};
 	CKeyInput* m_input = {};
+	CLight* m_spotLight = {};
 
-	constexpr inline static float sTurnSpeed = 45.f;
-	constexpr inline static float sMoveSpeed = 1.f;
+	constexpr inline static float sTurnSpeed = 30.f;
+	constexpr inline static float sMoveSpeed = 3.f;
 };

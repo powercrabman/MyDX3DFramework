@@ -13,7 +13,7 @@ void Scene::UpdateSceneCore()
 	for (size_t i = 0; i < m_validObjSizeinVector; ++i)
 	{
 		GameObject* obj = m_updateObjRepo[i];
-		obj->Update();
+		obj->UpdateCore();
 	}
 
 	UpdateScene();

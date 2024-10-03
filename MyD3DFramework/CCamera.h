@@ -31,11 +31,11 @@ public:
 
 	void RegisterToMainCamera();
 
-	Vector3 GetPosition() { return m_offsetPosition + m_ownerTrans->GetPosition(); }
+	Vector3 GetPosition() { return (m_offsetPosition + m_ownerTrans->GetPosition()); }
 
 private:
 	const CTransform* m_ownerTrans = nullptr;
-	
+
 	Vector3 m_offsetPosition = Vector3::Zero;
 	Quaternion m_offsetRotator = Quaternion::Identity;
 
@@ -94,7 +94,7 @@ inline void CCamera::ResetOffset()
 	Quaternion m_offsetRotator = Quaternion::Identity;
 }
 
-Matrix CCamera::GetViewMatrix(const Vector3& inUp) const
+inline Matrix CCamera::GetViewMatrix(const Vector3& inUp) const
 {
 	Vector3 lookVec = ::XMVector3Rotate(Vector3{ 0.f,0.f,1.f }, m_offsetRotator * m_ownerTrans->GetRotate());
 	return ::XMMatrixLookToLH(m_ownerTrans->GetPosition() + m_offsetPosition, lookVec, inUp);
@@ -105,12 +105,12 @@ inline Matrix CCamera::GetPerspectiveMatrix(float inAspectRatio) const
 	return ::XMMatrixPerspectiveFovLH(m_fov, inAspectRatio, m_nearPlane, m_farPlane);
 }
 
-void CCamera::SetNearPlane(float inNearPlane)
+inline void CCamera::SetNearPlane(float inNearPlane)
 {
 	m_nearPlane = inNearPlane;
 }
 
-void CCamera::SetFarPlane(float inFarPlane)
+inline void CCamera::SetFarPlane(float inFarPlane)
 {
 	m_farPlane = inFarPlane;
 }

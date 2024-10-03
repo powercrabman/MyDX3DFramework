@@ -60,7 +60,7 @@ private:
 	constexpr static size_t sReserveCapacity = 16;
 };
 
-CKeyInput::CKeyInput()
+inline CKeyInput::CKeyInput()
 {
 	m_actionRepo.reserve(sReserveCapacity);
 	m_actionVector.reserve(sReserveCapacity);

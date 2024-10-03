@@ -12,6 +12,10 @@ public:
 	void SetRotateDegree(const Vector3& inYawPitchRoll);
 	void SetRotate(float inYaw, float inPitch, float inRoll);
 	void SetRotate(const Vector3& inYawPitchRoll);
+	void SetRotateByDirection(const Vector3& inDirection)
+	{
+		m_rotator = Quaternion::FromToRotation(Vector3{ 0,0,1 }, inDirection);
+	}
 	void SetScale(const Vector3& inScale);
 
 	void AddPosition(const Vector3& inVector);

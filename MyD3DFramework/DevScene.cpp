@@ -4,6 +4,9 @@
 #include "CCamera.h"
 #include "Scene.h"
 #include "Pawn.h"
+#include "LightObject.h"
+#include "Ground.h"
+#include "CTransform.h"
 
 void DevScene::EnterScene()
 {
@@ -16,6 +19,8 @@ void DevScene::EnterScene()
 		cmr->RegisterToMainCamera();
 	}
 
+	CreateGameObject<LightObject>();
+	CreateGameObject<Ground>();
 	CreateGameObject<Pawn>();
 }
 

@@ -89,7 +89,7 @@
       <Filter>01.Engine</Filter>
     </ClInclude>
     <ClInclude Include="CTransform.h">
-      <Filter>06.GameModules\Attribute</Filter>
+      <Filter>06.Component\Attribute</Filter>
     </ClInclude>
     <ClInclude Include="CircularArray.h">
       <Filter>99.Headers\Utility\Container</Filter>
@@ -98,13 +98,13 @@
       <Filter>99.Headers\Utility\Container</Filter>
     </ClInclude>
     <ClInclude Include="CAttribute.h">
-      <Filter>06.GameModules\Abstract</Filter>
+      <Filter>06.Component\Abstract</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
-      <Filter>06.GameModules\Abstract</Filter>
+      <Filter>06.Component\Abstract</Filter>
     </ClInclude>
     <ClInclude Include="CMeshRenderer.h">
-      <Filter>06.GameModules\Attribute</Filter>
+      <Filter>06.Component\Attribute</Filter>
     </ClInclude>
     <ClInclude Include="TypeTrait.h">
       <Filter>99.Headers\Utility</Filter>
@@ -119,16 +119,13 @@
       <Filter>04.GameScene\Abstract</Filter>
     </ClInclude>
     <ClInclude Include="CBehavior.h">
-      <Filter>06.GameModules\Abstract</Filter>
+      <Filter>06.Component\Abstract</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>05.GameObject\Abstract</Filter>
     </ClInclude>
-    <ClInclude Include="CLight.h">
-      <Filter>06.GameModules\Attribute\Light</Filter>
-    </ClInclude>
     <ClInclude Include="CCamera.h">
-      <Filter>06.GameModules\Attribute</Filter>
+      <Filter>06.Component\Attribute</Filter>
     </ClInclude>
     <ClInclude Include="FastCompVector.h">
       <Filter>99.Headers\Utility\Container</Filter>
@@ -140,13 +137,25 @@
       <Filter>99.Headers\ID</Filter>
     </ClInclude>
     <ClInclude Include="CKeyInput.h">
-      <Filter>06.GameModules\Behavior</Filter>
+      <Filter>06.Component\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="Array.h">
       <Filter>99.Headers\Utility\Container</Filter>
     </ClInclude>
     <ClInclude Include="Pawn.h">
       <Filter>05.GameObject\Concrete</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentSet.h">
+      <Filter>06.Component\Abstract</Filter>
+    </ClInclude>
+    <ClInclude Include="LightObject.h">
+      <Filter>05.GameObject\Concrete</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>05.GameObject\Concrete</Filter>
+    </ClInclude>
+    <ClInclude Include="CLight.h">
+      <Filter>06.Component\Attribute</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -203,26 +212,11 @@
     <Filter Include="05.GameObject\Abstract">
       <UniqueIdentifier>{019bfbe2-d4d1-4c30-b135-2d85daf87400}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06.GameModules">
-      <UniqueIdentifier>{f8036edb-80a5-431c-942d-468ffcdd0835}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.GameModules\Attribute">
-      <UniqueIdentifier>{5faf1144-6109-4cfb-91c9-c08b07756cfc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="99.Headers\Utility\Container">
       <UniqueIdentifier>{209fc5c4-5031-4bbe-a1a0-9a35a929ce23}</UniqueIdentifier>
     </Filter>
     <Filter Include="05.GameObject\Concrete">
       <UniqueIdentifier>{a1ef300d-f231-43fd-be55-4510bebc31a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.GameModules\Abstract">
-      <UniqueIdentifier>{12cad8e6-eddd-4c97-a2c3-78ae78c2af62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.GameModules\Behavior">
-      <UniqueIdentifier>{aef79aa2-bad6-4122-9d08-b5e65d462a52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="06.GameModules\Attribute\Light">
-      <UniqueIdentifier>{0f0c2a6a-e08d-42d1-8513-7efb53aea42e}</UniqueIdentifier>
     </Filter>
     <Filter Include="04.GameScene">
       <UniqueIdentifier>{0e1a8674-65c9-481c-b799-4c5e89457b52}</UniqueIdentifier>
@@ -241,6 +235,18 @@
     </Filter>
     <Filter Include="99.Headers\ID">
       <UniqueIdentifier>{2817ad6f-a9d4-440a-ad51-3ef1ee88246e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component">
+      <UniqueIdentifier>{f8036edb-80a5-431c-942d-468ffcdd0835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Attribute">
+      <UniqueIdentifier>{5faf1144-6109-4cfb-91c9-c08b07756cfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Abstract">
+      <UniqueIdentifier>{12cad8e6-eddd-4c97-a2c3-78ae78c2af62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component\Behavior">
+      <UniqueIdentifier>{aef79aa2-bad6-4122-9d08-b5e65d462a52}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -311,7 +317,7 @@
       <Filter>07.RenderModules</Filter>
     </ClCompile>
     <ClCompile Include="CTransform.cpp">
-      <Filter>06.GameModules\Attribute</Filter>
+      <Filter>06.Component\Attribute</Filter>
     </ClCompile>
     <ClCompile Include="CircularArray.cpp">
       <Filter>99.Headers\Utility\Container</Filter>
@@ -320,13 +326,13 @@
       <Filter>99.Headers\Utility\Container</Filter>
     </ClCompile>
     <ClCompile Include="CAttribute.cpp">
-      <Filter>06.GameModules\Abstract</Filter>
+      <Filter>06.Component\Abstract</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
-      <Filter>06.GameModules\Abstract</Filter>
+      <Filter>06.Component\Abstract</Filter>
     </ClCompile>
     <ClCompile Include="CMeshRenderer.cpp">
-      <Filter>06.GameModules\Attribute</Filter>
+      <Filter>06.Component\Attribute</Filter>
     </ClCompile>
     <ClCompile Include="TypeTrait.cpp">
       <Filter>99.Headers\Utility</Filter>
@@ -341,16 +347,13 @@
       <Filter>04.GameScene\Concrete</Filter>
     </ClCompile>
     <ClCompile Include="CBehavior.cpp">
-      <Filter>06.GameModules\Abstract</Filter>
+      <Filter>06.Component\Abstract</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>05.GameObject\Abstract</Filter>
     </ClCompile>
-    <ClCompile Include="CLight.cpp">
-      <Filter>06.GameModules\Attribute\Light</Filter>
-    </ClCompile>
     <ClCompile Include="CCamera.cpp">
-      <Filter>06.GameModules\Attribute</Filter>
+      <Filter>06.Component\Attribute</Filter>
     </ClCompile>
     <ClCompile Include="FastCompVector.cpp">
       <Filter>99.Headers\Utility\Container</Filter>
@@ -362,13 +365,22 @@
       <Filter>99.Headers\ID</Filter>
     </ClCompile>
     <ClCompile Include="CKeyInput.cpp">
-      <Filter>06.GameModules\Behavior</Filter>
+      <Filter>06.Component\Behavior</Filter>
     </ClCompile>
     <ClCompile Include="Array.cpp">
       <Filter>99.Headers\Utility\Container</Filter>
     </ClCompile>
     <ClCompile Include="Pawn.cpp">
       <Filter>05.GameObject\Concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="LightObject.cpp">
+      <Filter>05.GameObject\Concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>05.GameObject\Concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight.cpp">
+      <Filter>06.Component\Attribute</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,13 +7,6 @@
 #include "CMeshRenderer.h"
 #include <fstream>
 
-const std::string Renderer::BasicEffectKey = "BasicEffect";
-const std::string Renderer::CubeMeshKey = "CubeMesh";
-const std::string Renderer::SphereMeshKey = "SphereMesh";
-const std::string Renderer::BasicRenderStateKey = "BasicRenderState";
-const std::string Renderer::BasicMaterialKey = "BasicMateral";
-const std::string Renderer::CbPerFrameKey = "cbPerFrame";
-const std::string Renderer::CbPerObjectKey = "cbPerObject";
 
 bool Renderer::InitD3D11Device()
 {
@@ -177,7 +170,7 @@ void Renderer::InitializeDirectXTKResource()
 void Renderer::InitializeRenderResoucre()
 {
 	//이펙트 생성
-	Effect* effect = CreateEffect(BasicEffectKey);
+	Effect* effect = CreateEffect(sBasicEffectKey);
 
 	effect->SetProperties(
 		m_device.Get(),
@@ -194,7 +187,7 @@ void Renderer::InitializeRenderResoucre()
 	);
 
 	//메쉬 생성
-	Mesh* mesh = CreateMesh(CubeMeshKey);
+	Mesh* mesh = CreateMesh(sCubeMeshKey);
 
 	//버텍스 버퍼 생성
 	std::vector<VertexNormal> vertices = {
@@ -229,7 +222,7 @@ void Renderer::InitializeRenderResoucre()
 	mesh->SetIndexBuffer(m_device.Get(), indices);
 
 	//RnederState 설정
-	RenderState* renderState = CreateRenderState(BasicRenderStateKey);
+	RenderState* renderState = CreateRenderState(sBasicRenderStateKey);
 	renderState->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	renderState->SetRasterizerState(m_device.Get());
 
@@ -239,7 +232,7 @@ void Renderer::InitializeRenderResoucre()
 	effect->RegisterConstantBuffer(
 		m_device.Get(),
 		sizeof(cbPerObject),
-		CbPerObjectKey,
+		sCbPerObjectKey,
 		0,
 		CONSTANT_BUFFER_APPLY_VERTEX_SHADER | CONSTANT_BUFFER_APPLY_PIXEL_SHADER
 	);
@@ -248,21 +241,36 @@ void Renderer::InitializeRenderResoucre()
 	effect->RegisterConstantBuffer(
 		m_device.Get(),
 		sizeof(cbPerFrame),
-		CbPerFrameKey,
+		sCbPerFrameKey,
 		1,
-		CONSTANT_BUFFER_APPLY_PIXEL_SHADER
+		CONSTANT_BUFFER_APPLY_VERTEX_SHADER | CONSTANT_BUFFER_APPLY_PIXEL_SHADER
 	);
 
-	SetCurrentEffect(BasicEffectKey);
-	SetCurrentRenderState(BasicRenderStateKey);
+	//머테리얼 생성
+	Material* m = CreateMaterial(sBasicMaterialKey);
+	m->Ambient = Color(0.2f, 0.2f, 0.2f);
+	m->Diffuse = Color(0.7f, 0.7f, 0.7f);
+	m->Specular = Color(1.0f, 1.0f, 1.0f);
+	m->Specular.w = 32;
+
+	SetCurrentEffect(sBasicEffectKey);
+	SetCurrentRenderState(sBasicRenderStateKey);
+
 }
 
 void Renderer::Render()
 {
+	/* 렌더링 옵션 복구 */
+	m_curEffect->Apply(m_deviceContext.Get());
+	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), sCbPerFrameKey);
+	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), sCbPerObjectKey);
+	m_curRenderState->Apply(m_deviceContext.Get());
+	m_curMesh = nullptr;
+	
 	/* 카메라 설정 */
 	{
 		cbPerFrame cb = {};
-		
+
 		/* 방향성 광원 */
 		for (int i = 0; i < m_dirLightRepo.Size(); ++i)
 		{
@@ -305,15 +313,16 @@ void Renderer::Render()
 			cb.SpotLight[i] = desc;
 		}
 
-		/* 사이즈 설정 */
+		/* 광원 사이즈 설정 */
 		cb.DirLightCount = m_dirLightRepo.Size();
-		cb.PointLightCount= m_pointLightRepo.Size();
+		cb.PointLightCount = m_pointLightRepo.Size();
 		cb.SpotLightCount = m_spotLightRepo.Size();
 
+		/* 카메라 설정 */
 		cb.EyePosW = ToVector4(m_camera->GetPosition());
-		cb.ViewProj = m_camera->GetPerspectiveMatrix(WindowsApp::GetInst().GetAspectRatio());
+		cb.ViewProj = (m_camera->GetViewMatrix() * m_camera->GetPerspectiveMatrix(WindowsApp::GetInst().GetAspectRatio())).Transpose();
 
-		m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerFrameKey, cb);
+		m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), sCbPerFrameKey, cb);
 	}
 
 	/* 오브젝트 업데이터 */
@@ -323,82 +332,22 @@ void Renderer::Render()
 		const CMeshRenderer* meshCmp = repo[i];
 		if (meshCmp->IsEnable())
 		{
+			/* 상수버퍼 업데이트 */
 			cbPerObject cb = {};
 
 			cb.Material = *meshCmp->GetMaterial();
 
-			cb.World = meshCmp->GetTransform()->GetWorldMatrix();
+			cb.World = meshCmp->GetTransform()->GetWorldMatrix().Transpose();
 			cb.WorldInvTranspose = meshCmp->GetTransform()->GetWorldMatrixInverse();
 
-			m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerObjectKey, cb);
+			m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), sCbPerObjectKey, cb);
 
-			/* 이쪽 구조 살짝 맘에 안듦 */
+			/* 버텍스 버퍼와 인덱스 버퍼를 바인딩하고 출력*/
 			Mesh* m = meshCmp->GetMesh();
-			if (m != m_curMesh)
-			{
-				m->BindBuffers(m_deviceContext.Get());
-				BindMesh(m);
-			}
-
-			RenderIndices(m->GetIndexBufferSize());
+			BindBuffers(m);
+			RenderIndices(m);
 		}
 	}
-
-
-	////렌더상태 초기화 할까 말까??
-	//m_curEffect->Apply(m_deviceContext.Get());
-	//m_curRenderState->Apply(m_deviceContext.Get());
-	//m_curEffect->BindConstantBuffer(m_deviceContext.Get(), CbPerObjectKey);
-	//m_curEffect->BindConstantBuffer(m_deviceContext.Get(), CbPerFrameKey);
-	//
-	////cbPerFrame 업데이트
-	//{
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//}
-	//
-	//for (const auto& obj : m_rObjRepo)
-	//{
-	//	//cbPerObjct 업데이트
-	//	cbPerObject cb = {};
-	//
-	//	const Transform& t = obj->GetTransform();
-	//	const Mesh* m = obj->GetMesh();
-	//
-	//	m->BindBuffers(m_deviceContext.Get());
-	//
-	//	cb.World = ::XMMatrixTranspose(t.GetWorldMatrix());
-	//	cb.WorldInvTranspose = ::XMMatrixInverse(nullptr, t.GetWorldMatrix());
-	//	cb.ViewProj = ::XMMatrixTranspose(m_viewMat * m_projMat);
-	//
-	//	cb.Material = *obj->GetMaterial();
-	//
-	//	m_curEffect->UpdateConstantBuffer(
-	//		m_deviceContext.Get(),
-	//		CbPerObjectKey,
-	//		cb
-	//	);
-	//	m_curEffect->BindConstantBuffer(
-	//		m_deviceContext.Get(),
-	//		CbPerObjectKey
-	//	);
-	//
-	//	RenderIndices(m->GetIndexBufferSize());
-	//}
-
-
-	//오브젝트 렌더링
-
-
 }
 
 //========================================
