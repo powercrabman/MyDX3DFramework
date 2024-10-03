@@ -10,15 +10,15 @@ public:
 
 	//씬 메인 함수
 	void EnterSceneCore();
-	void UpdateSceneCore(float inDeltaTime);
+	void UpdateSceneCore();
 	void ExitSceneCore();
 
 	/* 오브젝트 생성 */
 	template <typename ObjType, typename... Args>
-	GameObject* CreateGameObject(Args&&...args);
+	ObjType* CreateGameObject(Args&&...args);
 
 	template <typename ObjType, typename... Args>
-	GameObject* CreateNamedGameObject(std::string_view inObjectName, Args&&...args);
+	ObjType* CreateNamedGameObject(std::string_view inObjectName, Args&&...args);
 
 	/* 탐색 */
 	GameObject* GetGameObjectOrNull(const CM::Name& inObjName);
@@ -32,16 +32,17 @@ public:
 
 	/* 가비지 컬렉터 */
 	void CleanGarbge();
+	void ClearRepogitory();
 
 protected:
 	Scene();
 
 	virtual void EnterScene() = 0;
-	virtual void UpdateScene(float inDeltaTime) = 0;
+	virtual void UpdateScene() = 0;
 	virtual void ExitScene() = 0;
 
 private:
-	void AddObjectToRepositories(std::unique_ptr<GameObject>& inObject);
+	void AddObjectToRepositories(std::unique_ptr<GameObject> inObject);
 
 private:
 	constexpr static size_t sReserveCapacity = 1024;
@@ -50,7 +51,6 @@ private:
 	std::vector<GameObject*> m_updateObjRepo;
 	size_t m_validObjSizeinVector = 0;
 };
-
 
 /* 탐색 */
 inline GameObject* Scene::GetGameObjectOrNull(const CM::Name& inObjName)
@@ -127,6 +127,12 @@ void Scene::CleanGarbge()
 	}
 }
 
+inline void Scene::ClearRepogitory()
+{
+	m_gameObjRepo.clear();
+	m_updateObjRepo.clear();
+	m_validObjSizeinVector = 0;
+}
 
 Scene::Scene()
 {
@@ -134,7 +140,7 @@ Scene::Scene()
 	m_updateObjRepo.reserve(sReserveCapacity);
 }
 
-inline void Scene::AddObjectToRepositories(std::unique_ptr<GameObject>& inObject)
+inline void Scene::AddObjectToRepositories(std::unique_ptr<GameObject> inObject)
 {
 	//배열에 업데이트
 	size_t backIndex = m_updateObjRepo.size();
@@ -152,26 +158,33 @@ inline void Scene::AddObjectToRepositories(std::unique_ptr<GameObject>& inObject
 	}
 
 	//해쉬에 업데이트
-	ASSERT(!m_gameObjRepo.contains(inObject->GetName()), "동일한 ID를 가진 오브젝트가 씬 내에 이미 존재합니다.");
-	m_gameObjRepo[inObject->GetName()] = std::make_pair(m_validObjSizeinVector - 1, std::move(inObject));
+	const CM::Name& name = inObject->GetName();
+	ASSERT(!m_gameObjRepo.contains(name), "동일한 ID를 가진 오브젝트가 씬 내에 이미 존재합니다.");
+	m_gameObjRepo[name] = std::make_pair(m_validObjSizeinVector - 1, std::move(inObject));
 }
 
 template<typename ObjType, typename ...Args>
-inline GameObject* Scene::CreateGameObject(Args && ...args)
+inline ObjType* Scene::CreateGameObject(Args && ...args)
 {
 	static_assert(std::is_base_of<GameObject, ObjType>::value, "ObjType is not derivation of GameObject");
-	std::unique_ptr<GameObject> obj = std::make_unique<ObjType>(std::forward<Args>(args)...);
+	std::unique_ptr<ObjType> obj = std::make_unique<ObjType>(std::forward<Args>(args)...);
 	obj->SetupObject(CM::GetTypeName<ObjType>(), false);
+	obj->InitalizeCore();
+	ObjType* ptr = obj.get();
+	AddObjectToRepositories(std::move(obj));
 
-	return AddObjectToRepositories(obj);
+	return ptr;
 }
 
 template<typename ObjType, typename ...Args>
-inline GameObject* Scene::CreateNamedGameObject(std::string_view inObjectName, Args && ...args)
+inline ObjType* Scene::CreateNamedGameObject(std::string_view inObjectName, Args && ...args)
 {
 	static_assert(std::is_base_of<GameObject, ObjType>::value, "ObjType is not derivation of GameObject");
-	std::unique_ptr<GameObject> obj = std::make_unique<ObjType>(std::forward<Args>(args)...);
+	std::unique_ptr<ObjType> obj = std::make_unique<ObjType>(std::forward<Args>(args)...);
 	obj->SetupObject(inObjectName, true);
+	obj->InitalizeCore();
+	ObjType* ptr = obj.get();
+	AddObjectToRepositories(std::move(obj));
 
-	return 	AddObjectToRepositories(obj);;
+	return ptr;
 }

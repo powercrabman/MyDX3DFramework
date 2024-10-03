@@ -7,7 +7,7 @@ void GameObject::InitalizeCore()
 	Initialize();
 }
 
-void GameObject::UpdateCore(float inDeltaTime)
+void GameObject::UpdateCore( )
 {
 	for (size_t i = 0; i < m_validCompSizeInVector; ++i)
 	{
@@ -15,10 +15,10 @@ void GameObject::UpdateCore(float inDeltaTime)
 
 		if (cmp->IsEnable())
 		{
-			UpdateCore(inDeltaTime);
+			cmp->Update();
 		}
 	}
 
-	Update(inDeltaTime);
+	Update();
 }
 

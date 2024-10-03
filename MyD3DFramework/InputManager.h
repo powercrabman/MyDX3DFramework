@@ -93,13 +93,15 @@ public:
 	bool GetKeyRelease(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Release; }
 	bool GetKeyAway(eKeyCode key) { return m_stateList[static_cast<uint8>(key)] == eKeyState::Away; }
 
+	bool GetKeyDown(eKeyCode key) { return GetKeyHold(key) && GetKeyPress(key); }
+	bool GetKeyUp(eKeyCode key) { return GetKeyRelease(key) && GetKeyAway(key); }
+
 	POINT GetMousePos()const { return m_mousePos; }
 	POINT GetDeltaMousePos() const { return POINT{ m_mousePos.x - m_prevMousePos.x, m_mousePos.y - m_prevMousePos.y }; }
 
 private:
 	std::array<eKeyState, UINT8_MAX> m_stateList = {};
-	POINT m_mousePos = {};
-	POINT m_prevMousePos = {};
+	POINT m_mousePos = {};	POINT m_prevMousePos = {};
 
 	HWND m_hwnd = NULL;
 };

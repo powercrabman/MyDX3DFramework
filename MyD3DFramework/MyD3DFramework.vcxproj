@@ -118,6 +118,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)\DirectXTK\inc;$(SolutionDir)\MyD3DFramework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <MinFilesInUnityFile>5</MinFilesInUnityFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,17 +150,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Algorithm.h" />
+    <ClInclude Include="Array.h" />
     <ClInclude Include="CameraObject.h" />
     <ClInclude Include="CAttribute.h" />
     <ClInclude Include="CBehavior.h" />
     <ClInclude Include="BufferPool.h" />
     <ClInclude Include="CCamera.h" />
-    <ClInclude Include="CDirectionalLight.h" />
     <ClInclude Include="CircularArray.h" />
+    <ClInclude Include="CKeyInput.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ContantBuffers.h" />
-    <ClInclude Include="CPointLight.h" />
-    <ClInclude Include="CSpotLight.h" />
     <ClInclude Include="DevScene.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine.h" />
@@ -200,17 +200,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algorithm.cpp" />
+    <ClCompile Include="Array.cpp" />
     <ClCompile Include="CameraObject.cpp" />
     <ClCompile Include="CAttribute.cpp" />
     <ClCompile Include="CBehavior.cpp" />
     <ClCompile Include="BufferPool.cpp" />
     <ClCompile Include="CCamera.cpp" />
-    <ClCompile Include="CDirectionalLight.cpp" />
     <ClCompile Include="CircularArray.cpp" />
+    <ClCompile Include="CKeyInput.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ContantBuffers.cpp" />
-    <ClCompile Include="CPointLight.cpp" />
-    <ClCompile Include="CSpotLight.cpp" />
     <ClCompile Include="DevScene.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />

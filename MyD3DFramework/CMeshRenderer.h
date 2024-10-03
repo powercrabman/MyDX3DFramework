@@ -17,9 +17,9 @@ public:
 	void SetMesh(const std::string& inMeshKey);
 	void SetMaterial(const std::string& inMaterialKey);
 
-	const Mesh* GetMesh() const;
+	Mesh* GetMesh() const;
+	Material* GetMaterial() const;
 	const CTransform* GetTransform() const;
-	const Material* GetMaterial() const;
 
 private:
 	void SetIndex(uint64 inIdx);
@@ -33,7 +33,7 @@ private:
 	const CTransform* m_ownerTrans = nullptr;
 };
 
-const Mesh* CMeshRenderer::GetMesh() const
+ Mesh* CMeshRenderer::GetMesh() const
 {
 	ASSERT(m_mesh, "메시가 설정되지 않음.");
 	return m_mesh;
@@ -44,7 +44,7 @@ const CTransform* CMeshRenderer::GetTransform() const
 	return m_ownerTrans;
 }
 
-const Material* CMeshRenderer::GetMaterial() const
+ Material* CMeshRenderer::GetMaterial() const
 {
 	ASSERT(m_material, "머테리얼이 설정되지 않음");
 	return m_material;

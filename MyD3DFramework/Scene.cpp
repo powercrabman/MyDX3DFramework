@@ -7,16 +7,16 @@ void Scene::EnterSceneCore()
 	EnterScene();
 }
 
-void Scene::UpdateSceneCore(float inDeltaTime)
+void Scene::UpdateSceneCore()
 {
 
 	for (size_t i = 0; i < m_validObjSizeinVector; ++i)
 	{
 		GameObject* obj = m_updateObjRepo[i];
-		obj->Update(inDeltaTime);
+		obj->Update();
 	}
 
-	UpdateScene(inDeltaTime);
+	UpdateScene();
 }
 
 void Scene::ExitSceneCore()

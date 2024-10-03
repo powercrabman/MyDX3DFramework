@@ -109,15 +109,6 @@
     <ClInclude Include="TypeTrait.h">
       <Filter>99.Headers\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="CDirectionalLight.h">
-      <Filter>06.GameModules\Attribute\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="CPointLight.h">
-      <Filter>06.GameModules\Attribute\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="CSpotLight.h">
-      <Filter>06.GameModules\Attribute\Light</Filter>
-    </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>03.System</Filter>
     </ClInclude>
@@ -147,6 +138,12 @@
     </ClInclude>
     <ClInclude Include="Name.h">
       <Filter>99.Headers\ID</Filter>
+    </ClInclude>
+    <ClInclude Include="CKeyInput.h">
+      <Filter>06.GameModules\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Array.h">
+      <Filter>99.Headers\Utility\Container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -331,15 +328,6 @@
     <ClCompile Include="TypeTrait.cpp">
       <Filter>99.Headers\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="CDirectionalLight.cpp">
-      <Filter>06.GameModules\Attribute\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="CPointLight.cpp">
-      <Filter>06.GameModules\Attribute\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="CSpotLight.cpp">
-      <Filter>06.GameModules\Attribute\Light</Filter>
-    </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>03.System</Filter>
     </ClCompile>
@@ -369,6 +357,12 @@
     </ClCompile>
     <ClCompile Include="Name.cpp">
       <Filter>99.Headers\ID</Filter>
+    </ClCompile>
+    <ClCompile Include="CKeyInput.cpp">
+      <Filter>06.GameModules\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="Array.cpp">
+      <Filter>99.Headers\Utility\Container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

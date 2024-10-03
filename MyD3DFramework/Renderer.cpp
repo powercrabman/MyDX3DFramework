@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Renderer.h"
 #include "WindowsApp.h"
+#include "CCamera.h"
 #include "Engine.h"
 #include "CTransform.h"
 #include "CMeshRenderer.h"
@@ -252,75 +253,97 @@ void Renderer::InitializeRenderResoucre()
 		CONSTANT_BUFFER_APPLY_PIXEL_SHADER
 	);
 
-	//뷰 투영 행렬 초기화
-	//const static Vector3 s_cmrLookAt{ 0.f, 0.f, 5.f };
-	//m_viewMat = ::XMMatrixLookAtLH(m_cmrPosition, s_cmrLookAt, m_worldUpAxis);
-	//m_cmrLook = s_cmrLookAt - m_cmrPosition;
-	//m_cmrLook.Normalize();
-	//
-	//m_projMat = ::XMMatrixPerspectiveFovLH(
-	//	m_fov,
-	//	WindowsApp::GetInst().GetAspectRatio(),
-	//	m_nearPlane,
-	//	m_farPlane);
-	//
-	////광원 초기화
-	//m_dirLight.Ambient = Color(0.2f, 0.2f, 0.2f, 1.f);
-	//m_dirLight.Diffuse = Color(1.0f, 0.95f, 0.8f, 1.f);
-	//m_dirLight.Specular = Color(1.0f, 1.0f, 1.0f, 1.f);
-	//m_dirLight.Direction = Vector3(2.f, -1.f, 2.f);
-	//m_dirLight.Direction.Normalize();
-
-	//머테리얼 설정
-	Material* material = CreateMaterial(BasicMaterialKey);
-	material->Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
-	material->Diffuse = Color(0.5f, 0.5f, 0.5f, 1.f);
-	material->Specular = Color(0.8f, 0.8f, 0.8f, 16.f);
-
 	SetCurrentEffect(BasicEffectKey);
 	SetCurrentRenderState(BasicRenderStateKey);
 }
 
 void Renderer::Render()
 {
-	////Constant Buffer Per Frame
-	//{
-	//	cbPerFrame cb = {};
-	//	//cb.DirLight = m_dirLight;
-	//	//cb.PointLight = m_pointLight;
-	//	//cb.SpotLight = m_spotLight;
-	//
-	//	cb.EyePosW = ToVector4(m_cmrPosition, true);
-	//
-	//	m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerFrameKey, cb);
-	//}
-	//
-	////Constant Buffer Per Object
-	//for (const auto* mesh : m_cMashRendererRepo)
-	//{
-	//	if (mesh == nullptr)
-	//	{
-	//		//mesh는 삭제시 즉시 삭제하지 않고, 나중에 한 꺼번에 삭제됨
-	//		//완전히 삭제되기 전까지는 nullptr 상태로 존재함
-	//		continue;
-	//	}
-	//
-	//	const Mesh* m = mesh->GetMesh();
-	//	const CTransform* t = mesh->GetTransform();
-	//
-	//	//상수 버퍼 설정
-	//	Matrix wMat = t->GetWorldMatrix();
-	//
-	//	cbPerObject cb = {};
-	//	cb.Material = *mesh->GetMaterial();
-	//	cb.World = ::XMMatrixTranspose(t->GetWorldMatrix());
-	//	cb.WorldInvTranspose = t->GetWorldMatrixInverse();
-	//
-	//	m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerObjectKey, cb);
-	//
-	//	m->BindBuffers(m_deviceContext.Get());
-	//	RenderIndices(m->GetIndexBufferSize());
-	//}
+	/* 카메라 설정 */
+	{
+		cbPerFrame cb = {};
+		
+		/* 방향성 광원 */
+		for (int i = 0; i < m_dirLightRepo.Size(); ++i)
+		{
+			cbStructDirLight desc = {};
+			desc.Ambient = m_dirLightRepo[i]->GetAmbient();
+			desc.Diffuse = m_dirLightRepo[i]->GetDiffuse();
+			desc.Specular = m_dirLightRepo[i]->GetSpecular();
+			desc.Direction = m_dirLightRepo[i]->GetDirection();
+
+			cb.DirLight[i] = desc;
+		}
+
+		/* 점 광원 */
+		for (int i = 0; i < m_pointLightRepo.Size(); ++i)
+		{
+			cbStructPointLight desc = {};
+			desc.Ambient = m_pointLightRepo[i]->GetAmbient();
+			desc.Diffuse = m_pointLightRepo[i]->GetDiffuse();
+			desc.Specular = m_pointLightRepo[i]->GetSpecular();
+			desc.Position = m_pointLightRepo[i]->GetPosition();
+			desc.Attenuation = m_pointLightRepo[i]->GetAttenuation();
+			desc.Range = m_pointLightRepo[i]->GetRange();
+
+			cb.PointLight[i] = desc;
+		}
+
+		/* 스폿라이트 광원 */
+		for (int i = 0; i < m_spotLightRepo.Size(); ++i)
+		{
+			cbStructSpotLight desc = {};
+			desc.Ambient = m_spotLightRepo[i]->GetAmbient();
+			desc.Diffuse = m_spotLightRepo[i]->GetDiffuse();
+			desc.Specular = m_spotLightRepo[i]->GetSpecular();
+			desc.Position = m_spotLightRepo[i]->GetPosition();
+			desc.Attenuation = m_spotLightRepo[i]->GetAttenuation();
+			desc.Range = m_spotLightRepo[i]->GetRange();
+			desc.Exponent = m_spotLightRepo[i]->GetExpoent();
+			desc.SpotDirection = m_spotLightRepo[i]->GetDirection();
+
+			cb.SpotLight[i] = desc;
+		}
+
+		/* 사이즈 설정 */
+		cb.DirLightCount = m_dirLightRepo.Size();
+		cb.PointLightCount= m_pointLightRepo.Size();
+		cb.SpotLightCount = m_spotLightRepo.Size();
+
+		cb.EyePosW = ToVector4(m_camera->GetPosition());
+		cb.ViewProj = m_camera->GetPerspectiveMatrix(WindowsApp::GetInst().GetAspectRatio());
+
+		m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerFrameKey, cb);
+	}
+
+	/* 오브젝트 업데이터 */
+	const auto& repo = m_cMeshRendererRepo.GetVector();
+	for (int i = 0; i < repo.size(); ++i)
+	{
+		const CMeshRenderer* meshCmp = repo[i];
+		if (meshCmp->IsEnable())
+		{
+			cbPerObject cb = {};
+
+			cb.Material = *meshCmp->GetMaterial();
+
+			cb.World = meshCmp->GetTransform()->GetWorldMatrix();
+			cb.WorldInvTranspose = meshCmp->GetTransform()->GetWorldMatrixInverse();
+
+			m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), CbPerObjectKey, cb);
+
+			/* 이쪽 구조 살짝 맘에 안듦 */
+			Mesh* m = meshCmp->GetMesh();
+			if (m != m_curMesh)
+			{
+				m->BindBuffers(m_deviceContext.Get());
+				BindMesh(m);
+			}
+
+			RenderIndices(m->GetIndexBufferSize());
+		}
+	}
+
 
 	////렌더상태 초기화 할까 말까??
 	//m_curEffect->Apply(m_deviceContext.Get());
@@ -374,21 +397,8 @@ void Renderer::Render()
 
 
 	//오브젝트 렌더링
-	
-	for (const CMeshRenderer* meshComp : m_cMeshRendererRepo.GetVector())
-	{
-		if (meshComp == nullptr)
-		{
-			break;
-		}
 
-		if (!meshComp->IsEnable())
-		{
-			continue;
-		}
 
-		/* 렌더링 수행 */
-	}
 }
 
 //========================================

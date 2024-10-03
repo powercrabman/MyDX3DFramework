@@ -20,7 +20,7 @@ void ResourceManager::LoadFont()
 	std::wstring fontResourcePath = m_resourcePath + L"Font\\";
 	ID3D11Device5* device = Renderer::GetInst().GetDeivce();
 
-	auto CreateSpriteFont = [&](const std::wstring& fileName)
+	static const auto CreateSpriteFont = [&](const std::wstring& fileName)
 		{
 			return std::make_unique<SpriteFont>(device, (fontResourcePath + fileName).c_str());
 		};

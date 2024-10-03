@@ -8,7 +8,7 @@ public:
 	virtual ~GameObject() = default;
 
 	virtual void InitalizeCore();
-	virtual void UpdateCore(float inDeltaTime);
+	virtual void UpdateCore();
 
 	const CM::Name GetName() const { return m_name; }
 
@@ -59,7 +59,7 @@ private:
 	void SetupObject(std::string_view inNameOrEmpty, bool isExplitName);
 
 	virtual void Initialize() = 0;
-	virtual void Update(float inDeltaTime) = 0;
+	virtual void Update() = 0;
 
 private:
 	inline static uint64 sObjectIDCounter = 0;
@@ -77,7 +77,6 @@ GameObject::GameObject()
 	m_compRepo.reserve(sReserveCapacity);
 	m_updateCompRepo.reserve(sReserveCapacity);
 }
-
 
 
 // 컴포넌트 생성 관련 함수
@@ -197,7 +196,7 @@ CompType* GameObject::GetComponentOrNull()
 		return nullptr;
 	}
 
-	return iter->second[0].get();
+	return static_cast<CompType*>(iter->second[0].get());
 }
 
 template<typename CompType>

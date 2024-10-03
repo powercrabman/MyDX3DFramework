@@ -62,7 +62,10 @@ void SceneManager::SwitchScene()
 	assert(iter != m_sceneRepo.end());
 
 	//기존 Scene 처리
-	m_curScene->ExitSceneCore();
+	if (m_curScene)
+	{
+		m_curScene->ExitSceneCore();
+	}
 
 	//Scene 변경
 	Scene* sceneToSwitch = iter->second.get();

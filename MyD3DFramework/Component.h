@@ -19,6 +19,9 @@ public:
 
 	const CM::Name GetName() const { return m_name; }
 
+	template<typename CompType>
+	CompType* CastOrNull();
+
 protected:
 	Component() = default;
 
@@ -61,6 +64,19 @@ void Component::SetIndex(size_t inIdx)
 size_t Component::GetIndex() const
 {
 	return m_index;
+}
+
+template<typename CompType>
+inline CompType* Component::CastOrNull()
+{
+	static_assert(std::is_base_of<Component, CompType>::value);
+
+	if (m_typeID == CM::TypeTrait<CompType>::ID())
+	{
+		return static_cast<CompType*>(this);
+	}
+
+	return nullptr;
 }
 
 template<typename CompType>

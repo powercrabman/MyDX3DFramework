@@ -12,6 +12,8 @@ namespace CM
         Name() = default;
         Name(std::string_view inString, size_t inNumber);
 
+        static Name GetUniqueName(std::string_view inString) { return Name{ inString, UNIQUE_KEY }; }
+
         bool operator==(const Name& inOther) const;
 
         std::string_view ToString() const;
@@ -25,7 +27,7 @@ namespace CM
     private:
         std::string_view m_stringView;
 
-        size_t m_nameID;
+        size_t m_nameID = NULL;
         size_t m_extraIndex = UNIQUE_KEY;
     };
 }

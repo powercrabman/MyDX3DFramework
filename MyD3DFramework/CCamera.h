@@ -1,7 +1,6 @@
 #pragma once
 #include "CAttribute.h"
 #include "CTransform.h"
-#include "WindowsApp.h"
 #include "Renderer.h"
 
 class CCamera : public CAttribute
@@ -28,9 +27,11 @@ public:
 	void SetFarPlane(float inFarPlane);
 
 	Matrix GetViewMatrix(const Vector3& inUp = Vector3::Up) const;
-	Matrix GetPerspectiveMatrix() const;
+	Matrix GetPerspectiveMatrix(float inAspectRatio) const;
 
 	void RegisterToMainCamera();
+
+	Vector3 GetPosition() { return m_offsetPosition + m_ownerTrans->GetPosition(); }
 
 private:
 	const CTransform* m_ownerTrans = nullptr;
@@ -99,9 +100,9 @@ Matrix CCamera::GetViewMatrix(const Vector3& inUp) const
 	return ::XMMatrixLookToLH(m_ownerTrans->GetPosition() + m_offsetPosition, lookVec, inUp);
 }
 
-Matrix CCamera::GetPerspectiveMatrix() const
+inline Matrix CCamera::GetPerspectiveMatrix(float inAspectRatio) const
 {
-	return ::XMMatrixPerspectiveFovLH(m_fov, WindowsApp::GetInst().GetAspectRatio(), m_nearPlane, m_farPlane);
+	return ::XMMatrixPerspectiveFovLH(m_fov, inAspectRatio, m_nearPlane, m_farPlane);
 }
 
 void CCamera::SetNearPlane(float inNearPlane)

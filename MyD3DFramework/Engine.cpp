@@ -65,7 +65,7 @@ void Engine::Update()
 	//DebugHandler(); // 지금 사용하지 않음
 
 	//Scene 업데이트
-	SceneManager::GetInst().GetCurrentScene()->UpdateSceneCore(timer.GetDeltaTime());
+	SceneManager::GetInst().GetCurrentScene()->UpdateSceneCore();
 }
 
 void Engine::Render()

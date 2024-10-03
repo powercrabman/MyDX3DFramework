@@ -90,6 +90,11 @@ namespace CM
 			return m_hashRepo.contains(inItem->GetComponentID());
 		}
 
+		inline size_t Size()
+		{
+			return m_validSize;
+		}
+
 	private:
 		using Pair = std::pair<size_t, CompType>;
 

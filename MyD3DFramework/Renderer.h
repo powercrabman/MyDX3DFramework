@@ -1,11 +1,12 @@
 #pragma once
 #include <fstream>
 #include "CMeshRenderer.h"
+#include "CLight.h"
 #include "FastCompVector.h"
 
-class CMeshRenderer;
 class CCamera;
-class CLight;
+class Effect;
+class RenderState;
 
 class Renderer
 {
@@ -59,6 +60,9 @@ public:
 	void SetCurrentEffect(const std::string& inKey);
 	void SetCurrentRenderState(const std::string& inKey);
 
+	void BindMesh(Mesh* inMesh) { m_curMesh = inMesh; }
+	Mesh* GetBindedMesh() const { return m_curMesh; }
+
 	// 카메라 관련 코드
 	void RegisterCamera(CCamera* inCamera);
 	void ReleaseCamera() { m_camera = nullptr; }
@@ -79,6 +83,9 @@ public:
 
 	void RegisterCMeshRenderer(CMeshRenderer* inMesh);
 	void UnRegisterCMeshRenderer(CMeshRenderer* inMesh);
+
+	void RegisterCLight(CLight* inLight);
+	void UnRegisterCLight(CLight* inLight);
 
 public:
 	//참조용 Static 변수들
@@ -127,9 +134,15 @@ private:
 	//Constant Buffer Struct
 	cbPerObject m_cbPerObject = {};
 	cbPerFrame m_cbPerFrame = {};
-	
+
 	//3D 메쉬 집합
-	CM::FastCompVector<CMeshRenderer*> m_cMeshRendererRepo{ 1024 };
+	CM::FastCompVector<CMeshRenderer*> m_cMeshRendererRepo;
+	Mesh* m_curMesh = nullptr;
+
+	//광원 
+	CM::Array<CLight*, DIRECTIONAL_LIGHT_MAXIMUM_COUNT> m_dirLightRepo = {};
+	CM::Array<CLight*, POINT_LIGHT_MAXIMUM_COUNT> m_pointLightRepo = {};
+	CM::Array<CLight*, SPOT_LIGHT_MAXIMUM_COUNT> m_spotLightRepo = {};
 
 	//카메라
 	CCamera* m_camera = nullptr;
@@ -256,8 +269,31 @@ void Renderer::UnRegisterCMeshRenderer(CMeshRenderer* inMesh)
 	m_cMeshRendererRepo.Remove(inMesh);
 }
 
+inline void Renderer::RegisterCLight(CLight* inLight)
+{
+	switch (inLight->GetLightType())
+	{
+	case eLightType::Directional_Light: m_dirLightRepo.PushBack(inLight); break;
+	case eLightType::Point_Light: m_pointLightRepo.PushBack(inLight); break;
+	case eLightType::Spot_Light: m_spotLightRepo.PushBack(inLight); break;
+	default: assert(false);
+	}
+}
+
+inline void Renderer::UnRegisterCLight(CLight* inLight)
+{
+	switch (inLight->GetLightType())
+	{
+	case eLightType::Directional_Light: m_dirLightRepo.Erase(inLight); break;
+	case eLightType::Point_Light: m_pointLightRepo.Erase(inLight); break;
+	case eLightType::Spot_Light: m_spotLightRepo.Erase(inLight); break;
+	default: assert(false);
+	}
+}
+
 Renderer::Renderer()
 {
+	m_cMeshRendererRepo.Reserve(1024);
 }
 
 Mesh* Renderer::GetMesh(const std::string& inKey)

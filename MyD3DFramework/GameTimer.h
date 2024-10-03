@@ -36,7 +36,7 @@ private:
 	bool m_bStop = false; //타이머 중단 플래그
 };
 
-GameTimer::GameTimer()
+inline GameTimer::GameTimer()
 {
 	//주기 초기화
 	LARGE_INTEGER freq = {};
@@ -47,10 +47,8 @@ GameTimer::GameTimer()
 	
 }
 
-void GameTimer::Update()
+inline void GameTimer::Update()
 {
-	//타이머 업데이트
-
 	//타이머 일시중지 시 예외 처리
 	if (m_bStop)
 	{
@@ -74,24 +72,24 @@ void GameTimer::Update()
 	}
 }
 
-void GameTimer::Reset()
+inline void GameTimer::Reset()
 {
 	//타이머 리셋
 	LARGE_INTEGER curCount = {};
 	::QueryPerformanceCounter(&curCount);
 
-	 m_prevCount = curCount.QuadPart;
-	 m_baseTime = curCount.QuadPart;
+	m_prevCount = curCount.QuadPart;
+	m_baseTime = curCount.QuadPart;
 
-	 m_stopTime = 0;
-	 m_pauseTime = 0;
+	m_stopTime = 0;
+	m_pauseTime = 0;
 
-	 m_deltaTime = 0.f;	
+	m_deltaTime = 0.f;
 
-	 m_bStop = false;
+	m_bStop = false;
 }
 
-void GameTimer::TimerStop()
+inline void GameTimer::TimerStop()
 {
 	//타이머 정지 함수
 	if (!m_bStop)
@@ -105,7 +103,7 @@ void GameTimer::TimerStop()
 	}
 }
 
-void GameTimer::TimerStart()
+inline void GameTimer::TimerStart()
 {
 	//정지된 타이머 재개 함수
 	if (m_bStop)
@@ -120,12 +118,12 @@ void GameTimer::TimerStart()
 	}
 }
 
-float GameTimer::GetDeltaTime() const
+inline float GameTimer::GetDeltaTime() const
 {
 	return m_deltaTime;
 }
 
-float GameTimer::GetTotalTime() const
+inline float GameTimer::GetTotalTime() const
 {
 	if (m_bStop)
 	{
@@ -140,7 +138,7 @@ float GameTimer::GetTotalTime() const
 	}
 }
 
-uint64 GameTimer::GetFPS() const
+inline uint64 GameTimer::GetFPS() const
 {
 	return m_fps;
 }

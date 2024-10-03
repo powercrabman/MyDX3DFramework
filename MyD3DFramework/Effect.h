@@ -109,16 +109,14 @@ public:
 	{
 		ComPtr<ID3D11Buffer> constantBuffer = m_cbRepo[key].ConstantBuffer;
 
-		// 원본 컨스턴트 버퍼의 설명을 가져옴
 		D3D11_BUFFER_DESC desc = {};
 		constantBuffer->GetDesc(&desc);
 
 		uint32 bufferSize = desc.ByteWidth;
 
-		// 스테이징 버퍼 생성
-		desc.Usage = D3D11_USAGE_STAGING;  // 스테이징 버퍼로 설정
-		desc.BindFlags = 0;                // 스테이징 버퍼는 BindFlags가 필요 없음
-		desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;  // CPU에서 읽기 가능
+		desc.Usage = D3D11_USAGE_STAGING;  
+		desc.BindFlags = 0;                
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 		desc.MiscFlags = 0;
 
 		ComPtr<ID3D11Buffer> stagingBuffer;
@@ -129,15 +127,12 @@ public:
 			return;
 		}
 
-		// 스테이징 버퍼로 컨스턴트 버퍼 데이터 복사
 		context->CopyResource(stagingBuffer.Get(), constantBuffer.Get());
 
-		// 스테이징 버퍼 맵핑 (읽기 전용)
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		hr = context->Map(stagingBuffer.Get(), 0, D3D11_MAP_READ, 0, &mappedResource);
 		if (SUCCEEDED(hr))
 		{
-			// 데이터를 읽어와서 출력 (예시)
 			std::byte* bufferData = static_cast<std::byte*>(mappedResource.pData);
 			for (size_t i = 0; i < bufferSize; ++i)
 			{
@@ -146,7 +141,6 @@ public:
 				WinUtile::OutputLog(b.c_str());
 			}
 
-			// 맵핑 해제
 			context->Unmap(stagingBuffer.Get(), 0);
 		}
 		else
@@ -158,9 +152,9 @@ public:
 private:
 	struct ConstantBufferInfo
 	{
-		ComPtr<ID3D11Buffer> ConstantBuffer;
-		uint32 Flags;
-		uint32 Slot;
+		ComPtr<ID3D11Buffer> ConstantBuffer = nullptr;
+		uint32 Flags = 0;
+		uint32 Slot = 0;
 	};
 
 private:
