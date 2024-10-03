@@ -145,6 +145,9 @@
     <ClInclude Include="Array.h">
       <Filter>99.Headers\Utility\Container</Filter>
     </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>05.GameObject\Concrete</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="MyD3DFramework.ico">
@@ -363,6 +366,9 @@
     </ClCompile>
     <ClCompile Include="Array.cpp">
       <Filter>99.Headers\Utility\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="Pawn.cpp">
+      <Filter>05.GameObject\Concrete</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

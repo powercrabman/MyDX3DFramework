@@ -38,7 +38,7 @@ private:
 	Vector3 m_scaling = Vector3::One;
 };
 
-void CTransform::SetPosition(const Vector3& inVector)
+inline void CTransform::SetPosition(const Vector3& inVector)
 {
 	m_translate = inVector;
 }
@@ -60,7 +60,7 @@ inline void CTransform::SetRotateDegree(const Vector3& inYawPitchRoll)
 	);
 }
 
-void CTransform::SetRotate(float inYaw, float inPitch, float inRoll)
+inline void CTransform::SetRotate(float inYaw, float inPitch, float inRoll)
 {
 	m_rotator = Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
@@ -70,17 +70,17 @@ inline void CTransform::SetRotate(const Vector3& inYawPitchRoll)
 	m_rotator = Quaternion::CreateFromYawPitchRoll(inYawPitchRoll);
 }
 
-void CTransform::SetScale(const Vector3& inScale)
+inline void CTransform::SetScale(const Vector3& inScale)
 {
 	m_scaling = inScale;
 }
 
-void CTransform::AddPosition(const Vector3& inVector)
+inline void CTransform::AddPosition(const Vector3& inVector)
 {
 	m_translate += inVector;
 }
 
-void CTransform::AddRotateDegree(float inYaw, float inPitch, float inRoll)
+inline void CTransform::AddRotateDegree(float inYaw, float inPitch, float inRoll)
 {
 	inYaw = ::XMConvertToRadians(inYaw);
 	inPitch = ::XMConvertToRadians(inPitch);
@@ -88,17 +88,17 @@ void CTransform::AddRotateDegree(float inYaw, float inPitch, float inRoll)
 	m_rotator *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-void CTransform::AddRotate(float inYaw, float inPitch, float inRoll)
+inline void CTransform::AddRotate(float inYaw, float inPitch, float inRoll)
 {
 	m_rotator *= Quaternion::CreateFromYawPitchRoll(inYaw, inPitch, inRoll);
 }
 
-void CTransform::AddScale(const Vector3& inScale)
+inline void CTransform::AddScale(const Vector3& inScale)
 {
 	m_scaling += inScale;
 }
 
-Matrix CTransform::GetWorldMatrix() const
+inline Matrix CTransform::GetWorldMatrix() const
 {
 	return ::XMMatrixAffineTransformation(
 		m_scaling,
@@ -108,7 +108,7 @@ Matrix CTransform::GetWorldMatrix() const
 	);
 }
 
-Matrix CTransform::GetWorldMatrixInverse() const
+inline Matrix CTransform::GetWorldMatrixInverse() const
 {
 	return ::XMMatrixInverse(nullptr, GetWorldMatrix());
 }

@@ -2,6 +2,8 @@
 #include "DevScene.h"
 #include "CameraObject.h"
 #include "CCamera.h"
+#include "Scene.h"
+#include "Pawn.h"
 
 void DevScene::EnterScene()
 {
@@ -13,6 +15,8 @@ void DevScene::EnterScene()
 	{
 		cmr->RegisterToMainCamera();
 	}
+
+	CreateGameObject<Pawn>();
 }
 
 void DevScene::UpdateScene()

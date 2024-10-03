@@ -50,18 +50,18 @@ private:
 
 };
 
-GameObject* Component::GetOwner() const
+inline GameObject* Component::GetOwner() const
 {
 	assert(m_owner);
 	return m_owner;
 }
 
-void Component::SetIndex(size_t inIdx)
+inline void Component::SetIndex(size_t inIdx)
 {
 	m_index = inIdx;
 }
 
-size_t Component::GetIndex() const
+inline size_t Component::GetIndex() const
 {
 	return m_index;
 }

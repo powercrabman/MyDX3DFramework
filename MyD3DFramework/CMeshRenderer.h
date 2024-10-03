@@ -33,29 +33,29 @@ private:
 	const CTransform* m_ownerTrans = nullptr;
 };
 
- Mesh* CMeshRenderer::GetMesh() const
+inline Mesh* CMeshRenderer::GetMesh() const
 {
 	ASSERT(m_mesh, "메시가 설정되지 않음.");
 	return m_mesh;
 }
 
-const CTransform* CMeshRenderer::GetTransform() const
+ inline const CTransform* CMeshRenderer::GetTransform() const
 {
 	return m_ownerTrans;
 }
 
- Material* CMeshRenderer::GetMaterial() const
+inline Material* CMeshRenderer::GetMaterial() const
 {
 	ASSERT(m_material, "머테리얼이 설정되지 않음");
 	return m_material;
 }
 
-void CMeshRenderer::SetIndex(uint64 inIdx)
+inline void CMeshRenderer::SetIndex(uint64 inIdx)
 {
 	m_index = inIdx;
 }
 
-CMeshRenderer::CMeshRenderer(const CTransform* inOwnerTrans)
+inline CMeshRenderer::CMeshRenderer(const CTransform* inOwnerTrans)
 	: m_ownerTrans(inOwnerTrans)
 {
 	ASSERT(inOwnerTrans, "트랜스폼이 nullptr 입니다.");

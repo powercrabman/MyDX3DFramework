@@ -81,8 +81,14 @@ public:
 	RenderState* CreateRenderState(const std::string& inKey);
 	Material* CreateMaterial(const std::string& inKey);
 
-	void RegisterCMeshRenderer(CMeshRenderer* inMesh);
-	void UnRegisterCMeshRenderer(CMeshRenderer* inMesh);
+	void RegisterCMeshRenderer(CMeshRenderer* inMesh)
+	{
+		m_cMeshRendererRepo.Insert(inMesh);
+	}
+	void UnRegisterCMeshRenderer(CMeshRenderer* inMesh)
+	{
+		m_cMeshRendererRepo.Remove(inMesh);
+	}
 
 	void RegisterCLight(CLight* inLight);
 	void UnRegisterCLight(CLight* inLight);
@@ -131,10 +137,6 @@ private:
 	bool m_bUseMSAA = false;
 	UINT m_MSAAquality = 0;
 
-	//Constant Buffer Struct
-	cbPerObject m_cbPerObject = {};
-	cbPerFrame m_cbPerFrame = {};
-
 	//3D 메쉬 집합
 	CM::FastCompVector<CMeshRenderer*> m_cMeshRendererRepo;
 	Mesh* m_curMesh = nullptr;
@@ -148,7 +150,7 @@ private:
 	CCamera* m_camera = nullptr;
 };
 
-bool Renderer::IsInitalized() const
+inline bool Renderer::IsInitalized() const
 {
 	return  (m_device != nullptr) &&
 		(m_deviceContext != nullptr) &&
@@ -159,7 +161,7 @@ bool Renderer::IsInitalized() const
 
 //더블 버퍼링
 
-void Renderer::ClearBuffer(XMVECTORF32 inClearColor)
+inline void Renderer::ClearBuffer(XMVECTORF32 inClearColor)
 {
 	m_deviceContext->ClearRenderTargetView(
 		m_renderTargetView.Get(),
@@ -172,13 +174,13 @@ void Renderer::ClearBuffer(XMVECTORF32 inClearColor)
 		0);
 }
 
-void Renderer::Present()
+inline void Renderer::Present()
 {
 	m_swapChain->Present(0, 0);
 }
 
 
-void Renderer::CleanUp()
+inline void Renderer::CleanUp()
 {
 	m_device.Reset();
 	m_deviceContext.Reset();
@@ -191,14 +193,14 @@ void Renderer::CleanUp()
 	m_spriteBatch.reset();
 }
 
-void Renderer::SetFullScreen(bool trigger)
+inline void Renderer::SetFullScreen(bool trigger)
 {
 	ASSERT(m_swapChain, L"스왑체인이 존재하지 않습니다.");
 	HRESULT hr = m_swapChain->SetFullscreenState(trigger, nullptr);
 	CHECK_FAILED(hr);
 }
 
-std::string Renderer::GetFeatureLevelToString() const
+inline std::string Renderer::GetFeatureLevelToString() const
 {
 	switch (m_featureLevel)
 	{
@@ -217,19 +219,19 @@ std::string Renderer::GetFeatureLevelToString() const
 	}
 }
 
-Effect* Renderer::GetEffect(const std::string& inKey)
+inline Effect* Renderer::GetEffect(const std::string& inKey)
 {
 	assert(m_effectRepo.contains(inKey));
 	return m_effectRepo[inKey].get();
 }
 
-RenderState* Renderer::GetRenderState(const std::string& inKey)
+inline RenderState* Renderer::GetRenderState(const std::string& inKey)
 {
 	assert(m_renderStateRepo.contains(inKey));
 	return m_renderStateRepo[inKey].get();
 }
 
-Effect* Renderer::CreateEffect(const std::string& inKey)
+inline Effect* Renderer::CreateEffect(const std::string& inKey)
 {
 	assert(!m_effectRepo.contains(inKey));
 	std::unique_ptr<Effect> inst = std::make_unique<Effect>();
@@ -239,7 +241,7 @@ Effect* Renderer::CreateEffect(const std::string& inKey)
 	return returnObj;
 }
 
-Mesh* Renderer::CreateMesh(const std::string& inKey)
+inline Mesh* Renderer::CreateMesh(const std::string& inKey)
 {
 	assert(!m_meshRepo.contains(inKey));
 	std::unique_ptr<Mesh> inst = std::make_unique<Mesh>();
@@ -249,7 +251,7 @@ Mesh* Renderer::CreateMesh(const std::string& inKey)
 	return returnObj;
 }
 
-Material* Renderer::CreateMaterial(const std::string& inKey)
+inline Material* Renderer::CreateMaterial(const std::string& inKey)
 {
 	assert(!m_materialRepo.contains(inKey));
 	std::unique_ptr<Material> inst = std::make_unique<Material>();
@@ -257,16 +259,6 @@ Material* Renderer::CreateMaterial(const std::string& inKey)
 	m_materialRepo[inKey] = std::move(inst);
 
 	return returnObj;
-}
-
-void Renderer::RegisterCMeshRenderer(CMeshRenderer* inMesh)
-{
-	m_cMeshRendererRepo.Insert(inMesh);
-}
-
-void Renderer::UnRegisterCMeshRenderer(CMeshRenderer* inMesh)
-{
-	m_cMeshRendererRepo.Remove(inMesh);
 }
 
 inline void Renderer::RegisterCLight(CLight* inLight)
@@ -291,29 +283,29 @@ inline void Renderer::UnRegisterCLight(CLight* inLight)
 	}
 }
 
-Renderer::Renderer()
+inline Renderer::Renderer()
 {
 	m_cMeshRendererRepo.Reserve(1024);
 }
 
-Mesh* Renderer::GetMesh(const std::string& inKey)
+inline Mesh* Renderer::GetMesh(const std::string& inKey)
 {
 	assert(m_meshRepo.contains(inKey));
 	return m_meshRepo[inKey].get();
 }
 
-Material* Renderer::GetMaterial(const std::string& inKey)
+inline Material* Renderer::GetMaterial(const std::string& inKey)
 {
 	assert(m_materialRepo.contains(inKey));
 	return m_materialRepo[inKey].get();
 }
 
-void Renderer::SetCurrentEffect(const std::string& inKey)
+inline void Renderer::SetCurrentEffect(const std::string& inKey)
 {
 	m_curEffect = GetEffect(inKey);
 }
 
-void Renderer::SetCurrentRenderState(const std::string& inKey)
+inline void Renderer::SetCurrentRenderState(const std::string& inKey)
 {
 	m_curRenderState = GetRenderState(inKey);
 }
@@ -330,15 +322,14 @@ inline void Renderer::RegisterCamera(CCamera* inCamera)
 	m_camera = inCamera;
 }
 
-CCamera* Renderer::GetCamera()
+inline CCamera* Renderer::GetCamera()
 {
 	assert(m_camera);
 	return m_camera;
 }
 
 //쉐이더 코드 가져오기
-
-void Renderer::LoadAndCopileShaderFromFile(std::wstring_view inFilename, std::string_view inEntryPoint, std::string_view inTarget, ID3DBlob** outInppBlob)
+inline void Renderer::LoadAndCopileShaderFromFile(std::wstring_view inFilename, std::string_view inEntryPoint, std::string_view inTarget, ID3DBlob** outInppBlob)
 {
 	std::wifstream file{ inFilename.data() };
 	VERTIFY(file.is_open(), L"쉐이더 파일 로드 실패");
@@ -354,14 +345,13 @@ void Renderer::LoadAndCopileShaderFromFile(std::wstring_view inFilename, std::st
 #else
 	compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
 #endif
-	ShaderIncludeHelper includeHelper = {};
 	ComPtr<ID3DBlob> errorBlob = nullptr;
 	HRESULT hr = D3DCompile(
 		shaderCode.c_str(),
 		shaderCode.size(),
 		nullptr,
 		nullptr,
-		&includeHelper,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		inEntryPoint.data(),
 		inTarget.data(),
 		compileFlags,
@@ -371,6 +361,3 @@ void Renderer::LoadAndCopileShaderFromFile(std::wstring_view inFilename, std::st
 
 	CHECK_FAILED_MESSAGE(hr, CM::StringToWstring((char*)errorBlob->GetBufferPointer()).c_str());
 }
-
-//쉐이더 코드 가져오기
-
