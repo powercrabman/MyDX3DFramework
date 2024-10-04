@@ -20,7 +20,6 @@ Pawn::~Pawn()
 
 void Pawn::Initialize()
 {
-	m_trans->SetPosition(Vector3{ 0,0,10 });
 }
 
 void Pawn::Update()

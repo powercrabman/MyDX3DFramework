@@ -8,7 +8,7 @@ Ground::Ground()
 	m_trans = CreateComponent<CTransform>();
 	m_meshCmp = CreateComponent<CMeshRenderer>(m_trans);
 
-	m_meshCmp->SetMaterial(Renderer::sBasicMaterialKey);
+	m_meshCmp->SetMaterial(Renderer::sGroundMaterialKey);
 	m_meshCmp->SetMesh(Renderer::sCubeMeshKey);
 }
 

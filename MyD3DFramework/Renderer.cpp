@@ -48,16 +48,19 @@ bool Renderer::InitD3D11Device()
 	CHECK_FAILED(hr);
 
 	//4xMSAA 확인
-	uint32 qualityLevel = 0;
-	hr = m_device->CheckMultisampleQualityLevels(
-		DXGI_FORMAT_R8G8B8A8_UNORM,
-		4,
-		&qualityLevel
-	);
-	ASSERT(qualityLevel > 0, "QualityleveL Error.");
-	CHECK_FAILED(hr);
-	m_bUseMSAA = true;
-	m_MSAAquality = qualityLevel - 1;
+	if (MSAA_OPTION)
+	{
+		uint32 qualityLevel = 0;
+		hr = m_device->CheckMultisampleQualityLevels(
+			DXGI_FORMAT_R8G8B8A8_UNORM,
+			4,
+			&qualityLevel
+		);
+		ASSERT(qualityLevel > 0, "QualityleveL Error.");
+		CHECK_FAILED(hr);
+		m_bUseMSAA = true;
+		m_MSAAquality = qualityLevel - 1;
+	}
 
 	//스왑체인 생성
 	WindowSize winSize = WindowSize::s_defaultWindowSize;
@@ -186,6 +189,59 @@ void Renderer::InitializeRenderResoucre()
 		}
 	);
 
+	CreateCubeMesh();
+	CreateSphereMesh(20, 20, 0.5f);
+
+	//RnederState 설정
+	RenderState* renderState = CreateRenderState(sBasicRenderStateKey);
+	renderState->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	renderState->SetRasterizerState(m_device.Get());
+
+	//컨스턴트 버퍼 설정
+
+	//cbPerObject
+	effect->RegisterConstantBuffer(
+		m_device.Get(),
+		sizeof(cbPerObject),
+		sCbPerObjectKey,
+		0,
+		CONSTANT_BUFFER_APPLY_VERTEX_SHADER | CONSTANT_BUFFER_APPLY_PIXEL_SHADER
+	);
+
+	//cbPerFrame
+	effect->RegisterConstantBuffer(
+		m_device.Get(),
+		sizeof(cbPerFrame),
+		sCbPerFrameKey,
+		1,
+		CONSTANT_BUFFER_APPLY_VERTEX_SHADER | CONSTANT_BUFFER_APPLY_PIXEL_SHADER
+	);
+
+	//머테리얼 생성
+	{
+		Material* m = CreateMaterial(sBasicMaterialKey);
+		m->Ambient = Color(0.2f, 0.2f, 0.2f);
+		m->Diffuse = Color(0.7f, 0.7f, 0.7f);
+		m->Specular = Color(1.0f, 1.0f, 1.0f);
+		m->Specular.w = 32;
+	}
+
+	//머테리얼 생성
+	{
+		Material* m = CreateMaterial(sGroundMaterialKey);
+		m->Ambient = Color(0.6f, 0.6f, 0.6f);
+		m->Diffuse = Color(0.7f, 0.7f, 1.0f);
+		m->Specular = Color(1.0f, 1.0f, 1.0f);
+		m->Specular.w = 32;
+	}
+
+	SetCurrentEffect(sBasicEffectKey);
+	SetCurrentRenderState(sBasicRenderStateKey);
+
+}
+
+void Renderer::CreateCubeMesh()
+{
 	//메쉬 생성
 	Mesh* mesh = CreateMesh(sCubeMeshKey);
 
@@ -220,44 +276,58 @@ void Renderer::InitializeRenderResoucre()
 	};
 
 	mesh->SetIndexBuffer(m_device.Get(), indices);
-
-	//RnederState 설정
-	RenderState* renderState = CreateRenderState(sBasicRenderStateKey);
-	renderState->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	renderState->SetRasterizerState(m_device.Get());
-
-	//컨스턴트 버퍼 설정
-
-	//cbPerObject
-	effect->RegisterConstantBuffer(
-		m_device.Get(),
-		sizeof(cbPerObject),
-		sCbPerObjectKey,
-		0,
-		CONSTANT_BUFFER_APPLY_VERTEX_SHADER | CONSTANT_BUFFER_APPLY_PIXEL_SHADER
-	);
-
-	//cbPerFrame
-	effect->RegisterConstantBuffer(
-		m_device.Get(),
-		sizeof(cbPerFrame),
-		sCbPerFrameKey,
-		1,
-		CONSTANT_BUFFER_APPLY_VERTEX_SHADER | CONSTANT_BUFFER_APPLY_PIXEL_SHADER
-	);
-
-	//머테리얼 생성
-	Material* m = CreateMaterial(sBasicMaterialKey);
-	m->Ambient = Color(0.2f, 0.2f, 0.2f);
-	m->Diffuse = Color(0.7f, 0.7f, 0.7f);
-	m->Specular = Color(1.0f, 1.0f, 1.0f);
-	m->Specular.w = 32;
-
-	SetCurrentEffect(sBasicEffectKey);
-	SetCurrentRenderState(sBasicRenderStateKey);
-
 }
 
+void Renderer::CreateSphereMesh(int latitudeSegments, int longitudeSegments, float radius)
+{
+	Mesh* mesh = CreateMesh(sSphereMeshKey);
+
+	std::vector<VertexNormal> vertices;
+	std::vector<UINT> indices;
+
+	// 버텍스 생성
+	for (int lat = 0; lat <= latitudeSegments; ++lat) {
+		float theta = lat * DirectX::XM_PI / latitudeSegments;
+		float sinTheta = sinf(theta);
+		float cosTheta = cosf(theta);
+
+		for (int lon = 0; lon <= longitudeSegments; ++lon) {
+			float phi = lon * 2 * DirectX::XM_PI / longitudeSegments;
+			float sinPhi = sinf(phi);
+			float cosPhi = cosf(phi);
+
+			Vector3 position = {
+				radius * cosPhi * sinTheta,
+				radius * cosTheta,
+				radius * sinPhi * sinTheta
+			};
+
+			Vector3 normal = position;
+			normal.Normalize();
+
+			vertices.push_back({ position, normal });
+		}
+	}
+
+	for (int lat = 0; lat < latitudeSegments; ++lat) {
+		for (int lon = 0; lon < longitudeSegments; ++lon) {
+			int first = (lat * (longitudeSegments + 1)) + lon;
+			int second = first + longitudeSegments + 1;
+
+			indices.push_back(first);
+			indices.push_back(second);
+			indices.push_back(first + 1);
+
+			indices.push_back(second);
+			indices.push_back(second + 1);
+			indices.push_back(first + 1);
+		}
+	}
+
+	mesh->SetVertexBuffer(m_device.Get(), vertices);
+
+	mesh->SetIndexBuffer(m_device.Get(), indices);
+}
 void Renderer::Render()
 {
 	/* 렌더링 옵션 복구 */
@@ -266,7 +336,7 @@ void Renderer::Render()
 	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), sCbPerObjectKey);
 	m_curRenderState->Apply(m_deviceContext.Get());
 	m_curMesh = nullptr;
-	
+
 	/* 카메라 설정 */
 	{
 		cbPerFrame cb = {};

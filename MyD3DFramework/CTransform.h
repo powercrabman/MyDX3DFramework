@@ -12,9 +12,15 @@ public:
 	void SetRotateDegree(const Vector3& inYawPitchRoll);
 	void SetRotate(float inYaw, float inPitch, float inRoll);
 	void SetRotate(const Vector3& inYawPitchRoll);
-	void SetRotateByDirection(const Vector3& inDirection)
+	void SetRotateByDirection(Vector3 inDirection)
 	{
+		inDirection.Normalize();
 		m_rotator = Quaternion::FromToRotation(Vector3{ 0,0,1 }, inDirection);
+	}
+	void SetRotateByLookAtPoint(const Vector3& inPoint)
+	{
+		Vector3 lookDirect = inPoint - m_translate;
+		SetRotateByDirection(lookDirect);
 	}
 	void SetScale(const Vector3& inScale);
 

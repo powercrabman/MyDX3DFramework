@@ -22,6 +22,9 @@ public:
 	void InitializeDirectXTKResource();
 	void InitializeRenderResoucre();
 
+	void CreateCubeMesh();
+	void CreateSphereMesh(int latitudeSegments, int longitudeSegments, float radius);
+
 	//렌더링 코어 함수
 	void Render();
 
@@ -110,7 +113,8 @@ public:
 	const inline static std::string sCubeMeshKey = "CubeMesh";
 	const inline static std::string sSphereMeshKey = "SphereMesh";
 	const inline static std::string sBasicRenderStateKey = "BasicRenderState";
-	const inline static std::string sBasicMaterialKey = "BasicMateral";
+	const inline static std::string sBasicMaterialKey = "BasicMaterial";
+	const inline static std::string sGroundMaterialKey = "GroundMaterial";
 	const inline static std::string sCbPerFrameKey = "cbPerFrame";
 	const inline static std::string sCbPerObjectKey = "cbPerObject";
 

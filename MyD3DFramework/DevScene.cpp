@@ -20,8 +20,10 @@ void DevScene::EnterScene()
 	}
 
 	CreateGameObject<LightObject>();
-	CreateGameObject<Ground>();
-	CreateGameObject<Pawn>();
+	
+	Pawn* pawn = CreateGameObject<Pawn>();
+	pawn->GetComponentOrNull<CTransform>()->SetPosition(Vector3{ 0.f,0.f,3.f });
+	cmrObj->GetComponentOrNull<CTransform>()->SetRotateByLookAtPoint(Vector3{ 0.f,0.f,3.f });
 }
 
 void DevScene::UpdateScene()

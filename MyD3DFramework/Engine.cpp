@@ -72,7 +72,7 @@ void Engine::Update()
 void Engine::Render()
 {
 	Renderer& r = Renderer::GetInst();
-	r.ClearBuffer(Colors::SlateGray);
+	r.ClearBuffer(Colors::LightSkyBlue);
 
 	//성능측정
 	r.Render();

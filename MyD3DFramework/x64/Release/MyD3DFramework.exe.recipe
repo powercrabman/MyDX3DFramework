@@ -2,15 +2,21 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\x64\Release\MyD3DFramework.exe</FullPath>
+      <FullPath>C:\Users\ajw01\Desktop\Jiwoo\MyDX3DFramework\Binaries\Release\MyD3DFramework.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\x64\Release\PixelShader.cso</FullPath>
+      <FullPath>C:\Users\ajw01\Desktop\Jiwoo\MyDX3DFramework\Binaries\Release\LightPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\x64\Release\VertexShader.cso</FullPath>
+      <FullPath>C:\Users\ajw01\Desktop\Jiwoo\MyDX3DFramework\Binaries\Release\SimplePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ajw01\Desktop\Jiwoo\MyDX3DFramework\Binaries\Release\SimpleVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ajw01\Desktop\Jiwoo\MyDX3DFramework\Binaries\Release\LightVertexShader.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
