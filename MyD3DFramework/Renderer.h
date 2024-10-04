@@ -69,6 +69,23 @@ public:
 		}
 	}
 
+	HRESULT LoadAndCreateTexture2D(
+		std::wstring_view inFileName,
+		ID3D11Resource** inOutTexture,
+		ID3D11ShaderResourceView** inOutShdaerResourceView,
+		bool doGenerateMipMap)
+	{
+
+		HRESULT hr = CreateWICTextureFromFile(m_device.Get(), inFileName.data(), inOutTexture, inOutShdaerResourceView);
+		CHECK_FAILED(hr);
+		if (doGenerateMipMap)
+		{
+			m_deviceContext->GenerateMips(m_shaderResourceView.Get());
+		}
+
+		return hr;
+	}
+
 	NODISCARD Effect* GetEffect(const std::string& inKey);
 	NODISCARD Effect* GetCurrentEffect() const { assert(m_curEffect); return m_curEffect; }
 
@@ -131,6 +148,8 @@ private:
 	ComPtr<ID3D11Texture2D> m_depthStencilBuffer = nullptr;
 	ComPtr<ID3D11DepthStencilView> m_depthStencilView = nullptr;
 	ComPtr<ID3D11RenderTargetView> m_renderTargetView = nullptr;
+	ComPtr<ID3D11ShaderResourceView> m_shaderResourceView = nullptr;
+	ComPtr<ID3D11SamplerState> m_samplerState = nullptr;
 
 	CD3D11_VIEWPORT m_viewport = {};
 	D3D_FEATURE_LEVEL m_featureLevel = {};

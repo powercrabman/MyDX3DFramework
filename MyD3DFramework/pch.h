@@ -7,6 +7,7 @@
 #include <DirectXColors.h>
 #include <wrl/client.h> 
 #include <d3dcompiler.h>
+#include <DDSTextureLoader.h>
 using namespace Microsoft::WRL;
 using namespace DirectX;
 

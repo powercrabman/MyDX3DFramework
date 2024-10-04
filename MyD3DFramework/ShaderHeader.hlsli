@@ -4,6 +4,9 @@
 //  구조체
 // ---------------------------------------
 
+Texture2D txDiffuse : register(t0);
+SamplerState samLinear : register(s0);
+
 struct Material
 {
     float4 Ambient;
@@ -103,4 +106,35 @@ struct LIGHT_VS_OUTPUT
     
     //월드 좌표계 법선벡터(광원 계산을 위함)
     float3 NormalW : NORMAL;
+};
+
+// ---------------------------------------
+//  선형 변환 + 광원 + 텍스처
+// ---------------------------------------
+
+struct TEX_VS_INPUT
+{
+    //로컬 좌표
+    float3 PosL : POSITION;
+
+    //로컬 법선벡터
+    float3 NormalL : NORMAL;
+    
+    //텍스처 좌표
+    float2 UV : TEXCOORD0;
+};
+
+struct TEX_VS_OUTPUT
+{
+    //동차 좌표계 좌표
+    float4 PosH : SV_POSITION;
+
+    //월드 좌표계 좌표(광원 계산을 위함)
+    float3 PosW : POSITION;
+    
+    //월드 좌표계 법선벡터(광원 계산을 위함)
+    float3 NormalW : NORMAL;
+
+    //텍스처 좌표
+    float2 UV : TEXCOORD0;
 };

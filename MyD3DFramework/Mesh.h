@@ -7,8 +7,8 @@ public:
 	virtual ~Mesh() = default;
 
 	template<typename VertexType>
-	inline void SetVertexBuffer(ID3D11Device* inDevice, const std::vector<VertexType>& inVertices);
-	inline void SetIndexBuffer(ID3D11Device* inDevice, const std::vector<UINT>& inIndices);
+	inline void CreateVertexBuffer(ID3D11Device* inDevice, const std::vector<VertexType>& inVertices);
+	inline void CreateIndexBuffer(ID3D11Device* inDevice, const std::vector<UINT>& inIndices);
 
 	inline void BindBuffers(ID3D11DeviceContext* inDeviceContext);
 	inline uint32 GetIndexBufferSize() const { return m_indexBufferSize; }
@@ -23,7 +23,7 @@ private:
 };
 
 template<typename VertexType>
-inline void Mesh::SetVertexBuffer(ID3D11Device* inDivice, const std::vector<VertexType>& inVertices)
+inline void Mesh::CreateVertexBuffer(ID3D11Device* inDivice, const std::vector<VertexType>& inVertices)
 {
 	m_vertexBuffer.Reset();
 
@@ -41,7 +41,7 @@ inline void Mesh::SetVertexBuffer(ID3D11Device* inDivice, const std::vector<Vert
 	CHECK_FAILED(inDivice->CreateBuffer(&desc, &subData, m_vertexBuffer.GetAddressOf()));
 }
 
-inline void Mesh::SetIndexBuffer(ID3D11Device* inDivice, const std::vector<UINT>& inIndices)
+inline void Mesh::CreateIndexBuffer(ID3D11Device* inDivice, const std::vector<UINT>& inIndices)
 {
 	m_indexBuffer.Reset();
 

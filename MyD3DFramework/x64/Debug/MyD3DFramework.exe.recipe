@@ -2,21 +2,27 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\ajw01\Desktop\Jiwoo\MyDX3DFramework\Binaries\Debug\MyD3DFramework.exe</FullPath>
+      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\MyD3DFramework.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\ajw01\Desktop\Jiwoo\MyDX3DFramework\Binaries\Debug\LightPixelShader.cso</FullPath>
+      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\TexPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\ajw01\Desktop\Jiwoo\MyDX3DFramework\Binaries\Debug\SimplePixelShader.cso</FullPath>
+      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\TexVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\ajw01\Desktop\Jiwoo\MyDX3DFramework\Binaries\Debug\SimpleVertexShader.cso</FullPath>
+      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\LightPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\ajw01\Desktop\Jiwoo\MyDX3DFramework\Binaries\Debug\LightVertexShader.cso</FullPath>
+      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\SimplePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\SimpleVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\alsxm\Desktop\dev\MyDX3DFramework\Binaries\Debug\LightVertexShader.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

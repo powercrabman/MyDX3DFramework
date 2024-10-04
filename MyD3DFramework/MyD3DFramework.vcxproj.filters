@@ -248,6 +248,9 @@
     <Filter Include="06.Component\Behavior">
       <UniqueIdentifier>{aef79aa2-bad6-4122-9d08-b5e65d462a52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07.RenderModules\Shader\Texture+Light+Trans">
+      <UniqueIdentifier>{2905fbef-b18c-4358-a7b6-a8459bcc0fde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -415,6 +418,12 @@
     </FxCompile>
     <FxCompile Include="LightPixelShader.hlsl">
       <Filter>07.RenderModules\Shader\Light+Trans</Filter>
+    </FxCompile>
+    <FxCompile Include="TexVertexShader.hlsl">
+      <Filter>07.RenderModules\Shader\Texture+Light+Trans</Filter>
+    </FxCompile>
+    <FxCompile Include="TexPixelShader.hlsl">
+      <Filter>07.RenderModules\Shader\Texture+Light+Trans</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

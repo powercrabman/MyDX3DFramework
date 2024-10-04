@@ -177,15 +177,16 @@ void Renderer::InitializeRenderResoucre()
 
 	effect->SetProperties(
 		m_device.Get(),
-		L"LightVertexShader.hlsl",
+		L"TexVertexShader.hlsl",
 		"VS",
 		"vs_5_0",
-		L"LightPixelShader.hlsl",
+		L"TexPixelShader.hlsl",
 		"PS",
 		"ps_5_0",
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		}
 	);
 
@@ -220,8 +221,8 @@ void Renderer::InitializeRenderResoucre()
 	//머테리얼 생성
 	{
 		Material* m = CreateMaterial(sBasicMaterialKey);
-		m->Ambient = Color(0.2f, 0.2f, 0.2f);
-		m->Diffuse = Color(0.7f, 0.7f, 0.7f);
+		m->Ambient = Color(0.4f, 0.4f, 0.4f);
+		m->Diffuse = Color(1.f, 1.f, 1.f);
 		m->Specular = Color(1.0f, 1.0f, 1.0f);
 		m->Specular.w = 32;
 	}
@@ -235,6 +236,26 @@ void Renderer::InitializeRenderResoucre()
 		m->Specular.w = 32;
 	}
 
+	/* 샘플러 스테이트 */
+	{
+
+		D3D11_SAMPLER_DESC desc = { };
+		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		desc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		HRESULT hr = m_device->CreateSamplerState(&desc, m_samplerState.GetAddressOf());
+		CHECK_FAILED(hr);
+	}
+
+	/* 텍스처 생성 */
+	{
+		HRESULT hr = LoadAndCreateTexture2D(L"C:\\Users\\alsxm\\Desktop\\dev\\MyDX3DFramework\\woodTexture.png", nullptr, m_shaderResourceView.GetAddressOf(), true);
+		CHECK_FAILED(hr);
+	}
+
 	SetCurrentEffect(sBasicEffectKey);
 	SetCurrentRenderState(sBasicRenderStateKey);
 
@@ -246,15 +267,15 @@ void Renderer::CreateCubeMesh()
 	Mesh* mesh = CreateMesh(sCubeMeshKey);
 
 	//버텍스 버퍼 생성
-	std::vector<VertexNormal> vertices = {
-		{Vector3{-1.f,-1.f,-1.f}, Vector3{-1.f,-1.f,-1.f}},
-		{Vector3{-1.f,+1.f,-1.f}, Vector3{-1.f,+1.f,-1.f}},
-		{Vector3{+1.f,+1.f,-1.f}, Vector3{+1.f,+1.f,-1.f}},
-		{Vector3{+1.f,-1.f,-1.f}, Vector3{+1.f,-1.f,-1.f}},
-		{Vector3{-1.f,-1.f,+1.f}, Vector3{-1.f,-1.f,+1.f}},
-		{Vector3{-1.f,+1.f,+1.f}, Vector3{-1.f,+1.f,+1.f}},
-		{Vector3{+1.f,+1.f,+1.f}, Vector3{+1.f,+1.f,+1.f}},
-		{Vector3{+1.f,-1.f,+1.f}, Vector3{+1.f,-1.f,+1.f}}
+	std::vector<VertexNormalTexture> vertices = {
+		{Vector3{-1.f,-1.f,-1.f}, Vector3{-1.f,-1.f,-1.f}, Vector2{0.f,1.f}},
+		{Vector3{-1.f,+1.f,-1.f}, Vector3{-1.f,+1.f,-1.f}, Vector2{0.f,0.f}},
+		{Vector3{+1.f,+1.f,-1.f}, Vector3{+1.f,+1.f,-1.f}, Vector2{1.f,0.f}},
+		{Vector3{+1.f,-1.f,-1.f}, Vector3{+1.f,-1.f,-1.f}, Vector2{1.f,1.f}},
+		{Vector3{-1.f,-1.f,+1.f}, Vector3{-1.f,-1.f,+1.f}, Vector2{1.f,1.f}},
+		{Vector3{-1.f,+1.f,+1.f}, Vector3{-1.f,+1.f,+1.f}, Vector2{1.f,0.f}},
+		{Vector3{+1.f,+1.f,+1.f}, Vector3{+1.f,+1.f,+1.f}, Vector2{0.f,0.f}},
+		{Vector3{+1.f,-1.f,+1.f}, Vector3{+1.f,-1.f,+1.f}, Vector2{0.f,1.f}}
 	};
 
 	//노멀 벡터 정규화
@@ -263,7 +284,7 @@ void Renderer::CreateCubeMesh()
 		v.Normal.Normalize();
 	}
 
-	mesh->SetVertexBuffer(m_device.Get(), vertices);
+	mesh->CreateVertexBuffer(m_device.Get(), vertices);
 
 	//인덱스 버퍼 생성
 	std::vector<UINT> indices = {
@@ -275,7 +296,7 @@ void Renderer::CreateCubeMesh()
 		3, 2, 6, 3, 6, 7
 	};
 
-	mesh->SetIndexBuffer(m_device.Get(), indices);
+	mesh->CreateIndexBuffer(m_device.Get(), indices);
 }
 
 void Renderer::CreateSphereMesh(int latitudeSegments, int longitudeSegments, float radius)
@@ -324,13 +345,14 @@ void Renderer::CreateSphereMesh(int latitudeSegments, int longitudeSegments, flo
 		}
 	}
 
-	mesh->SetVertexBuffer(m_device.Get(), vertices);
-
-	mesh->SetIndexBuffer(m_device.Get(), indices);
+	mesh->CreateVertexBuffer(m_device.Get(), vertices);
+	mesh->CreateIndexBuffer(m_device.Get(), indices);
 }
 void Renderer::Render()
 {
 	/* 렌더링 옵션 복구 */
+	m_deviceContext->PSSetShaderResources(0, 1, m_shaderResourceView.GetAddressOf());
+	m_deviceContext->PSSetSamplers(0, 1, m_samplerState.GetAddressOf());
 	m_curEffect->Apply(m_deviceContext.Get());
 	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), sCbPerFrameKey);
 	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), sCbPerObjectKey);
@@ -419,14 +441,6 @@ void Renderer::Render()
 		}
 	}
 }
-
-//========================================
-// 
-//	1. Light 관리 
-//  2. 상수버퍼 관리
-//	3. 렌더링 테스트 하면 끝! 
-// 
-//========================================
 
 void Renderer::ResizeWindow(const WindowSize& winSize)
 {
