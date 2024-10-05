@@ -15,7 +15,7 @@
 	if (FAILED(hr))																					\
 	{																								\
 		auto& buffer = Buffer512W::GetInst();													    \
-		buffer.Input(L"DirectX Fail!\nError Code: %d\nMessage: %s", static_cast<int>(hr), msg);		\
+		buffer.Input(L"DirectX Fail!\nError Code: %ld\nMessage: %s", static_cast<HRESULT>(hr), msg);		\
 		WinUtile::Alert(buffer.c_str(), L"Error");													\
 		PostQuitMessage(0);																			\
 	}

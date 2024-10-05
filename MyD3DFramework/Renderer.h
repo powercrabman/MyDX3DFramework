@@ -134,6 +134,7 @@ public:
 	const inline static std::string sGroundMaterialKey = "GroundMaterial";
 	const inline static std::string sCbPerFrameKey = "cbPerFrame";
 	const inline static std::string sCbPerObjectKey = "cbPerObject";
+	const inline static std::string sCbPerRarelyKey = "cbPerRarely";
 
 private:
 	Renderer();;
@@ -150,6 +151,7 @@ private:
 	ComPtr<ID3D11RenderTargetView> m_renderTargetView = nullptr;
 	ComPtr<ID3D11ShaderResourceView> m_shaderResourceView = nullptr;
 	ComPtr<ID3D11SamplerState> m_samplerState = nullptr;
+	ComPtr<ID3D11BlendState> m_blendState = nullptr;
 
 	CD3D11_VIEWPORT m_viewport = {};
 	D3D_FEATURE_LEVEL m_featureLevel = {};

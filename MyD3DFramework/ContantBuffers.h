@@ -67,3 +67,11 @@ struct cbPerFrame
 	unsigned int SpotLightCount;   
 	float Pad;
 };
+
+struct cbPerRarely
+{
+	Vector4 FogColor;
+	float FogStart;
+	float FogRange;
+	Vector2 Pad;
+};

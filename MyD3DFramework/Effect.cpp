@@ -52,7 +52,7 @@ void Effect::SetProperties(ID3D11Device* inDevice, std::wstring_view inVertexSha
 	CHECK_FAILED(hr);
 }
 
- void Effect::RegisterConstantBuffer(ID3D11Device* inDevice, uint32 inContantBuffeStructSize, const std::string inConstantBufferName, uint32 inSlotToUse, uint32 inApplyFlags)
+ void Effect::CreateConstantBuffer(ID3D11Device* inDevice, uint32 inContantBuffeStructSize, const std::string inConstantBufferName, uint32 inSlotToUse, uint32 inApplyFlags)
 {
 	assert(!m_cbRepo.contains(inConstantBufferName));
 

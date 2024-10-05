@@ -23,7 +23,7 @@ public:
 		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inInputElementDesc
 	);
 
-	void RegisterConstantBuffer(
+	void CreateConstantBuffer(
 		ID3D11Device* inDevice,
 		uint32 inContantBuffeStructSize,
 		const std::string inConstantBufferName,

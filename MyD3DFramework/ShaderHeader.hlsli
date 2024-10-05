@@ -4,9 +4,6 @@
 //  구조체
 // ---------------------------------------
 
-Texture2D txDiffuse : register(t0);
-SamplerState samLinear : register(s0);
-
 struct Material
 {
     float4 Ambient;
@@ -52,7 +49,10 @@ struct SpotLight
 // ---------------------------------------
 //  컨스턴트 버퍼
 // ---------------------------------------
-    
+
+Texture2D txDiffuse : register(t0);
+SamplerState samLinear : register(s0);
+
 cbuffer cPerObject : register(b0)
 {
     matrix gWorld;
@@ -74,6 +74,14 @@ cbuffer cbPerFrame : register(b1)
     unsigned int gSpotLightCount;
     float Pad;
 }
+
+cbuffer cbPerRarely : register(b2)
+{
+    float4 gFogColor;
+    float gFogStart;
+    float gFogRange;
+}
+
 // ---------------------------------------
 //  선형 변환만 정의하는 버텍스 쉐이더
 // ---------------------------------------

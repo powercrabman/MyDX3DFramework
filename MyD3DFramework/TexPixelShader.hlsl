@@ -148,8 +148,14 @@ void ComputeSpotLight(
 
 float4 PS(TEX_VS_OUTPUT input) : SV_TARGET
 {
+    //텍스처 매핑 미리 수행
+    float4 texColor = txDiffuse.Sample(samLinear, input.UV);
+    clip(texColor.a - 0.1f); //텍스처의 알파 값이 0.1 미만이면 클리핑
+    
     //시선 벡터
-    float3 eyeVecW = normalize(gEyePosW.xyz - input.PosW);
+    float3 eyeVecW = gEyePosW.xyz - input.PosW;
+    float distToEye = length(eyeVecW);
+    eyeVecW /= distToEye;
 
     //초기화
     float4 ambient = float4(0.f, 0.f, 0.f, 0.f);
@@ -162,7 +168,7 @@ float4 PS(TEX_VS_OUTPUT input) : SV_TARGET
     float4 s = float4(0.f, 0.f, 0.f, 0.f);
     
     int i;
-
+    
     //방향성 광원
     for (i = 0; i < gDirLightCount; ++i)
     {
@@ -172,7 +178,6 @@ float4 PS(TEX_VS_OUTPUT input) : SV_TARGET
         diffuse += d;
     }
 
-    
     //점 광원
     for (i = 0; i < gPointLightCount; ++i)
     {
@@ -192,13 +197,16 @@ float4 PS(TEX_VS_OUTPUT input) : SV_TARGET
         diffuse += d;
     }
 
+    //Light
+    float4 fianlColor = (ambient + diffuse) * texColor + specular;
     
-    //최종 조명 계산
-
-    float4 texColor = txDiffuse.Sample(samLinear, input.UV);
-    float4 finalColor = (ambient + diffuse) * texColor + specular;
-    finalColor.w = gMaterial.Diffuse.w * texColor.a; //알파 값은 머테리얼에서 가져옴
-    return finalColor;
+    //Fog
+    float fogLerp = saturate((distToEye - gFogStart) / gFogRange);
+    fianlColor = lerp(fianlColor, gFogColor, fogLerp);
+    
+    //Texture + Material Alpha
+    fianlColor.w = gMaterial.Diffuse.w * texColor.a; //알파 값은 머테리얼에서 가져옴
+    return fianlColor;
 }
 
 

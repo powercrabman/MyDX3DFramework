@@ -8,7 +8,7 @@
 CameraObject::CameraObject()
 {
 	m_trans = CreateComponent<CTransform>();
-	m_camera = CreateComponent<CCamera>(::XMConvertToRadians(45.f), 0.5f, 100.f, m_trans);
+	m_camera = CreateComponent<CCamera>(::XMConvertToRadians(45.f), 0.5f, 50.f, m_trans);
 	m_input = CreateComponent<CKeyInput>();
 
 	/* ¿Œ«≤ º≥¡§ */

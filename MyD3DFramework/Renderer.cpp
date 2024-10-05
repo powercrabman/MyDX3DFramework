@@ -201,7 +201,7 @@ void Renderer::InitializeRenderResoucre()
 	//컨스턴트 버퍼 설정
 
 	//cbPerObject
-	effect->RegisterConstantBuffer(
+	effect->CreateConstantBuffer(
 		m_device.Get(),
 		sizeof(cbPerObject),
 		sCbPerObjectKey,
@@ -210,12 +210,21 @@ void Renderer::InitializeRenderResoucre()
 	);
 
 	//cbPerFrame
-	effect->RegisterConstantBuffer(
+	effect->CreateConstantBuffer(
 		m_device.Get(),
 		sizeof(cbPerFrame),
 		sCbPerFrameKey,
 		1,
 		CONSTANT_BUFFER_APPLY_VERTEX_SHADER | CONSTANT_BUFFER_APPLY_PIXEL_SHADER
+	);
+
+	//cbPerRarely
+	effect->CreateConstantBuffer(
+		m_device.Get(),
+		sizeof(cbPerRarely),
+		sCbPerRarelyKey,
+		2,
+		CONSTANT_BUFFER_APPLY_PIXEL_SHADER
 	);
 
 	//머테리얼 생성
@@ -225,6 +234,7 @@ void Renderer::InitializeRenderResoucre()
 		m->Diffuse = Color(1.f, 1.f, 1.f);
 		m->Specular = Color(1.0f, 1.0f, 1.0f);
 		m->Specular.w = 32;
+		m->Diffuse.w = 1.f;
 	}
 
 	//머테리얼 생성
@@ -236,9 +246,27 @@ void Renderer::InitializeRenderResoucre()
 		m->Specular.w = 32;
 	}
 
+	/* 블렌더 스테이트 */
+	{
+		D3D11_BLEND_DESC desc = {};
+		desc.AlphaToCoverageEnable = false;
+		desc.IndependentBlendEnable = false;
+
+		desc.RenderTarget[0].BlendEnable = true;                 
+		desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;   
+		desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;       
+		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;    
+		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;  
+		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;  
+		desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; 
+
+		HRESULT hr = m_device->CreateBlendState(&desc, m_blendState.GetAddressOf());
+		CHECK_FAILED(hr);
+	}
+
 	/* 샘플러 스테이트 */
 	{
-
 		D3D11_SAMPLER_DESC desc = { };
 		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -255,9 +283,28 @@ void Renderer::InitializeRenderResoucre()
 		HRESULT hr = LoadAndCreateTexture2D(L"C:\\Users\\alsxm\\Desktop\\dev\\MyDX3DFramework\\woodTexture.png", nullptr, m_shaderResourceView.GetAddressOf(), true);
 		CHECK_FAILED(hr);
 	}
+	
+	/* 안개 설정 */
+	{
+		cbPerRarely cb = {};
+
+		cb.FogStart = 25.f;
+		cb.FogRange = 25.f;
+		cb.FogColor = Color(Colors::LightSkyBlue);
+
+		effect->UpdateConstantBuffer(
+			m_deviceContext.Get(),
+			sCbPerRarelyKey,
+			cb
+		);
+
+		//지금 업데이트 해도 됨
+		effect->BindConstantBuffer(m_deviceContext.Get(), sCbPerRarelyKey);
+	}
 
 	SetCurrentEffect(sBasicEffectKey);
 	SetCurrentRenderState(sBasicRenderStateKey);
+
 
 }
 
@@ -357,6 +404,12 @@ void Renderer::Render()
 	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), sCbPerFrameKey);
 	m_curEffect->BindConstantBuffer(m_deviceContext.Get(), sCbPerObjectKey);
 	m_curRenderState->Apply(m_deviceContext.Get());
+
+	/* 블랜드 스테이트 */
+	FLOAT blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	m_deviceContext->OMSetBlendState(m_blendState.Get(), blendFactor, 0xffffffff);
+
+
 	m_curMesh = nullptr;
 
 	/* 카메라 설정 */
