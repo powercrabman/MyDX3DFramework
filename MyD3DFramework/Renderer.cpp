@@ -252,14 +252,14 @@ void Renderer::InitializeRenderResoucre()
 		desc.AlphaToCoverageEnable = false;
 		desc.IndependentBlendEnable = false;
 
-		desc.RenderTarget[0].BlendEnable = true;                 
-		desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;   
+		desc.RenderTarget[0].BlendEnable = true;
+		desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;       
-		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;    
-		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;  
-		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;  
-		desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; 
+		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 		HRESULT hr = m_device->CreateBlendState(&desc, m_blendState.GetAddressOf());
 		CHECK_FAILED(hr);
@@ -278,12 +278,28 @@ void Renderer::InitializeRenderResoucre()
 		CHECK_FAILED(hr);
 	}
 
+	/* 깊이/스텐실 스테이트 */
+	{
+		D3D11_DEPTH_STENCIL_DESC desc = {};
+
+		desc.DepthEnable = true;
+		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		desc.DepthFunc = D3D11_COMPARISON_LESS;
+
+		desc.StencilEnable = true;
+		desc.StencilReadMask = 0xff;
+		desc.StencilWriteMask = 0xff;
+
+		HRESULT hr = m_device->CreateDepthStencilState(&desc, m_depthStencilState.GetAddressOf());
+		CHECK_FAILED(hr);
+	}
+
 	/* 텍스처 생성 */
 	{
 		HRESULT hr = LoadAndCreateTexture2D(L"C:\\Users\\alsxm\\Desktop\\dev\\MyDX3DFramework\\woodTexture.png", nullptr, m_shaderResourceView.GetAddressOf(), true);
 		CHECK_FAILED(hr);
 	}
-	
+
 	/* 안개 설정 */
 	{
 		cbPerRarely cb = {};
@@ -406,9 +422,11 @@ void Renderer::Render()
 	m_curRenderState->Apply(m_deviceContext.Get());
 
 	/* 블랜드 스테이트 */
-	FLOAT blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	static FLOAT blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	m_deviceContext->OMSetBlendState(m_blendState.Get(), blendFactor, 0xffffffff);
 
+	/* 깊이 스텐실 스테이트 */
+	m_deviceContext->OMSetDepthStencilState(m_depthStencilState.Get(), 1);
 
 	m_curMesh = nullptr;
 
@@ -470,7 +488,7 @@ void Renderer::Render()
 		m_curEffect->UpdateConstantBuffer(m_deviceContext.Get(), sCbPerFrameKey, cb);
 	}
 
-	/* 오브젝트 업데이터 */
+	/* 오브젝트 업데이트 */
 	const auto& repo = m_cMeshRendererRepo.GetVector();
 	for (int i = 0; i < repo.size(); ++i)
 	{
@@ -594,4 +612,5 @@ inline RenderState* Renderer::CreateRenderState(const std::string& inKey)
 
 	return returnObj;
 }
+
 
